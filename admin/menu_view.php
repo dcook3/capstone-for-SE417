@@ -10,7 +10,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <title>Menu View</title>
-    
+    <script src="https://cdn.jsdelivr.net/gh/mgalante/jquery.redirect@master/jquery.redirect.js"></script>
+
 </head>
 <body>
     <h1>Menu Items</h1>
@@ -54,26 +55,18 @@
         var addNewbutton = document.querySelector("#addNewButton");
         var editButtons = document.querySelectorAll(".editButton")
         addNewbutton.addEventListener("click", function(e){
-            window.location.replace("localhost/as_capstone/admin/menu_add.php");
+            window.location.replace("menu_add.php");
         })
 
 
         for(let i = 0; i < editButtons.length; i++){
             editButtons[i].addEventListener("click", function(e){
                 console.log(e.target.dataset["id"])
+                
+                $.redirect('menu_add.php', {'id': e.target.dataset["id"]})
             })
         }
-        // $.ajax({
-        //     type: "POST",
-        //     url: "../Webservices/EmployeeService.asmx/GetEmployeeOrders",
-        //     data: {id: },
-        //     contentType: "application/json; charset=utf-8",
-        //     dataType: "json",
-        //     success: function(result){
-        //         alert(result.d);
-        //         console.log(result);
-        //     }
-        // });
+        
 
     </script>
 </body>
