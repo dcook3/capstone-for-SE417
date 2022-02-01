@@ -23,7 +23,7 @@ try {
 }
 catch (PDOException $e) {
 
-    echo "<div style='border:1px solid black; message: " . $db->getMessage(). "</div>";
+    echo $db->getMessage();
 }
 
 //var_dump($db);
