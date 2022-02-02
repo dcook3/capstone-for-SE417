@@ -8,17 +8,16 @@ if($_SERVER['REQUEST_METHOD'] == "GET")
         $currentYear = $GET["year"];
         $currentMonth = $GET["month"];
         $currentDay = $GET["day"];
-        // $results = getOrdersByDT();
+        //$results = getOrdersByDT();
     }
-    
-}
-else
-{
-    $todayDate = new DateTime('NOW');
-    $todayDate = getdate($todayDate->getTimestamp());
-    $currentYear = $todayDate["year"];
-    $currentMonth = $todayDate['month'];
-    $currentDay = $todayDate['mday'];
+    else
+    {
+        $todayDate = new DateTime('NOW');
+        $todayDate = getdate($todayDate->getTimestamp());
+        $currentYear = $todayDate["year"];
+        $currentMonth = $todayDate['month'];
+        $currentDay = $todayDate['mday'];
+    }
 }
 ?>
 <!DOCTYPE html>
@@ -31,20 +30,20 @@ else
 </head>
 <body>
     <form method="get" action="orders_view.php" id="dateFilter">
-        <select class="" name="year">
+        <select class="dateFilter" name="year">
             <option disabled selected hidden>Year</option>
             <?php 
-                for($i = $currentYear-40; $i<=$currentYear; $i++)
+                for($i =$currentYear ; $i>=$currentYear-40; $i--)
                 {
-                    if($i == 1 && !isset($_POST['year']))
+                    if($i == 1 && !isset($_GET['year']))
                     {
                         echo '<option disabled selected hidden>Year</option>';
                     }
                     if($_SERVER['REQUEST_METHOD'] == "GET")
                     {
-                        if(isset($_POST['year']))
+                        if(isset($_GET['year']))
                         {
-                            if($i == $_POST['year'])
+                            if($i == $_GET['year'])
                             {
                                 $temp = '<option value="' . $i . '" selected>' . $i . '</option>';
                                 echo $temp;
@@ -69,9 +68,9 @@ else
                 }
             ?>
         </select>
-        <select name="month">
-            <?php if(isset($currentMonth)): ?>
-                <option><?= $currentMonth ?></option>
+        <select name="month" class="dateFilter">
+            <?php if(isset($_GET['month'])): ?>
+                <option selected hidden><?= $_GET['month'] ?></option>
             <?php else: ?>
                 <option disabled selected hidden>Month</option>
             <?php endif; ?>
@@ -88,15 +87,30 @@ else
             <option>November</option>
             <option>Decemeber</option>
         </select>
-        <select>
+        <select name="day" class="dateFilter">
             <?php
-                if(isset($currentYear) && isset($currentMonth))
+            if(isset($_GET['day']))
+            {
+                echo "<option selected hidden>{$_GET['day']}</option>";
+                for($i = 1; $i <= cal_days_in_month(CAL_GREGORIAN, date_parse($_GET['month'])['month'], $_GET['year']); $i++)
                 {
-                    for($i = 1; $i <= cal_days_in_month(CAL_GREGORIAN, $currentMonth, $currentYear); $i++)
+                    echo "<option>{$i}</option>";
+                }
+            }
+            else
+            {
+                if(isset($_GET['year']) && isset($_GET['month']))
+                {
+                    for($i = 1; $i <= cal_days_in_month(CAL_GREGORIAN, date_parse($_GET['month'])['month'], $_GET['year']); $i++)
                     {
                         echo "<option>{$i}</option>";
                     }
                 }
+                else
+                {
+                    echo "<option>Select Month and Year</option>";
+                }
+            }
             ?>
         </select>
     </form>
@@ -116,14 +130,14 @@ else
 
     <script>
         var form = document.querySelector('#dateFilter')
-        var selects = document.querySelectorAll('select#dateFilter')
+        var selects = document.querySelectorAll('select.dateFilter')
 
         for(let i=0; i<selects.length; i++)
         {
             selects[i].addEventListener('change', e =>{form.submit()})
         }
 
-        if(selects[0].value == "Year" && selects[1].value == "Month")
+        if(selects[0].value == "Year" || selects[1].value == "Month")
         {
             selects[2].disabled = true;
         }
