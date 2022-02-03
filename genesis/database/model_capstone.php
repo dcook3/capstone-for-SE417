@@ -6,7 +6,7 @@ function getStudents () {
     
     $results = [];
 
-    $stmt = $db->prepare("SELECT id, student_id, dorm_num, first_name, last_name, phone, phone2, email FROM User_Info ORDER BY id"); 
+    $stmt = $db->prepare("SELECT id, student_id, dorm_num, first_name, middle_name, last_name, phone, phone2, email FROM users ORDER BY id"); 
     
     if ( $stmt->execute() && $stmt->rowCount() > 0 ) {
          $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -45,8 +45,8 @@ function getStudent($id){
         
         $results = [];
 
-        $stmt = $db->prepare("SELECT id, img, student_id, dorm_num, first_name, last_name, phone, phone2, email 
-        FROM User_Login WHERE id=:id"); 
+        $stmt = $db->prepare("SELECT id, img, student_id, dorm_num, first_name, middle_name, last_name, phone, phone2, email 
+        FROM users WHERE id=:id"); 
 
         $stmt->bindValue(':id', $id);
         
@@ -57,12 +57,12 @@ function getStudent($id){
          return ($results);
 }
 
-function updateStudent($id, $img, $student_id, $dorm_num, $first_name, $last_name, $phone, $phone2, $email) {
+function updateStudent($id, $img, $student_id, $dorm_num, $first_name, $middle_name, $last_name, $phone, $phone2, $email) {
     global $db;
 
     $results = "Data NOT Updated";
     
-    $stmt = $db->prepare("UPDATE User_Login SET img = :img, student_id = :student_id, dorm_num = :dorm_num, first_name = :first_name,
+    $stmt = $db->prepare("UPDATE users SET img = :img, student_id = :student_id, dorm_num = :dorm_num, first_name = :first_name,
     last_name = :last_name, phone = :phone, phone2 = :phone2, email = :email WHERE id=:id");
     
     $stmt->bindValue(':id', $id);
