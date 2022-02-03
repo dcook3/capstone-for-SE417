@@ -5,10 +5,12 @@ if($_SERVER['REQUEST_METHOD'] == "GET")
 {
     if(isset($GET["year"]) && isset($GET["month"]) && isset($GET["day"]))
     {
-        $currentYear = $GET["year"];
-        $currentMonth = $GET["month"];
-        $currentDay = $GET["day"];
-        //$results = getOrdersByDT();
+        $selectedYear = $GET["year"];
+        $selectedMonth = $GET["month"];
+        $selectedDay = $GET["day"];
+        $selectedMonthInt = date_parse($_GET['month'])['month'];
+        $selectedDate = strtotime("{$selectedYear}/{$selectedMonthInt}/{$selectedDay}");
+        $results = getOrdersByDT($selectedDate);
     }
     else
     {
@@ -17,6 +19,7 @@ if($_SERVER['REQUEST_METHOD'] == "GET")
         $currentYear = $todayDate["year"];
         $currentMonth = $todayDate['month'];
         $currentDay = $todayDate['mday'];
+        $results = getOrders();
     }
 }
 ?>
@@ -124,7 +127,12 @@ if($_SERVER['REQUEST_METHOD'] == "GET")
             <th>Complete</th>
         </thead>
         <tbody>
-            
+            <?php foreach($results as $row): ?>
+                <tr>
+                    <td><?= "{$row['first_name']} {$row['last_name']}" ?></td>
+                    <td><?= $row['student_id'] ?></td>
+                    <td>soon to be implemented</td>
+                    <td><?= 
         </tbody>
     </table>
 
