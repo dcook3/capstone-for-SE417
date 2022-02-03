@@ -16,6 +16,7 @@ if(isset($_GET['id']))
         $stud_id = $row[0]['student_id'];
         $dorm_no = $row[0]['dorm_num'];
         $firstName = $row[0]['first_name'];
+		$middleName = $row[0]['middle_name'];
         $lastName = $row[0]['last_name'];
         $phoneNumber = $row[0]['phone'];
         $phoneNumber2 = $row[0]['phone2'];
@@ -30,6 +31,7 @@ if(isset($_GET['id']))
         $stud_id = "";
         $dorm_no = "";
         $firstName = "";
+		$middleName = "";
         $lastName = "";
         $phoneNumber = "";
         $phoneNumber2 = "";
@@ -48,6 +50,7 @@ if(isset($_GET['id']))
             $stud_id = filter_input(INPUT_POST, 'stud_id');
             $dorm_no = filter_input(INPUT_POST, 'dorm_no');
             $firstName = filter_input(INPUT_POST, 'firstName');
+			$middleName = filter_input(INPUT_POST, 'middleName');
             $lastName = filter_input(INPUT_POST, 'lastName');
             $phoneNumber = filter_input(INPUT_POST, 'phoneNumber');
             $phoneNumber2 = filter_input(INPUT_POST, 'phoneNumber2');
@@ -69,7 +72,7 @@ if(isset($_GET['id']))
                 
                 else if(isset($_POST['btnSubmit']))
                 {
-                    $results = updateStudent($id, $img, $student_id, $dorm_num, $first_name, $last_name, $phone, $phone2, $email);
+                    $results = updateStudent($id, $img, $student_id, $dorm_num, $first_name, $middle_name, $last_name, $phone, $phone2, $email);
                 }
                 
             }
