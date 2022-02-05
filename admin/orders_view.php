@@ -1,6 +1,8 @@
 <?php
 include '../models/sql_functions.php';
 
+$tempOrder = new Order();
+
 if($_SERVER['REQUEST_METHOD'] == "GET")
 {
     if(isset($GET["year"]) && isset($GET["month"]) && isset($GET["day"]))
@@ -10,16 +12,18 @@ if($_SERVER['REQUEST_METHOD'] == "GET")
         $selectedDay = $GET["day"];
         $selectedMonthInt = date_parse($_GET['month'])['month'];
         $selectedDate = strtotime("{$selectedYear}/{$selectedMonthInt}/{$selectedDay}");
-        $results = getOrdersByDT($selectedDate);
+        $results = $tempOrder->getOrdersByDT($selectedDate);
     }
     else
     {
         $todayDate = new DateTime('NOW');
         $todayDate = getdate($todayDate->getTimestamp());
-        $currentYear = $todayDate["year"];
-        $currentMonth = $todayDate['month'];
-        $currentDay = $todayDate['mday'];
-        $results = getOrders();
+        $selectedYear = $todayDate["year"];
+        $selectedMonth = $todayDate['month'];
+        $selectedMonthInt = date_parse($currentMonth)['month'];
+        $selectedDay = $todayDate['mday'];
+        $selectedDate = strtotime("{$selectedYear}/{$selectedMonthInt}/{$selectedDay}");
+        $results = $tempOrder->getOrdersByDT($selectedDate);
     }
 }
 ?>
