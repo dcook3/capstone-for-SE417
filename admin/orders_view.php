@@ -127,12 +127,15 @@ if($_SERVER['REQUEST_METHOD'] == "GET")
             <th>Complete</th>
         </thead>
         <tbody>
-            <?php foreach($results as $row): ?>
+            <?php foreach($results[0] as $row): ?>
                 <tr>
                     <td><?= "{$row['first_name']} {$row['last_name']}" ?></td>
                     <td><?= $row['student_id'] ?></td>
                     <td>soon to be implemented</td>
-                    <td><?= 
+                    <td></td>
+                    <!-- PHP call to second query withing index 1 on result array-->
+                </tr>
+            <?php endforeach; ?>
         </tbody>
     </table>
 
