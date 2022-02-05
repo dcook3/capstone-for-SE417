@@ -1,5 +1,6 @@
 <?php
-    include("..\models\sql_functions.php")
+    include("..\models\lucas.php");
+    $menuItems = Menu_Item::getMenuItems();
 ?>
 
 <!DOCTYPE html>
@@ -35,15 +36,15 @@
         </thead>
         <tbody>
             <?php 
-                foreach(getMenuItems() as $item){
+                foreach($menuItems as $item){
             ?>
                     <tr>
                         
-                        <td><?= $item["item_name"]?></td>
-                        <td><?= $item["section_id"]?></td>
-                        <td><?= $item["item_description"]?></td>
-                        <td><?= $item["item_price"]?></td>
-                        <td><button class = "editButton" data-id = "<?= $item["item_id"]?>">Edit</button></td>
+                        <td><?= $item->getItemName()?></td>
+                        <td><?= $item->getSection()->getSectionName()?></td>
+                        <td><?= $item->getItemDescription()?></td>
+                        <td><?= $item->getItemPrice()?></td>
+                        <td><button class = "editButton" data-id = "<?= $item->getMenuItemId()?>">Edit</button></td>
                         <td><button>Delete</button></td>
                     </tr>
             
