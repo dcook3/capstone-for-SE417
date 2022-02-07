@@ -18,9 +18,9 @@
             $this->item_description = $_item_description;
             $this->item_price = $_item_price;
             $this->item_img = $_item_img;
-            $this->itemIngredients = Ingredient::getIngredientsByMenuItemId($this->menu_item_id);
+            $this->itemIngredients = Array();
         }
-
+        
         static function getMenuItemByID(string $_menu_item_id){
             global $db;
             $stmt = $db->prepare("SELECT * FROM menu_items WHERE menu_item_id = :menu_item_id");
@@ -58,7 +58,30 @@
                 echo 'ERROR FINDING MENU ITEMS';
             }
         }
+        function populateIngredientsById(){
+            $this->itemIngredients = Ingredient::getIngredientsByMenuItemId($this->menu_item_id);
+        }
+        function addIngredient(Ingredient $ingredient){
+            array_push($this->itemIngredients, $ingredient);
+        }
+        function addToDB(){
+            global $db;
+            $stmt = $db->prepare("INSERT INTO menu_items (section_id, item_name, item_description, item_price, item_img) VALUES (:section_id, :item_name, :item_description, :item_price, :item_img)");
+            $binds = array(
+                ":section_id" => $this->getSection()->getSectionId(),
+                ":item_name" => $this->getItemName(),
+                ":item_description" => $this->getItemDescription(),
+                ":item_price" => $this->getItemPrice(),
+                ":item_img" => $this->getItemImg()
+            );
 
+            if($stmt->execute($binds)){
+                $this->menu_item_id = $db->lastInsertId();
+                foreach($this->getIngredients() as $ingredient){
+                    $ingredient->addToDB($this->getMenuItemId());
+                }
+            }
+        }
        
         function getMenuItemId(){
             return $this->menu_item_id;
@@ -168,6 +191,38 @@
                 }
             }
             return $ingredients;
+        }
+        function addToDB($menu_item_id){
+            global $db;
+            $selectStmt = $db->prepare("SELECT ingredient_id FROM ingredients WHERE ingredient_name = :ingredient_name");
+            $selectBinds = array(
+                ":ingredient_name" => $this->getIngredientName()
+            );
+
+            if($selectStmt->execute($selectBinds)){
+                if($selectStmt->rowCount() == 0){
+                    $insertStmt = $db->prepare("INSERT INTO ingredients (ingredient_name, ingredient_price, is_default) VALUES (:ingredient_name, :ingredient_price, :is_default);");
+                    $insertBinds = array(
+                        ":ingredient_name" => $this->getIngredientName(),
+                        ":ingredient_price" => $this->getIngredientPrice(),
+                        ":is_default" => ($this->getIsDefault()) ? '1' : '0'
+                    );
+
+                    if($insertStmt->execute($insertBinds)){
+                        $this->ingredient_id = $db->lastInsertId();
+                    }
+                    
+                }
+                else{
+                    $this->ingredient_id = $selectStmt->fetchAll(PDO::FETCH_ASSOC)[0]['ingredient_id'];
+                    $insertStmt = $db->prepare("INSERT INTO menu_item_ingredients (ingredient_id, menu_item_id VALUES (:ingredient_id, :menu_item_id);");
+                    $insertBinds = array(
+                        ":ingredient_id" => $this->getIngredientId(),
+                        ":menu_item_id" => $menu_item_id
+                    );
+                    $insertStmt->execute($insertBinds);
+                }
+            }
         }
         function getIngredientId(){
             return $this->ingredient_id;
