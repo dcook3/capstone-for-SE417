@@ -27,6 +27,20 @@ class Menu_Item{
             console.log(data);
         })
     }
+    updateItem(){
+        $.ajax({
+            url : "../models/ajaxHandler.php",
+            method : "POST",
+            data:{
+                'action' : 'updateItem',
+                'item' : this,
+            }
+        })
+        .fail(function(e) {console.log(e)})
+        .done(function(data){
+            console.log(data);
+        })
+    }
 }
 
 

@@ -82,7 +82,30 @@
                 }
             }
         }
-       
+        function updateMenuItem(){
+            global $db;
+            if($this->getMenuItemId() != '-1'){
+                $stmt = $db->prepare("Update menu_items SET section_id = :section_id, item_name = :item_name, item_description = :item_description, item_price = :item_price, item_img = :item_img WHERE menu_item_id = :menu_item_id;");
+                $binds = array(
+                    ":section_id" => $this->getSection()->getSectionId(),
+                    ":item_name" => $this->getItemName(),
+                    ":item_description" => $this->getItemDescription(),
+                    ":item_price" => $this->getItemPrice(),
+                    ":item_img" => $this->getItemImg()
+                );
+                $stmt->execute($binds); 
+                if($stmt->rowCount() > 0){
+                    return(true);
+                }
+                else{
+                    return(false);
+                }
+                
+            }
+        }
+
+        //GETTERS
+
         function getMenuItemId(){
             return $this->menu_item_id;
         }
@@ -127,6 +150,7 @@
                 echo 'ERROR FINDING SECTION WITH ID: ' . $_section_id;
             }
         }
+        
         static function getSections(){
             global $db;
 
@@ -139,6 +163,9 @@
             }
             return $sections;
         }
+        
+        //GETTERS
+
         function getSectionId(){
             return $this->section_id;
         }
@@ -170,7 +197,7 @@
                 $response = $stmt->fetchAll(PDO::FETCH_ASSOC)[0];
                 return new Ingredient($response['ingredient_id'], 
                                       $response['ingredient_name'], 
-                                      floatval($response['item_price']),
+                                      floatval($response['ingredient_price']),
                                       ($response['is_default'] == '1') ? true : false);
             }
             else{
@@ -179,16 +206,16 @@
         }
         static function getIngredientsByMenuItemId(string $_menu_item_id){
             global $db;
-            $stmt = $db->prepare("SELECT * FROM menu_item_ingredients WHERE menu_item_id = :menu_item_id");
+            $stmt = $db->prepare("SELECT ingredient_id FROM menu_item_ingredients WHERE menu_item_id = :menu_item_id");
             $binds = Array(":menu_item_id" => $_menu_item_id);
             $ingredients = Array();
             if($stmt->execute($binds)){
                 foreach($stmt->fetchAll(PDO::FETCH_ASSOC) as $row){
-                    array_push($ingredients, new Ingredient ($row["ingredient_id"], 
-                                                             $row["ingredient_name"], 
-                                                             floatval($row['item_price']), 
-                                                             ($row['is_default'] == '1') ? true : false));
+                    array_push($ingredients, Ingredient::getIngredientById($row['ingredient_id']));
                 }
+            }
+            else{
+                array_push($ingredients, "wtf");
             }
             return $ingredients;
         }
@@ -210,20 +237,45 @@
 
                     if($insertStmt->execute($insertBinds)){
                         $this->ingredient_id = $db->lastInsertId();
+                        $this->updateIngredient();
                     }
                     
                 }
                 else{
                     $this->ingredient_id = $selectStmt->fetchAll(PDO::FETCH_ASSOC)[0]['ingredient_id'];
-                    $insertStmt = $db->prepare("INSERT INTO menu_item_ingredients (ingredient_id, menu_item_id VALUES (:ingredient_id, :menu_item_id);");
-                    $insertBinds = array(
-                        ":ingredient_id" => $this->getIngredientId(),
-                        ":menu_item_id" => $menu_item_id
-                    );
-                    $insertStmt->execute($insertBinds);
+                    $this->updateIngredient();
                 }
+                $insertStmt = $db->prepare("INSERT INTO menu_item_ingredients (ingredient_id, menu_item_id) VALUES (:ingredient_id, :menu_item_id);");
+                $insertBinds = array(
+                    ":ingredient_id" => $this->getIngredientId(),
+                    ":menu_item_id" => $menu_item_id
+                );
+                $insertStmt->execute($insertBinds);
             }
         }
+        function updateIngredient(){
+            global $db;
+            if($this->getIngredientId() != '-1'){
+                $stmt = $db->prepare("Update ingredients SET ingredient_name = :ingredient_name, ingredient_price = :ingredient_price, is_default = :is_default WHERE ingredient_id = :ingredient_id;");
+                $binds = array(
+                    ":ingredient_id" => $this->getIngredientId(),
+                    ":ingredient_name" => $this->getIngredientName(),
+                    ":ingredient_price" => $this->getIngredientPrice(),
+                    ":is_default" => ($this->getIsDefault()) ? '1' : '0'
+                );
+                $stmt->execute($binds); 
+                if($stmt->rowCount() > 0){
+                    return(true);
+                }
+                else{
+                    return(false);
+                }
+                
+            }
+        }
+        
+        //GETTERS
+
         function getIngredientId(){
             return $this->ingredient_id;
         }

@@ -5,6 +5,7 @@
         $post = true;
         if(isset($_POST["id"])){
             $item = Menu_Item::getMenuItemByID($_POST["id"]);
+            $item->populateIngredientsById();
         }
     }
 ?>
@@ -77,20 +78,15 @@
         </thead>
         <tbody id = "ingredientBody">
         <?php 
-                if($post){
+            if($post){
+                foreach($item->getIngredients() as $key=>$ingredient){
+                    $isDefaultStr = ($ingredient->getIsDefault()) ? "checked" : ""; 
+                    echo("<tr class = 'ingredientRow'><td><input type = 'text' placeholder ='Name' value = '{$ingredient->getIngredientName()}'/></td><td><input type='number' min='0.00' max='10000.00' step='0.01' value = '{$ingredient->getIngredientPrice()}'/></td><td><label for = 'isDefault'>Default Option</label><input type = 'checkbox' name = 'isDefault' {$isDefaultStr}/></td><td><button id = 'deleteButton' onclick('deleteRow(this.parentElement.parentElement)')>Delete</button></td></tr>");
                     
-                    foreach($item->getIngredients() as $key=>$ingredient){
-                        $isDefaultStr = ($ingredient->isDefault()) ? "checked" : ""; 
-                        echo  `<tr class = "ingredientRow" }>`.
-                                `<td>{$ingredient->getIngredientName()}</td>`.
-                                `<td><input type="number" min="0.00" max="10000.00" step="0.01" {$ingredient->getIngredientPrice()}/></td>`.
-                                `<td><input type = "checkbox" name = "isDefault" {$isDefaultStr}/></td>`.
-                                `<td><button id = "deleteButton" onClick("deleteRow({$key})")></td>`.
-                              `</tr>`;
-                        
-                    }
                 }
-            ?></tbody>
+            }
+        ?>
+        </tbody>
     </table>
     <button id = "doneBtn">Done</button>
     <script>
@@ -140,7 +136,10 @@
                 
             }
             if(!post){
-                console.log("hell" + item.addToDatabase());
+                console.log(item.addToDatabase());
+            }
+            else{
+                console.log(item.updateItem());
             }
             
         })
