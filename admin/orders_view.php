@@ -5,14 +5,14 @@ $tempOrder = new Order();
 
 if($_SERVER['REQUEST_METHOD'] == "GET")
 {
-    if(isset($GET["year"]) && isset($GET["month"]) && isset($GET["day"]))
+    if(isset($_GET["year"]) && isset($_GET["month"]) && isset($_GET["day"]))
     {
-        $selectedYear = $GET["year"];
-        $selectedMonth = $GET["month"];
-        $selectedDay = $GET["day"];
-        $selectedMonthInt = date_parse($_GET['month'])['month'];
-        $selectedDate = strtotime("{$selectedYear}/{$selectedMonthInt}/{$selectedDay}");
-        $results = $tempOrder->getOrdersByDT($selectedDate);
+        $selectedYear = $_GET["year"];
+        $selectedMonth = $_GET["month"];
+        $selectedDay = $_GET["day"];
+        $selectedMonthInt = $_GET['month'];
+        $selectedDate = new DateTime("{$selectedYear}/{$selectedMonthInt}/{$selectedDay}");
+        $results = $tempOrder->getOrdersByDT($selectedDate->getTimestamp());
     }
     else
     {
@@ -154,32 +154,34 @@ if(isset($_GET['updateOrderStatus']))
                         <td>
                             <?php 
                                 $tempOrder = new Order();
-                                $tempOrder->populateOrderByID();
+                                $tempOrder->populateOrderByID($row['order_id']);
                                 $out = "<ul>";
-                                foreach($tempOrder->menu_items as $item)
+                                foreach($tempOrder->getMenuItems() as $item)
                                 {
-                                    $out += "<li>$item->item_name";
-                                    $out += "<ul>";
-                                    foreach($item->itemIngredients as $ingredient)
+                                    
+                                    $item->populateIngredientsById();
+                                    $out .= "<li>{$item->getItemName()}";
+                                    $out .= "<ul>";
+                                    foreach($item->getIngredients() as $ingredient)
                                     {
-                                        $out += "<li>$ingredient->ingredientName</li>";
+                                        $out .= "<li>$ingredient->ingredientName</li>"; //Figure out how to get specific ingredients that user orders from menu_item_ingredients bridge
                                     }
-                                    $out += "</ul>";
+                                    $out .= "</ul>";
                                 }
-                                $out += "</ul>";
+                                $out .= "</ul>";
                                 echo $out;
                             ?>
                         </td>
-                        <td><a href="orders_view.php?orderID=<?= $row['order_id']; ?>"><i class="fas fa-trash-alt"></i></a></td>
+                        <td><a href="orders_view.php?orderID=<?= $row['order_id']; ?>"><i class="fas fa-trash-alt fa-2x"></i></a></td>
                         <td>
                             <?php
                                 if($row['order_status'] == "0")
                                 {
-                                    echo "<form action='orders_view.php'><input type='hidden' name='orderID' value='true' /><input type='check' name='updateOrderStatus' /></form>";
+                                    echo "<form action='orders_view.php'><input type='hidden' name='orderID' value='true' /><input type='checkbox' name='updateOrderStatus' />Completed</form>";
                                 }
                                 else if($row['order_status'] == "1")
                                 {
-                                    echo "<form action='orders_view.php'><input type='hidden' name='orderID' value='true' /><input checked type='check' name='updateOrderStatus' /></form>";
+                                    echo "<form action='orders_view.php'><input type='hidden' name='orderID' value='true' /><input checked type='checkbox' name='updateOrderStatus' />Completed</form>";
                                 }
                             ?>
                         </td>
