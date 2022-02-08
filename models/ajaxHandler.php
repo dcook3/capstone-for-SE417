@@ -8,11 +8,20 @@
             echo "hello". $item->addToDB();
             
         }
-        if($_POST['action'] == 'updateItem'){
+        else if($_POST['action'] == 'updateItem'){
             $postItem = $_POST['item'];
             $item = postToMenuItem($postItem);
             echo $item->updateMenuItem();
             
+        }
+        else if($_POST['action'] == 'deleteIngredient'){
+            if(isset($_POST["ingredient_id"]) && isset($_POST["menu_item_id"])){
+                echo Ingredient::deleteIngredientById($_POST["ingredient_id"], $_POST["menu_item_id"]);
+
+            }
+            else{
+                echo false;
+            }
         }
     }
 
@@ -27,10 +36,12 @@
                                 $postItem["item_img"]);
         if(isset($postItem["ingredients"])){
             foreach($postItem["ingredients"] as $ingredientArr){
+                $checked = ($ingredientArr["is_default"] == "true") ? true : false;
+                var_dump($ingredientArr["is_default"]);
                 $item->addIngredient(new Ingredient($ingredientArr["ingredient_id"], 
                                                     $ingredientArr["ingredient_name"], 
                                                     $ingredientArr["ingredient_price"], 
-                                                    ($ingredientArr["ingredient_id"] == "true") ? true : false));
+                                                    $checked));
             }
         }
         return($item);

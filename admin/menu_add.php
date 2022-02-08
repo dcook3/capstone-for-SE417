@@ -28,7 +28,7 @@
 <body data-id = "<?= ($post) ? $item->getMenuItemId() : ""?>">
     <table class = "hidden">
         <tbody>
-            <tr class = "ingredientRow" id = "templateRow">
+            <tr class = "ingredientRow" id = "templateRow" data-id = "-1">
                 <td><input type = "text" placeholder ="Name"></td>
                 <td><input type="number" min="0.00" max="10000.00" step="0.01" placeholder="Price"/></td>
                 <td><label for = "isDefault">Default Option</label><input type = "checkbox" name = "isDefault" /></td>
@@ -81,7 +81,7 @@
             if($post){
                 foreach($item->getIngredients() as $key=>$ingredient){
                     $isDefaultStr = ($ingredient->getIsDefault()) ? "checked" : ""; 
-                    echo("<tr class = 'ingredientRow'><td><input type = 'text' placeholder ='Name' value = '{$ingredient->getIngredientName()}'/></td><td><input type='number' min='0.00' max='10000.00' step='0.01' value = '{$ingredient->getIngredientPrice()}'/></td><td><label for = 'isDefault'>Default Option</label><input type = 'checkbox' name = 'isDefault' {$isDefaultStr}/></td><td><button id = 'deleteButton' onclick('deleteRow(this.parentElement.parentElement)')>Delete</button></td></tr>");
+                    echo("<tr class = 'ingredientRow' data-id = '{$ingredient->getIngredientId()}'><td><input type = 'text' placeholder ='Name' value = '{$ingredient->getIngredientName()}'/></td><td><input type='number' min='0.00' max='10000.00' step='0.01' value = '{$ingredient->getIngredientPrice()}'/></td><td><label for = 'isDefault'>Default Option</label><input type = 'checkbox' name = 'isDefault' {$isDefaultStr}/></td><td><button id = 'deleteButton' onclick='deleteRow(this.parentElement.parentElement)'>Delete</button></td></tr>");
                     
                 }
             }
@@ -129,17 +129,19 @@
                                     "")
             for(let i = 0; i < ingredientBody.children.length; i++){
                 let ingredientRow = ingredientBody.children[i];
-                item.addIngredient(new Ingredient("-1",
+                let price = (ingredientRow.children[1].children[0].value == "") ? "0" : ingredientRow.children[1].children[0].value;
+            
+                item.addIngredient(new Ingredient(ingredientRow.dataset["id"],
                                                   ingredientRow.children[0].children[0].value,
-                                                  ingredientRow.children[1].children[0].value,
-                                                  (ingredientRow.children[2].children[1].checked) ? true : false))
+                                                  price,
+                                                  ingredientRow.children[2].children[1].checked))
                 
             }
             if(!post){
-                console.log(item.addToDatabase());
+                item.addToDatabase();
             }
             else{
-                console.log(item.updateItem());
+                item.updateItem();
             }
             
         })
@@ -148,9 +150,16 @@
             ingredientBody.appendChild(templateRow.cloneNode(true))
         }
         function deleteRow(row){
-            ingredientBody.removeChild(row);
+            if(confirm("This action is permenant do you wish to proceed")){
+                ingredientBody.removeChild(row);
+                if(row.dataset["id"] != "-1" || row.dataset["id"] != ""){
+                    Ingredient.deleteIngredient(row.dataset["id"], body.dataset["id"])
+                }
+            }
+            
         }
         
+       
 
 
     </script>

@@ -24,7 +24,7 @@ class Menu_Item{
         })
         .fail(function(e) {console.log(e)})
         .done(function(data){
-            console.log(data);
+            return(data);
         })
     }
     updateItem(){
@@ -38,9 +38,10 @@ class Menu_Item{
         })
         .fail(function(e) {console.log(e)})
         .done(function(data){
-            console.log(data);
+            return(data);
         })
     }
+    
 }
 
 
@@ -58,4 +59,22 @@ class Ingredient {
         this.ingredient_price = parseFloat(ingredient_price);
         this.is_default = is_default;
     }
+    static deleteIngredient(ingredient_id, menu_item_id){
+        
+        $.ajax({
+            url : "../models/ajaxHandler.php",
+            method : "POST",
+            data:{
+                'action' : 'deleteIngredient',
+                'ingredient_id' : ingredient_id,
+                'menu_item_id' : menu_item_id
+            }
+        })
+        .fail(function(e) {console.log(e)})
+        .done(function(data){
+            return(data);
+        })
+        
+    }
 }
+

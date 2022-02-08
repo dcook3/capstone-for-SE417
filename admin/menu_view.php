@@ -12,7 +12,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <title>Menu View</title>
     <script src="https://cdn.jsdelivr.net/gh/mgalante/jquery.redirect@master/jquery.redirect.js"></script>
-
+    <script src="..\models\lucas.js"></script>
 </head>
 <body>
     <h1>Menu Items</h1>
@@ -44,8 +44,8 @@
                         <td><?= $item->getSection()->getSectionName()?></td>
                         <td><?= $item->getItemDescription()?></td>
                         <td><?= $item->getItemPrice()?></td>
-                        <td><button class = "editButton" data-id = "<?= $item->getMenuItemId()?>">Edit</button></td>
-                        <td><button>Delete</button></td>
+                        <td><button onclick="edit('<?= $item->getMenuItemId()?>')">Edit</button></td>
+                        <td><button onclick="del('<?= $item->getMenuItemId()?>')">Delete</button></td>
                     </tr>
             
             <?php } ?>
@@ -63,10 +63,16 @@
         for(let i = 0; i < editButtons.length; i++){
             editButtons[i].addEventListener("click", function(e){
                 console.log(e.target.dataset["id"])
-                
-                $.redirect('menu_add.php', {'id': e.target.dataset["id"]})
             })
         }
+        function edit(id){
+            $.redirect('menu_add.php', id)
+        }
+        function del(id){
+            Ingredient.deleteIngredientById(id);
+            window.location.reload();
+        }
+
         
 
     </script>

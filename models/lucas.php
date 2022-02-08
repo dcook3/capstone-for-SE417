@@ -39,6 +39,17 @@
                 echo 'ERROR FINDING MENU_ITEM WITH ID: ' . $_menu_item_id;
             }
         }
+        static function deleteMenuItemByID(string $menu_item_id){
+            global $db;
+            $stmt = $db->prepare("DELETE FROM menu_items WHERE menu_item_id = :menu_item_id");
+            $binds = Array(":menu_item_id" => $menu_item_id);
+            if($stmt->execute($binds)){
+                return $stmt->rowCount();
+            }
+            else{
+                return 0;
+            }
+        }
         static function getMenuItems(){
             global $db;
             $menuItemArray = Array();
@@ -91,11 +102,17 @@
                     ":item_name" => $this->getItemName(),
                     ":item_description" => $this->getItemDescription(),
                     ":item_price" => $this->getItemPrice(),
-                    ":item_img" => $this->getItemImg()
+                    ":item_img" => $this->getItemImg(),
+                    ":menu_item_id" => $this->getMenuItemId()
                 );
-                $stmt->execute($binds); 
-                if($stmt->rowCount() > 0){
-                    return(true);
+                 
+                var_dump($this);
+                if($stmt->execute($binds)){
+                    
+                    foreach($this->getIngredients() as $ingredient){
+                        var_dump($ingredient);
+                        $ingredient->updateIngredient($this->getMenuItemId());
+                    }
                 }
                 else{
                     return(false);
@@ -219,6 +236,18 @@
             }
             return $ingredients;
         }
+        static function deleteIngredientById(string $ingredient_id, string $menu_item_id){
+            global $db;
+            $stmt = $db->prepare("DELETE FROM menu_item_ingredients WHERE ingredient_id = :ingredient_id AND menu_item_id = :menu_item_id");
+            $binds = Array(":ingredient_id" => $ingredient_id,
+                           ":menu_item_id" => $menu_item_id);
+            if($stmt->execute($binds)){
+                return $stmt->rowCount();
+            }
+            else{
+                return 0;
+            }
+        }
         function addToDB($menu_item_id){
             global $db;
             $selectStmt = $db->prepare("SELECT ingredient_id FROM ingredients WHERE ingredient_name = :ingredient_name");
@@ -229,21 +258,21 @@
             if($selectStmt->execute($selectBinds)){
                 if($selectStmt->rowCount() == 0){
                     $insertStmt = $db->prepare("INSERT INTO ingredients (ingredient_name, ingredient_price, is_default) VALUES (:ingredient_name, :ingredient_price, :is_default);");
+                    
                     $insertBinds = array(
                         ":ingredient_name" => $this->getIngredientName(),
                         ":ingredient_price" => $this->getIngredientPrice(),
-                        ":is_default" => ($this->getIsDefault()) ? '1' : '0'
+                        ":is_default" => $this->getIsDefault()
                     );
 
                     if($insertStmt->execute($insertBinds)){
                         $this->ingredient_id = $db->lastInsertId();
-                        $this->updateIngredient();
                     }
                     
                 }
                 else{
                     $this->ingredient_id = $selectStmt->fetchAll(PDO::FETCH_ASSOC)[0]['ingredient_id'];
-                    $this->updateIngredient();
+                    $this->updateIngredient($menu_item_id);
                 }
                 $insertStmt = $db->prepare("INSERT INTO menu_item_ingredients (ingredient_id, menu_item_id) VALUES (:ingredient_id, :menu_item_id);");
                 $insertBinds = array(
@@ -253,15 +282,18 @@
                 $insertStmt->execute($insertBinds);
             }
         }
-        function updateIngredient(){
+        function updateIngredient($menu_item_id){
             global $db;
+
             if($this->getIngredientId() != '-1'){
+                
                 $stmt = $db->prepare("Update ingredients SET ingredient_name = :ingredient_name, ingredient_price = :ingredient_price, is_default = :is_default WHERE ingredient_id = :ingredient_id;");
+                
                 $binds = array(
                     ":ingredient_id" => $this->getIngredientId(),
                     ":ingredient_name" => $this->getIngredientName(),
                     ":ingredient_price" => $this->getIngredientPrice(),
-                    ":is_default" => ($this->getIsDefault()) ? '1' : '0'
+                    ":is_default" => $this->getIsDefault()
                 );
                 $stmt->execute($binds); 
                 if($stmt->rowCount() > 0){
@@ -270,7 +302,9 @@
                 else{
                     return(false);
                 }
-                
+            }
+            else{
+                $this->addToDB($menu_item_id);
             }
         }
         
