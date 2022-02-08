@@ -156,17 +156,19 @@ if(isset($_GET['updateOrderStatus']))
                                 $tempOrder = new Order();
                                 $tempOrder->populateOrderByID($row['order_id']);
                                 $out = "<ul>";
+                                $count = 0;
                                 foreach($tempOrder->getMenuItems() as $item)
                                 {
-                                    
                                     $item->populateIngredientsById();
                                     $out .= "<li>{$item->getItemName()}";
                                     $out .= "<ul>";
-                                    foreach($item->getIngredients() as $ingredient)
+                                    $ingredients = $tempOrder->getOrderItems()[$count]->getIngredients();
+                                    foreach($ingredients as $ingRow)
                                     {
-                                        $out .= "<li>$ingredient->ingredientName</li>"; //Figure out how to get specific ingredients that user orders from menu_item_ingredients bridge
+                                        $out .= "<li>{$ingRow['ingredient_name']}</li>";
                                     }
                                     $out .= "</ul>";
+                                    $count++;
                                 }
                                 $out .= "</ul>";
                                 echo $out;

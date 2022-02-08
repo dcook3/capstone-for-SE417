@@ -8,6 +8,7 @@ include 'db.php';
 class Order_Item
 {
     private $order_item_id, $order_id, $item_id, $qty;
+    private $ingredients = [];
 
     public static function getOrderItemsByOID($orderID)
     {
@@ -29,9 +30,60 @@ class Order_Item
         return $results;
     }
 
+    public function populateOrderItemByID($oiid)
+    {
+        global $db;
+        $results = [];
+
+        $SQL = $db->prepare("SELECT * FROM order_items WHERE order_item_id = :oid;");
+
+        $SQL->bindValue(":oid", $oiid, PDO::PARAM_INT);
+
+        if($SQL->execute() && $SQL->rowCount() == 1)
+        {
+            $results = $SQL->fetchAll(PDO::FETCH_ASSOC)[0];
+            $this->order_item_id = $results['order_item_id'];
+            $this->order_id = $results['order_id'];
+            $this->item_id = $results['menu_item_id'];
+            $this->qty = $results['qty'];
+            $this->populateIngredientsByOID();
+        }
+        else
+        {
+            $results = "A SQL error occured on fetching Orders Items from server.";
+        }
+        return $results;
+    }
+
+    private function populateIngredientsByOID()
+    {
+        global $db;
+        $results = [];
+
+        $SQL = $db->prepare("SELECT ingredient_name, ingredient_price FROM order_item_ingredients INNER JOIN ingredients ON order_item_ingredients.item_ingredient_id = ingredients.ingredient_id WHERE order_item_ingredients.order_item_id = :oid");
+        
+        $SQL->bindValue(":oid", $this->order_item_id);
+
+        if($SQL->execute() && $SQL->rowCount() > 0)
+        {
+            $this->ingredients = $SQL->fetchAll(PDO::FETCH_ASSOC);
+        }
+        else
+        {
+            $results = "A SQL error occured on fetching Orders Item Ingredients from server.";
+        }
+
+        return $results;
+    } 
+
     public function getItemID()
     {
         return $this->item_id;
+    }
+
+    public function getIngredients()
+    {
+        return $this->ingredients;
     }
 }
 
@@ -82,17 +134,19 @@ class Order
 
         $SQL->bindValue(":oid", $orderID);
         
-
         if($SQL->execute() && $SQL->rowCount() == 1)
         {
             $results = $SQL->fetchAll(PDO::FETCH_ASSOC)[0];
             $this->orderID = $results["order_id"];
             $this->first_name = $results["first_name"];
             $this->last_name = $results["last_name"];
-            $this->order_items = Order_Item::getOrderItemsByOID($results["order_id"]);
-            foreach($this->order_items as $OI)
+            $oitems = Order_Item::getOrderItemsByOID($results["order_id"]);
+            foreach($oitems as $OI)
             {
+                $oitem = new Order_Item();
+                $oitem->populateOrderItemByID($OI["order_item_id"]);
                 $item = Menu_Item::getMenuItemByID($OI["menu_item_id"]);
+                array_push($this->order_items, $oitem);
                 array_push($this->menu_items ,$item);
             }
         }
@@ -110,6 +164,11 @@ class Order
     public function setMenuItems($arr)
     {
         $this->menu_items = $arr;
+    }
+
+    public function getOrderItems()
+    {
+        return $this->order_items;
     }
 }
 
