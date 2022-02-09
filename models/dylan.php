@@ -156,6 +156,45 @@ class Order
         }
     }
 
+    public function deleteOrder($oid)
+    {
+        global $db;
+
+        $SQL = $db->prepare("DELETE FROM orders WHERE order_id = :oid");
+
+        $SQL->bindValue(":oid", $oid, PDO::PARAM_INT);
+
+        if($SQL->execute() && $SQL->rowCount() > 0)
+        {
+            return "Successfully deleted order.";
+        }
+        else
+        {
+            return "A SQL error occured while attempting to delete order with id $oid.";
+        }
+    }
+
+    public function updateOrderStatus($oid, bool $status)
+    {
+        global $db;
+
+        $SQL = $db->prepare("UPDATE orders SET order_status = :status WHERE order_id = :oid");
+
+        $binds = array(
+            ":oid" => $oid,
+            ":status" => $status
+        )
+
+        if($SQL->execute() && $SQL->rowCount() > 0)
+        {
+            return "Successfully updated order status.";
+        }
+        else
+        {
+            return "A SQL error occured while attempting to update order status.";
+        }
+    }
+
     public function getMenuItems()
     {
         return $this->menu_items;
