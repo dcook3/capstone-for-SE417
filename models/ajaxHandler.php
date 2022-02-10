@@ -1,6 +1,6 @@
 <?php 
     include('lucas.php');
-    include('dylan.php');
+    // include('dylan.php');
     if($_SERVER['REQUEST_METHOD']==='POST'){
         if($_POST['action'] == 'addToDB'){
             $postItem = $_POST['item'];
@@ -22,6 +22,17 @@
             else{
                 echo false;
             }
+        }
+        else if($_POST['action'] == 'deleteItem'){
+            if(isset($_POST["menu_item_id"])){
+                echo Menu_Item::deleteMenuItemByID($_POST["menu_item_id"]);
+            }
+            else{
+                echo false;
+            }
+        }
+        else{
+            echo 'action not set';
         }
     }
 

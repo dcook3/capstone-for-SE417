@@ -66,11 +66,19 @@
             })
         }
         function edit(id){
+            console.log(id);
+
             $.redirect('menu_add.php', id)
         }
-        function del(id){
-            Ingredient.deleteIngredientById(id);
-            window.location.reload();
+        async function del(id){
+            let deleted = await Menu_Item.deleteItem(id);
+            console.log(deleted)
+            if(deleted == '1'){
+                window.location.reload();
+            }
+            else{
+                console.log("didn't delete i think")
+            }
         }
 
         

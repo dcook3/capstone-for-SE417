@@ -41,6 +41,21 @@ class Menu_Item{
             return(data);
         })
     }
+    static async deleteItem(menu_item_id){
+        let data = await $.ajax({
+            url : "../models/ajaxHandler.php",
+            method : "POST",
+            data:{
+                'action' : 'deleteItem',
+                'menu_item_id' : menu_item_id
+            }
+        })
+        .fail(function(e) {console.log(e)})
+        .done(function(data){
+            return(data);
+        })
+        return data.trim();
+    }
     
 }
 

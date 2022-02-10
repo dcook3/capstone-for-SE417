@@ -2,11 +2,15 @@
     include("..\models\lucas.php");
     $post = false;
     if($_SERVER['REQUEST_METHOD']==='POST'){
-        $post = true;
+        var_dump($_POST);
         if(isset($_POST["id"])){
+            $post = true;
             $item = Menu_Item::getMenuItemByID($_POST["id"]);
             $item->populateIngredientsById();
+            var_dump($item);
         }
+        
+        
     }
 ?>
 
@@ -106,7 +110,6 @@
         var post
         if("<?= $post?>" == "1"){
             post = true;
-
         }
         else{
             post = false;
