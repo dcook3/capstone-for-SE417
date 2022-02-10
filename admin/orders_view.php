@@ -1,18 +1,16 @@
 <?php
 include '../models/sql_functions.php';
 
-$tempOrder = new Order();
-
 if($_SERVER['REQUEST_METHOD'] == "GET")
 {
-    if(isset($_GET["year"]) && isset($_GET["month"]) && isset($_GET["day"]))
+    if(isset($_GET["year"])
     {
         $selectedYear = $_GET["year"];
         $selectedMonth = $_GET["month"];
         $selectedDay = $_GET["day"];
-        $selectedMonthInt = $_GET['month'];
+        $selectedMonthInt = date_parse($_GET['month'])['month'];
         $selectedDate = new DateTime("{$selectedYear}/{$selectedMonthInt}/{$selectedDay}");
-        $results = $tempOrder->getOrdersByDT($selectedDate->getTimestamp());
+        $results = Order::getOrdersByDT($selectedDate->getTimestamp());
     }
     else
     {
@@ -23,23 +21,28 @@ if($_SERVER['REQUEST_METHOD'] == "GET")
         $selectedMonthInt = date_parse($selectedMonth)['month'];
         $selectedDay = $todayDate['mday'];
         $selectedDate = strtotime("{$selectedYear}/{$selectedMonthInt}/{$selectedDay}");
-        $results = $tempOrder->getOrdersByDT($selectedDate);
+        $results = Order::getOrdersByDT($selectedDate);
     }
 }
-
-if(isset($_GET['updateOrderStatus']))
+if($_SERVER['REQUEST_METHOD'] == 'POST')
 {
-    $updateOID = $_GET['orderID'];
-
-    //Use update method on a temporary order instance
-}
-
-?>
-<style>
-    table, td{
-        border: 1px solid black;
+    $selectedYear = $_POST["year"];
+    $selectedMonth = date('F', mktime(0, 0, 0, $_POST['month'], 10));
+    $selectedDay = $_POST["day"];
+    $selectedMonthInt = $_POST['month'];
+    $selectedDate = new DateTime("{$selectedYear}/{$selectedMonthInt}/{$selectedDay}");
+    $results = Order::getOrdersByDT($selectedDate->getTimestamp());
+    if(isset($_POST['delOrderID']))
+    {
+        $deleteOID = $_POST['delOrderID'];
+        $feedback = Order::deleteOrder($deleteOID);
     }
-</style>
+    else if(isset($_POST['updOrderID']))
+    {
+
+    }
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -48,94 +51,55 @@ if(isset($_GET['updateOrderStatus']))
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Orders View</title>
     <script src="https://kit.fontawesome.com/4933cad413.js" crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
 </head>
 <body>
     <form method="get" action="orders_view.php" id="dateFilter">
+        <input type="hidden" name="dateChanged" value="1">
         <select class="dateFilter" name="year">
             <option disabled selected hidden>Year</option>
             <?php 
-                for($i =$selectedYear ; $i>=$selectedYear-40; $i--)
+                for($i = $selectedYear ; $i>=$selectedYear-40; $i--)
                 {
-                    if($i == 1 && !isset($_GET['year']))
+                    if($i == 1 && !isset($selectedYear))
                     {
                         echo '<option disabled selected hidden>Year</option>';
                     }
-                    if($_SERVER['REQUEST_METHOD'] == "GET")
-                    {
-                        if(isset($_GET['year']))
-                        {
-                            if($i == $_GET['year'])
-                            {
-                                $temp = '<option value="' . $i . '" selected>' . $i . '</option>';
-                                echo $temp;
-                            }
-                            else
-                            {
-                                $temp = '<option value="' . $i . '">' . $i . '</option>';
-                                echo $temp;
-                            }
-                        }
-                        else
-                        {
-                            $temp = '<option value="' . $i . '">' . $i . '</option>';
-                            echo $temp;
-                        }
-                    }
                     else
                     {
-                        $temp = '<option value="' . $i . '">' . $i . '</option>';
-                        echo $temp;
+                        echo "<option disabled selected hidden>$selectedYear</option>";
                     }
+                    echo '<option value="' . $i . '">' . $i . '</option>';
                 }
             ?>
         </select>
         <select name="month" class="dateFilter">
-            <?php if(isset($_GET['month'])): ?>
-                <option selected hidden><?= $_GET['month'] ?></option>
-            <?php else: ?>
-                <option disabled selected hidden>Month</option>
-            <?php endif; ?>
-            <option value=1>1</option>
-            <option value=2>2</option>
-            <option value=3>3</option>
-            <option value=4>4</option>
-            <option value=5>5</option>
-            <option value=6>6</option>
-            <option value=7>7</option>
-            <option value=8>8</option>
-            <option value=9>9</option>
-            <option value=10>10</option>
-            <option value=11>11</option>
-            <option value=12>12</option>
+            <option selected hidden><?= $selectedMonth ?></option>
+            <option value=1>January</option>
+            <option value=2>February</option>
+            <option value=3>March</option>
+            <option value=4>April</option>
+            <option value=5>May</option>
+            <option value=6>June</option>
+            <option value=7>July</option>
+            <option value=8>August</option>
+            <option value=9>September</option>
+            <option value=10>October</option>
+            <option value=11>November</option>
+            <option value=12>December</option>
         </select>
         <select name="day" class="dateFilter">
             <?php
-            if(isset($_GET['day']))
-            {
-                echo "<option selected hidden>{$_GET['day']}</option>";
-                for($i = 1; $i <= cal_days_in_month(CAL_GREGORIAN, $_GET['month'], $_GET['year']); $i++)
+                echo "<option selected hidden>{$selectedDay}</option>";
+                for($i = 1; $i <= cal_days_in_month(CAL_GREGORIAN, $selectedMonthInt, $selectedYear); $i++)
                 {
                     echo "<option>{$i}</option>";
                 }
-            }
-            else
-            {
-                if(isset($_GET['year']) && isset($_GET['month']))
-                {
-                    for($i = 1; $i <= cal_days_in_month(CAL_GREGORIAN, $_GET['month'], $_GET['year']); $i++)
-                    {
-                        echo "<option>{$i}</option>";
-                    }
-                }
-                else
-                {
-                    echo "<option>Select Month and Year</option>";
-                }
-            }
             ?>
         </select>
     </form>
-    <table>
+    <table class="table table-striped">
         <thead>
             <th>Student Name</th>
             <th>Student ID</th>
@@ -152,6 +116,7 @@ if(isset($_GET['updateOrderStatus']))
                         <td><?= $row['student_id']; ?></td>
                         <td>soon to be implemented</td>
                         <td>
+                            <a class="toggleDetails" href="">Show Details</a>
                             <?php 
                                 $tempOrder = new Order();
                                 $tempOrder->populateOrderByID($row['order_id']);
@@ -174,7 +139,11 @@ if(isset($_GET['updateOrderStatus']))
                                 echo $out;
                             ?>
                         </td>
-                        <td><a href="orders_view.php?orderID=<?= $row['order_id']; ?>"><i class="fas fa-trash-alt fa-2x"></i></a></td>
+                        <td>
+                            <button type="button" class="btn btn-primary modalbtn" data-bs-toggle="modal" data-bs-target="#staticBackdrop" data-orderid=<?= $row['order_id'] ?>>
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+                        </td>
                         <td>
                             <?php
                                 if($row['order_status'] == "0")
@@ -193,7 +162,30 @@ if(isset($_GET['updateOrderStatus']))
         </tbody>
     </table>
 
+    <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="staticBackdropLabel">Delete Confirmation</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Are you sure you wish to delete this order? Once an order is deleted, you cannot go back.
+                </div>
+                <form class="modal-footer" action="orders_view.php" method="post">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+                    <button type="submit" class="btn btn-primary">Yes</button>
+                    <input type="hidden" id="oidInput" name="delOrderID" value="">
+                    <input type="hidden" name="year" value="<?= $selectedYear ?>">
+                    <input type="hidden" name="month" value="<?= $selectedMonthInt ?>">
+                    <input type="hidden" name="day" value="<?= $selectedDay ?>">
+                </form>
+            </div>
+        </div>
+    </div>
+
     <script>
+        //Date Filter Code
         var form = document.querySelector('#dateFilter')
         var selects = document.querySelectorAll('select.dateFilter')
 
@@ -211,16 +203,41 @@ if(isset($_GET['updateOrderStatus']))
             selects[2].disabled = false;
         }
 
-        var itemLinks = document.querySelector('.orderItems');
+        //Showing/hiding order details code
+        var itemLinks = document.querySelectorAll('.toggleDetails');
 
         if(itemLinks != null)
         {
             for(let i=0; i<itemLinks.length; i++)
             {
+                itemLinks[i].parentElement.children[1].classList.add('d-none');
+
                 itemLinks[i].addEventListener(`click`, e => {
-                    //This will trigger the showing/hiding of the context box once functionality is implemented
+                    e.preventDefault();
+
+                    let details = e.target.parentElement.children[1];
+                    details.classList.toggle('d-none');
+                    if(details.classList.contains('d-none'))
+                    {
+                        e.target.innerHTML = 'Show Details';
+                    }
+                    else
+                    {
+                        e.target.innerHTML = 'Hide Details';
+                    }
                 });
             }
+        }
+
+        //Modal code
+        var modalBtns = document.querySelectorAll('.modalbtn');
+        var orderIDInput = document.querySelector('#oidInput');
+
+        for(let i=0; i<modalBtns.length; i++)
+        {
+            modalBtns[i].addEventListener(`click`, e => {
+                orderIDInput.value = modalBtns[i].dataset.orderid;
+            });
         }
     </script>
 </body>

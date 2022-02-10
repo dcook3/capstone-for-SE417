@@ -93,7 +93,7 @@ class Order
     private $order_items = [];
     private $menu_items = [];
 
-    public function getOrdersByDT($selectedTS)
+    public static function getOrdersByDT($selectedTS)
     {
         global $db;
         $results = [];
@@ -156,7 +156,7 @@ class Order
         }
     }
 
-    public function deleteOrder($oid)
+    public static function deleteOrder($oid)
     {
         global $db;
 
@@ -183,9 +183,9 @@ class Order
         $binds = array(
             ":oid" => $oid,
             ":status" => $status
-        )
+        );
 
-        if($SQL->execute() && $SQL->rowCount() > 0)
+        if($SQL->execute($binds) && $SQL->rowCount() > 0)
         {
             return "Successfully updated order status.";
         }
