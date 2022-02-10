@@ -1,9 +1,10 @@
 <?php
 include '../models/sql_functions.php';
+date_default_timezone_set("America/New_York");
 
 if($_SERVER['REQUEST_METHOD'] == "GET")
 {
-    if(isset($_GET["year"])
+    if(!empty($_GET))
     {
         $selectedYear = $_GET["year"];
         $selectedMonth = $_GET["month"];
@@ -25,13 +26,7 @@ if($_SERVER['REQUEST_METHOD'] == "GET")
     }
 }
 if($_SERVER['REQUEST_METHOD'] == 'POST')
-{
-    $selectedYear = $_POST["year"];
-    $selectedMonth = date('F', mktime(0, 0, 0, $_POST['month'], 10));
-    $selectedDay = $_POST["day"];
-    $selectedMonthInt = $_POST['month'];
-    $selectedDate = new DateTime("{$selectedYear}/{$selectedMonthInt}/{$selectedDay}");
-    $results = Order::getOrdersByDT($selectedDate->getTimestamp());
+{   
     if(isset($_POST['delOrderID']))
     {
         $deleteOID = $_POST['delOrderID'];
@@ -39,8 +34,23 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
     }
     else if(isset($_POST['updOrderID']))
     {
-
+        if(isset($_POST['orderStatus']))
+        {
+            $updateOID = $_POST['updOrderID'];
+            $feedback = Order::updateOrderStatus($updateOID, true);
+        }
+        else 
+        {
+            $updateOID = $_POST['updOrderID'];
+            $feedback = Order::updateOrderStatus($updateOID, false);
+        }
     }
+    $selectedYear = $_POST["year"];
+    $selectedMonth = date('F', mktime(0, 0, 0, $_POST['month'], 10));;
+    $selectedDay = $_POST["day"];
+    $selectedMonthInt = $_POST['month'];
+    $selectedDate = new DateTime("{$selectedYear}/{$selectedMonthInt}/{$selectedDay}");
+    $results = Order::getOrdersByDT($selectedDate->getTimestamp());
 }
 ?>
 <!DOCTYPE html>
@@ -56,19 +66,18 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
 </head>
 <body>
     <form method="get" action="orders_view.php" id="dateFilter">
-        <input type="hidden" name="dateChanged" value="1">
         <select class="dateFilter" name="year">
-            <option disabled selected hidden>Year</option>
+            <option selected hidden>Year</option>
             <?php 
                 for($i = $selectedYear ; $i>=$selectedYear-40; $i--)
                 {
                     if($i == 1 && !isset($selectedYear))
                     {
-                        echo '<option disabled selected hidden>Year</option>';
+                        echo '<option selected hidden>Year</option>';
                     }
                     else
                     {
-                        echo "<option disabled selected hidden>$selectedYear</option>";
+                        echo "<option selected hidden>$selectedYear</option>";
                     }
                     echo '<option value="' . $i . '">' . $i . '</option>';
                 }
@@ -124,10 +133,11 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
                                 $count = 0;
                                 foreach($tempOrder->getMenuItems() as $item)
                                 {
+                                    $orderItems = $tempOrder->getOrderItems();
                                     $item->populateIngredientsById();
-                                    $out .= "<li>{$item->getItemName()}";
+                                    $out .= "<li><b>{$orderItems[$count]->getQuantity()}x</b> {$item->getItemName()}";
                                     $out .= "<ul>";
-                                    $ingredients = $tempOrder->getOrderItems()[$count]->getIngredients();
+                                    $ingredients = $orderItems[$count]->getIngredients();
                                     foreach($ingredients as $ingRow)
                                     {
                                         $out .= "<li>{$ingRow['ingredient_name']}</li>";
@@ -146,22 +156,37 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
                         </td>
                         <td>
                             <?php
+                            $id = $row['order_id'];
                                 if($row['order_status'] == "0")
                                 {
-                                    echo "<form action='orders_view.php'><input type='hidden' name='orderID' value='true' /><input type='checkbox' name='updateOrderStatus' />Completed</form>";
+                                    echo "<form action='orders_view.php' method='post' class='isCompleted'>
+                                            <input type='checkbox' name='orderStatus' value='checked'/><label for='orderStatus'>Completed</label>
+                                            <input type='hidden' name='updOrderID' value='$id' /> 
+                                            <input type='hidden' name='year' value='$selectedYear'>
+                                            <input type='hidden' name='month' value='$selectedMonthInt'>
+                                            <input type='hidden' name='day' value='$selectedDay'>
+                                        </form>";
                                 }
                                 else if($row['order_status'] == "1")
                                 {
-                                    echo "<form action='orders_view.php'><input type='hidden' name='orderID' value='true' /><input checked type='checkbox' name='updateOrderStatus' />Completed</form>";
+                                    echo "<form action='orders_view.php' method='post' class='isCompleted'>
+                                            <input checked type='checkbox' name='orderStatus' /><label for='orderStatus'>Completed</label>
+                                            <input type='hidden' name='updOrderID' value='$id' /> 
+                                            <input type='hidden' name='year' value='$selectedYear'>
+                                            <input type='hidden' name='month' value='$selectedMonthInt'>
+                                            <input type='hidden' name='day' value='$selectedDay'>
+                                        </form>";
                                 }
                             ?>
                         </td>
                     </tr>
-                <?php endforeach; ?>
+                <?php endforeach; 
+            else:?>
+                <tr><td><?= $results ?><td></tr>
             <?php endif; ?>
         </tbody>
-    </table>
-
+    </table>           
+   
     <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -227,6 +252,14 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
                     }
                 });
             }
+        }
+
+        //Update checkbox code
+        var statusForms = document.querySelectorAll('.isCompleted')
+
+        for(let i=0; i<statusForms.length; i++)
+        {
+            statusForms[i].children[0].addEventListener('change', e => {statusForms[i].submit()})
         }
 
         //Modal code

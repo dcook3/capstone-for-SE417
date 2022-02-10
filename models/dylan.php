@@ -85,6 +85,11 @@ class Order_Item
     {
         return $this->ingredients;
     }
+
+    public function getQuantity()
+    {
+        return $this->qty;
+    }
 }
 
 class Order 
@@ -99,26 +104,30 @@ class Order
         $results = [];
 
         //SQL tables got changed around double check names
-        $SQL = $db->prepare("SELECT * FROM orders INNER JOIN users ON users.user_id = orders.user_id WHERE order_datetime > :datestart AND order_datetime < :dateend ORDER BY order_status ASC, order_datetime ASC;");
+        $SQL = $db->prepare("SELECT * FROM orders INNER JOIN users ON users.user_id = orders.user_id WHERE order_datetime >= STR_TO_DATE(:datestart, '%Y-%m-%d %H:%i:%s') AND order_datetime <= STR_TO_DATE(:dateend, '%Y-%m-%d %H:%i:%s') ORDER BY order_status ASC, order_datetime ASC;");
 
         $SQLdateStart = new DateTime(date( 'Y-m-d H:i:s', $selectedTS));
         $SQLdateEnd = $SQLdateStart;
         $SQLdateStart = date( 'Y-m-d H:i:s', $SQLdateStart->getTimestamp());
         date_add($SQLdateEnd, new DateInterval('P1D'));
         $SQLdateEnd = date( 'Y-m-d H:i:s', $SQLdateEnd->getTimestamp());
-
         $binds = array(
             ":datestart" => $SQLdateStart,
             ":dateend" => $SQLdateEnd
         );
 
-        if($SQL->execute($binds) && $SQL->rowCount() == 1)
+        if($SQL->execute($binds))
         {
             $results = $SQL->fetchAll(PDO::FETCH_ASSOC);
+        }
+        else if($SQL->rowCount() == 0 && $db->errorInfo()[0] == '00')
+        {
+            $results = "The are no records available for this date.";
         }
         else
         {
             $results = "A SQL error occured on fetching Orders from server.";
+            print_r($db->errorInfo());
         }
 
         return ($results);
@@ -174,7 +183,7 @@ class Order
         }
     }
 
-    public function updateOrderStatus($oid, bool $status)
+    public static function updateOrderStatus($oid, bool $status)
     {
         global $db;
 
