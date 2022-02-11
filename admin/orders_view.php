@@ -55,8 +55,9 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
 include '../include/header.php';
 ?>
 
-    <form method="get" action="orders_view.php" id="dateFilter" class="col-4 p-2 m-2 border d-flex flex-row justify-content-evenly">
-        <div class="row">
+    <form method="get" action="orders_view.php" id="dateFilter" class="col-2 p-2 m-2 border d-flex flex-column">
+        <h3>Date Filter</h3>
+        <div class="row d-flex flex-row justify-content-evenly">
             <div class="form-group">
                 <label for="year" class="form-label">Year</label>
                 <select class="dateFilter form-control" name="year">
@@ -98,7 +99,7 @@ include '../include/header.php';
             </div>
             
             <div class="form-group">
-                <label for="day" class="form-label">Year</label>
+                <label for="day" class="form-label">Day</label>
                 <select name="day" class="dateFilter form-control">
                     <?php
                         echo "<option selected hidden>{$selectedDay}</option>";
@@ -110,11 +111,10 @@ include '../include/header.php';
                 </select>
             </div>
         </div>
-        
-        
     </form>
 
-    <table class="table table-striped">
+    <h2>Orders</h2>
+    <table class="table table-striped table-hover">
         <thead>
             <th>Student Name</th>
             <th>Student ID</th>
