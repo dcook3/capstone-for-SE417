@@ -9,14 +9,14 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <title>Menu View</title>
-    <script src="https://cdn.jsdelivr.net/gh/mgalante/jquery.redirect@master/jquery.redirect.js"></script>
     <script src="..\models\lucas.js"></script>
+    <link rel="stylesheet" href="assets/css/lucas.css">
+    <title>Menu View</title>
 </head>
 <body>
+    <?php include '../include/header.php'; ?>
     <h1>Menu Items</h1>
-    <table>
+    <table class = "table table-hover table-striped">
         <thead>
             <td>
                 Menu Item
@@ -31,7 +31,10 @@
                 Price
             </td>
             <td>
-                <button id = "addNewButton">Add New</button>
+
+            </td>
+            <td>
+                <button class = "btn btn-primary" id = "addNewButton">Add New</button>
             </td>
         </thead>
         <tbody>
@@ -44,14 +47,35 @@
                         <td><?= $item->getSection()->getSectionName()?></td>
                         <td><?= $item->getItemDescription()?></td>
                         <td><?= $item->getItemPrice()?></td>
-                        <td><button onclick="edit('<?= $item->getMenuItemId()?>')">Edit</button></td>
-                        <td><button onclick="del('<?= $item->getMenuItemId()?>')">Delete</button></td>
+                        <td><button class = "btn btn-primary" onclick="edit('<?= $item->getMenuItemId()?>')"><i class="fas fa-pencil-alt"></i></button></td>
+                        <td><button class = "btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop<?= $item->getMenuItemId()?>" ><i class="fas fa-trash-alt"></i></button></td>
+
                     </tr>
+                    <div class="modal fade" id="staticBackdrop<?= $item->getMenuItemId()?>" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">DeleteOrder</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <p>This is a permenant action do you wish to continue?</p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+                                <button type="button" class="btn btn-primary" onclick="del('<?= $item->getMenuItemId()?>')">Yes</button>
+                            </div>
+                            </div>
+                        </div>
+                    </div>
             
             <?php } ?>
         </tbody>
     </table>
-
+    
+    
+    <?php include '../include/footer.php'; ?>
+    <script src="https://cdn.jsdelivr.net/gh/mgalante/jquery.redirect@master/jquery.redirect.js"></script>
     <script>
         var addNewbutton = document.querySelector("#addNewButton");
         var editButtons = document.querySelectorAll(".editButton")
