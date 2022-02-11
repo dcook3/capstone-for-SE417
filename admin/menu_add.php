@@ -2,7 +2,6 @@
     include("..\models\lucas.php");
     $post = false;
     if($_SERVER['REQUEST_METHOD']==='POST'){
-        var_dump($_POST);
         if(isset($_POST["id"])){
             $post = true;
             $item = Menu_Item::getMenuItemByID($_POST["id"]);

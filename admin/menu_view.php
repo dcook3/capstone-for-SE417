@@ -68,7 +68,7 @@
         function edit(id){
             console.log(id);
 
-            $.redirect('menu_add.php', id)
+            $.redirect('menu_add.php', {'id' : String(id)})
         }
         async function del(id){
             let deleted = await Menu_Item.deleteItem(id);
