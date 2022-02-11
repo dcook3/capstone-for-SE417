@@ -52,62 +52,68 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
     $selectedDate = new DateTime("{$selectedYear}/{$selectedMonthInt}/{$selectedDay}");
     $results = Order::getOrdersByDT($selectedDate->getTimestamp());
 }
+include '../include/header.php';
 ?>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Orders View</title>
-    <script src="https://kit.fontawesome.com/4933cad413.js" crossorigin="anonymous"></script>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
-</head>
-<body>
-    <form method="get" action="orders_view.php" id="dateFilter">
-        <select class="dateFilter" name="year">
-            <option selected hidden>Year</option>
-            <?php 
-                for($i = $selectedYear ; $i>=$selectedYear-40; $i--)
-                {
-                    if($i == 1 && !isset($selectedYear))
-                    {
-                        echo '<option selected hidden>Year</option>';
-                    }
-                    else
-                    {
-                        echo "<option selected hidden>$selectedYear</option>";
-                    }
-                    echo '<option value="' . $i . '">' . $i . '</option>';
-                }
-            ?>
-        </select>
-        <select name="month" class="dateFilter">
-            <option selected hidden><?= $selectedMonth ?></option>
-            <option value=1>January</option>
-            <option value=2>February</option>
-            <option value=3>March</option>
-            <option value=4>April</option>
-            <option value=5>May</option>
-            <option value=6>June</option>
-            <option value=7>July</option>
-            <option value=8>August</option>
-            <option value=9>September</option>
-            <option value=10>October</option>
-            <option value=11>November</option>
-            <option value=12>December</option>
-        </select>
-        <select name="day" class="dateFilter">
-            <?php
-                echo "<option selected hidden>{$selectedDay}</option>";
-                for($i = 1; $i <= cal_days_in_month(CAL_GREGORIAN, $selectedMonthInt, $selectedYear); $i++)
-                {
-                    echo "<option>{$i}</option>";
-                }
-            ?>
-        </select>
+
+    <form method="get" action="orders_view.php" id="dateFilter" class="col-4 p-2 m-2 border d-flex flex-row justify-content-evenly">
+        <div class="row">
+            <div class="form-group">
+                <label for="year" class="form-label">Year</label>
+                <select class="dateFilter form-control" name="year">
+                    <option selected hidden>Year</option>
+                    <?php 
+                        for($i = $selectedYear ; $i>=$selectedYear-40; $i--)
+                        {
+                            if($i == 1 && !isset($selectedYear))
+                            {
+                                echo '<option selected hidden>Year</option>';
+                            }
+                            else
+                            {
+                                echo "<option selected hidden>$selectedYear</option>";
+                            }
+                            echo '<option value="' . $i . '">' . $i . '</option>';
+                        }
+                    ?>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="month" class="form-label">Month</label>
+                <select name="month" class="dateFilter form-control">
+                    <option selected hidden><?= $selectedMonth ?></option>
+                    <option value=1>January</option>
+                    <option value=2>February</option>
+                    <option value=3>March</option>
+                    <option value=4>April</option>
+                    <option value=5>May</option>
+                    <option value=6>June</option>
+                    <option value=7>July</option>
+                    <option value=8>August</option>
+                    <option value=9>September</option>
+                    <option value=10>October</option>
+                    <option value=11>November</option>
+                    <option value=12>December</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="day" class="form-label">Year</label>
+                <select name="day" class="dateFilter form-control">
+                    <?php
+                        echo "<option selected hidden>{$selectedDay}</option>";
+                        for($i = 1; $i <= cal_days_in_month(CAL_GREGORIAN, $selectedMonthInt, $selectedYear); $i++)
+                        {
+                            echo "<option>{$i}</option>";
+                        }
+                    ?>
+                </select>
+            </div>
+        </div>
+        
+        
     </form>
+
     <table class="table table-striped">
         <thead>
             <th>Student Name</th>
@@ -275,3 +281,4 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
     </script>
 </body>
 </html>
+<?php include '../include/footer.php'; ?>
