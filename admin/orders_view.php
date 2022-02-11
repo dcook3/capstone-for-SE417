@@ -1,4 +1,5 @@
 <?php
+$levels = 1;
 include '../models/sql_functions.php';
 date_default_timezone_set("America/New_York");
 
@@ -54,66 +55,67 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
 }
 include '../include/header.php';
 ?>
-
-    <form method="get" action="orders_view.php" id="dateFilter" class="col-2 p-2 m-2 border d-flex flex-column">
-        <h3>Date Filter</h3>
-        <div class="row d-flex flex-row justify-content-evenly">
-            <div class="form-group">
-                <label for="year" class="form-label">Year</label>
-                <select class="dateFilter form-control" name="year">
-                    <option selected hidden>Year</option>
-                    <?php 
-                        for($i = $selectedYear ; $i>=$selectedYear-40; $i--)
-                        {
-                            if($i == 1 && !isset($selectedYear))
+    <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#dateFilterDiv">Toggle Date Filter</button>
+    <div class="d-flex justify-content-end ml-3" id="dateFilterDiv">
+        <form method="get" action="orders_view.php" id="dateFilter" class="col-2 m-2 border d-flex flex-column ">
+            <h3>Date Filter</h3>
+            <div class="row d-flex flex-row justify-content-evenly">
+                <div class="form-group">
+                    <label for="year" class="form-label">Year</label>
+                    <select class="dateFilter form-control" name="year">
+                        <option selected hidden>Year</option>
+                        <?php 
+                            for($i = $selectedYear ; $i>=$selectedYear-40; $i--)
                             {
-                                echo '<option selected hidden>Year</option>';
+                                if($i == 1 && !isset($selectedYear))
+                                {
+                                    echo '<option selected hidden>Year</option>';
+                                }
+                                else
+                                {
+                                    echo "<option selected hidden>$selectedYear</option>";
+                                }
+                                echo '<option value="' . $i . '">' . $i . '</option>';
                             }
-                            else
+                        ?>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="month" class="form-label">Month</label>
+                    <select name="month" class="dateFilter form-control">
+                        <option selected hidden><?= $selectedMonth ?></option>
+                        <option value=1>January</option>
+                        <option value=2>February</option>
+                        <option value=3>March</option>
+                        <option value=4>April</option>
+                        <option value=5>May</option>
+                        <option value=6>June</option>
+                        <option value=7>July</option>
+                        <option value=8>August</option>
+                        <option value=9>September</option>
+                        <option value=10>October</option>
+                        <option value=11>November</option>
+                        <option value=12>December</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="day" class="form-label">Day</label>
+                    <select name="day" class="dateFilter form-control">
+                        <?php
+                            echo "<option selected hidden>{$selectedDay}</option>";
+                            for($i = 1; $i <= cal_days_in_month(CAL_GREGORIAN, $selectedMonthInt, $selectedYear); $i++)
                             {
-                                echo "<option selected hidden>$selectedYear</option>";
+                                echo "<option>{$i}</option>";
                             }
-                            echo '<option value="' . $i . '">' . $i . '</option>';
-                        }
-                    ?>
-                </select>
+                        ?>
+                    </select>
+                </div>
             </div>
-
-            <div class="form-group">
-                <label for="month" class="form-label">Month</label>
-                <select name="month" class="dateFilter form-control">
-                    <option selected hidden><?= $selectedMonth ?></option>
-                    <option value=1>January</option>
-                    <option value=2>February</option>
-                    <option value=3>March</option>
-                    <option value=4>April</option>
-                    <option value=5>May</option>
-                    <option value=6>June</option>
-                    <option value=7>July</option>
-                    <option value=8>August</option>
-                    <option value=9>September</option>
-                    <option value=10>October</option>
-                    <option value=11>November</option>
-                    <option value=12>December</option>
-                </select>
-            </div>
-            
-            <div class="form-group">
-                <label for="day" class="form-label">Day</label>
-                <select name="day" class="dateFilter form-control">
-                    <?php
-                        echo "<option selected hidden>{$selectedDay}</option>";
-                        for($i = 1; $i <= cal_days_in_month(CAL_GREGORIAN, $selectedMonthInt, $selectedYear); $i++)
-                        {
-                            echo "<option>{$i}</option>";
-                        }
-                    ?>
-                </select>
-            </div>
-        </div>
-    </form>
-
-    <h2>Orders</h2>
+        </form>
+    </div>
+    <h2 class="fw-bold text-center">Orders</h2>
     <table class="table table-striped table-hover">
         <thead>
             <th>Student Name</th>

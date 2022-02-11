@@ -150,14 +150,18 @@ class Order
             $this->first_name = $results["first_name"];
             $this->last_name = $results["last_name"];
             $oitems = Order_Item::getOrderItemsByOID($results["order_id"]);
-            foreach($oitems as $OI)
+            if(gettype($oitems) != 'string')
             {
-                $oitem = new Order_Item();
-                $oitem->populateOrderItemByID($OI["order_item_id"]);
-                $item = Menu_Item::getMenuItemByID($OI["menu_item_id"]);
-                array_push($this->order_items, $oitem);
-                array_push($this->menu_items ,$item);
+                foreach($oitems as $OI)
+                {
+                    $oitem = new Order_Item();
+                    $oitem->populateOrderItemByID($OI["order_item_id"]);
+                    $item = Menu_Item::getMenuItemByID($OI["menu_item_id"]);
+                    array_push($this->order_items, $oitem);
+                    array_push($this->menu_items ,$item);
+                }
             }
+            
         }
         else
         {
