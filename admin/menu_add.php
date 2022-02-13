@@ -56,8 +56,8 @@
 
         </form>
     </div>
-    <div class="ingredientWrapper">
-        <table >
+    <div id="ingredientWrapper">
+        <table id = "ingredientTable">
             <thead>
                 <td>
                     <h2>Ingredients</h2>
@@ -146,11 +146,14 @@
         ingredientBody.appendChild(templateRow.cloneNode(true))
     }
     function deleteRow(row){
-        if(confirm("This action is permenant do you wish to proceed")){
+        if(row.dataset["id"] != "-1" && confirm("This action is permenant do you wish to proceed")){
             ingredientBody.removeChild(row);
             if(row.dataset["id"] != "-1" || row.dataset["id"] != ""){
                 Ingredient.deleteIngredient(row.dataset["id"], backBtn.dataset["id"])
             }
+        }
+        else{
+            ingredientBody.removeChild(row);
         }
         
     }

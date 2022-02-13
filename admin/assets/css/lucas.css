@@ -7,7 +7,12 @@
     align-items: center;
     justify-content: center;
 }
-
+#ingredientWrapper{
+    background-color: blue;
+}
+table{
+    background: blue;
+}
 .centeredHeader{
     text-align: center;
 }
