@@ -1,9 +1,17 @@
 .hidden{
     display: none;
 }
-.bodyWrapper{
+#menuViewBodyWrapper{
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
+}
+
+.centeredHeader{
+    text-align: center;
+}
+
+.menuItemTable{
+    width: 80% !important;
 }
