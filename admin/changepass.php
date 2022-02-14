@@ -1,5 +1,5 @@
 <?php
-include 'inc/header.php';
+include '../include/header.php';
 Session::CheckSession();
  ?>
  <?php
@@ -58,6 +58,6 @@ Session::CheckSession();
 
 
   <?php
-  include 'inc/footer.php';
+  include '../include/footer.php';
 
   ?>

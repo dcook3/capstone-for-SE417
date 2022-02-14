@@ -47,7 +47,7 @@ class Session {
   // Check Login Method
   public static function CheckLogin(){
     if (self::get("login") == TRUE) {
-      header('Location:index.php');
+      header('Location:users.php');
     }
   }
 }

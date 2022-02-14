@@ -1,5 +1,6 @@
 <?php
-include 'include/header.php';
+$levels = 1;
+include '../include/header.php';
 Session::CheckSession();
 
  ?>
@@ -27,7 +28,7 @@ if (isset($updateUser)) {
 
  <div class="card ">
    <div class="card-header">
-          <h3>User Profile <span class="float-right"> <a href="index.php" class="btn btn-primary">Back</a> </h3>
+          <h3>User Profile <span class="float-right"> <a href="users.php" class="btn btn-primary">Back</a> </h3>
         </div>
         <div class="card-body">
 
@@ -45,23 +46,14 @@ if (isset($updateUser)) {
 
           <div style="width:600px; margin:0px auto">
 
-          <form method="POST">
-            <div class="form-group">
-                <label for="">Creation Time</label>
-                <input type="datetime-local" name="created_at" value="<?php echo $getUinfo->created_at; ?>" class="form-control">
-              </div>
-
-              <div class="form-group">
-                <label for="student_id">Your Student ID</label>
-                <input type="text" name="student_id" value="<?php echo $getUinfo->student_id; ?>" class="form-control">
+          <form class="" action="" method="POST">
+          <div class="form-group">
+                <label for="username">Your username</label>
+                <input type="text" name="username" value="<?php echo $getUinfo->student_id; ?>" class="form-control">
               </div>
               <div class="form-group">
                 <label for="first_name">Your first name</label>
                 <input type="text" name="first_name" value="<?php echo $getUinfo->first_name; ?>" class="form-control">
-              </div>
-              <div class="form-group">
-                <label for="middle_name">Your middle name</label>
-                <input type="text" name="middle_name" value="<?php echo $getUinfo->middle_name; ?>" class="form-control">
               </div>
               <div class="form-group">
                 <label for="last_name">Your last name</label>
@@ -72,16 +64,8 @@ if (isset($updateUser)) {
                 <input type="text" id="phone" name="phone" value="<?php echo $getUinfo->phone; ?>" class="form-control">
               </div>
               <div class="form-group">
-                <label for="phone">Phone</label>
-                <input type="text" id="phone2" name="phone2" value="<?php echo $getUinfo->phone2; ?>" class="form-control">
-              </div>
-              <div class="form-group">
                 <label for="email">Email</label>
                 <input type="email" id="email" name="email" value="<?php echo $getUinfo->email; ?>" class="form-control">
-              </div>
-              <div class="form-group">
-                <label for="email2">Email</label>
-                <input type="email" id="email2" name="email" value="<?php echo $getUinfo->email2; ?>" class="form-control">
               </div>
 
               <?php if (Session::get("roleid") == '1') { ?>
@@ -119,7 +103,7 @@ if (isset($updateUser)) {
               </div>
 
           <?php }else{?>
-            <input type="hidden" name="roleid" value="<?php echo $getUinfo->roleid; ?>">
+            <input type="text" name="roleid" value="<?php echo $getUinfo->roleid; ?>"hidden>
           <?php } ?>
 
               <?php if (Session::get("id") == $getUinfo->user_id) {?>
@@ -127,14 +111,14 @@ if (isset($updateUser)) {
 
               <div class="form-group">
                 <button type="submit" name="update" class="btn btn-success">Update</button>
-                <a class="btn btn-primary" href="changepass.php?id=<?php echo $getUinfo->id;?>">Password change</a>
+                <a class="btn btn-primary" href="password.php?id=<?php echo $getUinfo->user_id;?>">Password change</a>
               </div>
             <?php } elseif(Session::get("roleid") == '1') {?>
 
 
               <div class="form-group">
                 <button type="submit" name="update" class="btn btn-success">Update</button>
-                <a class="btn btn-primary" href="changepass.php?id=<?php echo $getUinfo->id;?>">Password change</a>
+                <a class="btn btn-primary" href="password.php?id=<?php echo $getUinfo->user_id;?>">Password change</a>
               </div>
             <?php } elseif(Session::get("roleid") == '2') {?>
 
@@ -147,7 +131,7 @@ if (isset($updateUser)) {
               <?php   }else{ ?>
                   <div class="form-group">
 
-                    <a class="btn btn-primary" href="index.php">Ok</a>
+                    <a class="btn btn-primary" href="users.php">Ok</a>
                   </div>
                 <?php } ?>
 
@@ -157,7 +141,7 @@ if (isset($updateUser)) {
 
       <?php }else{
 
-        header('Location:index.php');
+        header('Location:users.php');
       } ?>
 
 
@@ -167,6 +151,6 @@ if (isset($updateUser)) {
 
 
   <?php
-  include 'include/footer.php';
+  include '../include/footer.php';
 
   ?>
