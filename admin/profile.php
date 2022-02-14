@@ -56,6 +56,10 @@ if (isset($updateUser)) {
                 <input type="text" name="first_name" value="<?php echo $getUinfo->first_name; ?>" class="form-control">
               </div>
               <div class="form-group">
+                <label>Your middle name</label>
+                <input type="text" name="middle_name" value="<?php echo $getUinfo->middle_name; ?>" class="form-control">
+              </div>
+              <div class="form-group">
                 <label for="last_name">Your last name</label>
                 <input type="text" name="last_name" value="<?php echo $getUinfo->last_name; ?>" class="form-control">
               </div>

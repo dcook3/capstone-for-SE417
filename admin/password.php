@@ -1,4 +1,5 @@
 <?php
+$levels = 1;
 include '../include/header.php';
 Session::CheckSession();
  ?>
