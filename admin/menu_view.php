@@ -9,8 +9,7 @@ include '../include/header.php';
 
 
 <link rel="stylesheet" href="assets/css/lucas.css">
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-<script type = "text/javascript" src="https://cdn.jsdelivr.net/gh/mgalante/jquery.redirect@master/jquery.redirect.js"></script>
+
 <div id="menuViewBodyWrapper">
     <h1 class = "centeredHeader">Menu Items</h1>
     <table class = "table table-hover table-striped text-center menuItemTable">
@@ -70,11 +69,14 @@ include '../include/header.php';
     </table>
 </div>
 
-
+<form class = "hidden" action = "menu_add.php" method = "post">
+    <input id = "hiddenField" name = "id"></input>
+</form>
 
 <script>
     var addNewbutton = document.querySelector("#addNewButton");
     var editButtons = document.querySelectorAll(".editButton")
+    var hiddenField = document.querySelector("#hiddenField");
     addNewbutton.addEventListener("click", function(e){
         window.location.replace("menu_add.php");
     })
@@ -88,7 +90,8 @@ include '../include/header.php';
     function edit(id){
         console.log(id);
 
-        $.redirect('menu_add.php', {'id' : String(id)})
+        hiddenField.value = String(id);
+        hiddenField.parentElement.submit();
     }
     async function del(id){
         let deleted = await Menu_Item.deleteItem(id);
