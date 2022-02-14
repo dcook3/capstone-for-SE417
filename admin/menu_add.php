@@ -11,13 +11,13 @@
     }
     include '../include/header.php';
 ?>
-
+<script  src="../models/lucas.js"></script>
 <link rel="stylesheet" href="assets/css/lucas.css">
 <table class = "hidden">
     <tbody>
         <tr class = "ingredientRow" id = "templateRow" data-id = "-1">
             <td><input type = "text" placeholder ="Name"></td>
-            <td><input type="number" min="0.00" max="10000.00" step="0.01" placeholder="Price"/></td>
+            <td><div class="form-control"><input class = "dollaSign" type="number" min="0.00" max="10000.00" step="0.01" placeholder="Price"/></div></td>
             <td><div class="isDefaultWrapper"><label for = "isDefault">Default</label><input type = "checkbox" name = "isDefault" /></div></td>
             <td><button class = "btn btn-primary deleteButton" onclick="deleteRow(this.parentElement.parentElement)"><i class="fas fa-trash-alt"></i></button></td>
         </tr>
@@ -57,7 +57,7 @@
             </div>
             <div class="form-group">
                 <p>Price:</p>
-                <input id = "priceInput" type="number" min="0.00" max="10000.00" step="0.01" <?= ($post) ? "value = '{$item->getItemPrice()}'" : ""?> />
+                <input class = "dollaSign" id = "priceInput" type="number" min="0.00" max="10000.00" step="0.01" <?= ($post) ? "value = '{$item->getItemPrice()}'" : ""?> />
             </div>
         </form>
     </div>
@@ -82,8 +82,21 @@
                     if($post){
                         foreach($item->getIngredients() as $key=>$ingredient){
                             $isDefaultStr = ($ingredient->getIsDefault()) ? "checked" : ""; 
-                            echo("<tr class = 'ingredientRow' data-id = '{$ingredient->getIngredientId()}'><td><input type = 'text' placeholder ='Name' value = '{$ingredient->getIngredientName()}'/></td><td><input type='number' min='0.00' max='10000.00' step='0.01' value = '{$ingredient->getIngredientPrice()}'/></td><td><div class='isDefaultWrapper'><label for = 'isDefault'>Default</label><input type = 'checkbox' name = 'isDefault' {$isDefaultStr}/></div></td><td><button id = 'deleteButton' class = 'btn btn-primary' onclick='deleteRow(this.parentElement.parentElement)'>Delete</button></td></tr>");
-   
+                            ?>
+                            <tr class = 'ingredientRow' data-id = '<?=$ingredient->getIngredientId()?>'>
+                                <td><input type = 'text' placeholder ='Name' value = '<?=$ingredient->getIngredientName()?>'/></td>
+                                <td><input type='number' min='0.00' max='10000.00' step='0.01' value = '<?=$ingredient->getIngredientPrice()?>'/></td>
+                                <td>
+                                    <div class='isDefaultWrapper'>
+                                        <label for = 'isDefault'>Default</label>
+                                        <input type = 'checkbox' name = 'isDefault' $isDefaultStr/>
+                                    </div>
+                                </td>
+                                <td>
+                                    <button id = 'deleteButton' class = 'btn btn-primary' onclick='deleteRow(this.parentElement.parentElement)'><i class='fas fa-trash-alt'></i></button>
+                                </td>
+                            </tr>
+                            <?php
                         }
                     }
                 ?>
