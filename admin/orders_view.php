@@ -59,8 +59,8 @@ include '../include/header.php';
     <div class="d-flex flex-column align-items-center">
         <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#dateFilterDiv">Toggle Date Filter</button>
         <div class="d-flex mx-3 col-8">
-            <div id="dateFilterDiv" class="col-12 row collapse">
-                <h3>Date Filter</h3>
+            <div id="dateFilterDiv" class="col-12 collapse">
+                <h3 class="fw-bold fs-3">Date Filter</h3>
                 <form method="get" action="orders_view.php" id="dateFilter" class="p-2 col-6 border d-flex flex-column">
                     <div class="d-flex flex-row row justify-content-evenly">
                         <div class="form-group col-4">
@@ -168,7 +168,7 @@ include '../include/header.php';
                         </td>
                         <td>
                             <?php
-                            $id = $row['order_id'];
+                                $id = $row['order_id'];
                                 if($row['order_status'] == "0")
                                 {
                                     echo "<form action='orders_view.php' method='post' class='isCompleted'>
