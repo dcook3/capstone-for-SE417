@@ -13,24 +13,26 @@
     }
     include '../include/header.php';
 ?>
-<script src="https://cdn.jsdelivr.net/gh/mgalante/jquery.redirect@master/jquery.redirect.js"></script>
+
 <link rel="stylesheet" href="assets/css/lucas.css">
 <table class = "hidden">
     <tbody>
         <tr class = "ingredientRow" id = "templateRow" data-id = "-1">
             <td><input type = "text" placeholder ="Name"></td>
             <td><input type="number" min="0.00" max="10000.00" step="0.01" placeholder="Price"/></td>
-            <td><label for = "isDefault">Default Option</label><input type = "checkbox" name = "isDefault" /></td>
+            <td><div class="isDefaultWrapper"><label for = "isDefault">Default</label><input type = "checkbox" name = "isDefault" /></div></td>
             <td><button class = "btn btn-primary deleteButton" onclick="deleteRow(this.parentElement.parentElement)"><i class="fas fa-trash-alt"></i></button></td>
         </tr>
     </tbody>
 </table>
 
-<button id = "backBtn" class = "btn btn-primary"  data-id = "<?= ($post) ? $item->getMenuItemId() : ""?>">Back</button>
 <div class="d-flex justify-content-around flex-row">
     <div class="formWrapper">
-        
-        <h1><?= ($post) ? "Edit" : "Add New" ?> Item</h1>
+        <div id="topWrapper">
+            <button id = "backBtn" class = "btn btn-primary"  data-id = "<?= ($post) ? $item->getMenuItemId() : ""?>">Back</button>
+            <h1><?= ($post) ? "Edit" : "Add New" ?> Item</h1>
+            <p></p>
+        </div>
         <form>
             <p>Item Name:</p>
             <input id = "nameInput" type = "text" <?= ($post) ? "value = '{$item->getItemName()}'" : ""?>>
@@ -57,30 +59,37 @@
         </form>
     </div>
     <div id="ingredientWrapper">
-        <table id = "ingredientTable">
-            <thead>
+        <table id = "ingredientTable" class = "table table-hover table-striped text-center">
+            <thead id = "ingredientHeader">
+                <tr>
                 <td>
                     <h2>Ingredients</h2>
                 </td>
                 <td></td>
                 <td></td>
-                <td >
+                <td>
                     <button id = "addIngredientBtn" class = "btn btn-primary">+</button>
                 </td>
+                </tr>
+                
             </thead>
+        
             <tbody id = "ingredientBody">
-            <?php 
-                if($post){
-                    foreach($item->getIngredients() as $key=>$ingredient){
-                        $isDefaultStr = ($ingredient->getIsDefault()) ? "checked" : ""; 
-                        echo("<tr class = 'ingredientRow' data-id = '{$ingredient->getIngredientId()}'><td><input type = 'text' placeholder ='Name' value = '{$ingredient->getIngredientName()}'/></td><td><input type='number' min='0.00' max='10000.00' step='0.01' value = '{$ingredient->getIngredientPrice()}'/></td><td><label for = 'isDefault'>Default Option</label><input type = 'checkbox' name = 'isDefault' {$isDefaultStr}/></td><td><button id = 'deleteButton' class = 'btn btn-primary' onclick='deleteRow(this.parentElement.parentElement)'>Delete</button></td></tr>");
-                        
+                <?php 
+                    if($post){
+                        foreach($item->getIngredients() as $key=>$ingredient){
+                            $isDefaultStr = ($ingredient->getIsDefault()) ? "checked" : ""; 
+                            echo("<tr class = 'ingredientRow' data-id = '{$ingredient->getIngredientId()}'><td><input type = 'text' placeholder ='Name' value = '{$ingredient->getIngredientName()}'/></td><td><input type='number' min='0.00' max='10000.00' step='0.01' value = '{$ingredient->getIngredientPrice()}'/></td><td><div class='isDefaultWrapper'><label for = 'isDefault'>Default</label><input type = 'checkbox' name = 'isDefault' {$isDefaultStr}/></div></td><td><button id = 'deleteButton' class = 'btn btn-primary' onclick='deleteRow(this.parentElement.parentElement)'>Delete</button></td></tr>");
+                            
+                        }
                     }
-                }
-            ?>
+                ?>
             </tbody>
         </table>
-        <button id = "doneBtn" class = "btn btn-primary">Done</button>
+        <div id="doneBtnWrapper">
+            <p></p>
+            <button id = "doneBtn" class = "btn btn-primary">Done</button>
+        </div>
     </div>
     
 </div>

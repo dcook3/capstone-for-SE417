@@ -1,4 +1,4 @@
-
+console.log("hello")
 class Menu_Item{
     constructor(menu_item_id, section, item_name, item_description, item_price, item_img){
         this.menu_item_id = menu_item_id;

@@ -3,15 +3,66 @@
 }
 #menuViewBodyWrapper{
     display: flex;
+    width: 100%;
     flex-direction: column;
     align-items: center;
     justify-content: center;
 }
 #ingredientWrapper{
-    background-color: blue;
+    width: 40%;
 }
-table{
-    background: blue;
+#ingredientTable{
+    background-color: #ddd;
+    border-radius: 15px;
+}
+#ingredientBody
+{
+    width: 100%;
+    display:inline-block;
+    height: 50vh;
+    overflow: auto;
+}
+.ingredientRow{
+    width: 100% !important;
+    display: block;
+    align-items: center;
+}
+.isDefaultWrapper{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+#ingredientHeader tr{
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    
+}
+#topWrapper{
+    width: 100%;
+    display: flex !important;
+    justify-content: space-between;
+    align-items: center;
+    margin: 4px;
+}
+#topWrapper h1{
+    margin: 0;
+}
+
+#ingredientHeader h2{
+    margin: 0;
+}
+#ingredientHeader{
+    padding: 10px;
+    border-bottom: 1px solid black;
+}
+#ingredientHeader td{
+    display: inline-block;
+    border-bottom: none;
+}
+#doneBtnWrapper{
+    display: flex;
+    justify-content: space-between;
 }
 .centeredHeader{
     text-align: center;
@@ -19,4 +70,7 @@ table{
 
 .menuItemTable{
     width: 80% !important;
+}
+#doneBtn{
+    
 }

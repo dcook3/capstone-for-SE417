@@ -1,3 +1,5 @@
+
+
 <?php
     $levels = 1;
     include("..\models\lucas.php");
@@ -7,6 +9,8 @@ include '../include/header.php';
 
 
 <link rel="stylesheet" href="assets/css/lucas.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script type = "text/javascript" src="https://cdn.jsdelivr.net/gh/mgalante/jquery.redirect@master/jquery.redirect.js"></script>
 <div id="menuViewBodyWrapper">
     <h1 class = "centeredHeader">Menu Items</h1>
     <table class = "table table-hover table-striped text-center menuItemTable">
