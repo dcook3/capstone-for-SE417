@@ -55,67 +55,71 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
 }
 include '../include/header.php';
 ?>
-    <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#dateFilterDiv">Toggle Date Filter</button>
-    <div class="d-flex justify-content-end ml-3" id="dateFilterDiv">
-        <form method="get" action="orders_view.php" id="dateFilter" class="col-2 m-2 border d-flex flex-column ">
-            <h3>Date Filter</h3>
-            <div class="row d-flex flex-row justify-content-evenly">
-                <div class="form-group">
-                    <label for="year" class="form-label">Year</label>
-                    <select class="dateFilter form-control" name="year">
-                        <option selected hidden>Year</option>
-                        <?php 
-                            for($i = $selectedYear ; $i>=$selectedYear-40; $i--)
-                            {
-                                if($i == 1 && !isset($selectedYear))
-                                {
-                                    echo '<option selected hidden>Year</option>';
-                                }
-                                else
-                                {
-                                    echo "<option selected hidden>$selectedYear</option>";
-                                }
-                                echo '<option value="' . $i . '">' . $i . '</option>';
-                            }
-                        ?>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label for="month" class="form-label">Month</label>
-                    <select name="month" class="dateFilter form-control">
-                        <option selected hidden><?= $selectedMonth ?></option>
-                        <option value=1>January</option>
-                        <option value=2>February</option>
-                        <option value=3>March</option>
-                        <option value=4>April</option>
-                        <option value=5>May</option>
-                        <option value=6>June</option>
-                        <option value=7>July</option>
-                        <option value=8>August</option>
-                        <option value=9>September</option>
-                        <option value=10>October</option>
-                        <option value=11>November</option>
-                        <option value=12>December</option>
-                    </select>
-                </div>
-                
-                <div class="form-group">
-                    <label for="day" class="form-label">Day</label>
-                    <select name="day" class="dateFilter form-control">
-                        <?php
-                            echo "<option selected hidden>{$selectedDay}</option>";
-                            for($i = 1; $i <= cal_days_in_month(CAL_GREGORIAN, $selectedMonthInt, $selectedYear); $i++)
-                            {
-                                echo "<option>{$i}</option>";
-                            }
-                        ?>
-                    </select>
-                </div>
-            </div>
-        </form>
-    </div>
     <h2 class="fw-bold text-center">Orders</h2>
+    <div class="d-flex flex-column align-items-center">
+        <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#dateFilterDiv">Toggle Date Filter</button>
+        <div class="d-flex mx-3 col-8">
+            <div id="dateFilterDiv" class="col-12 row collapse">
+                <h3>Date Filter</h3>
+                <form method="get" action="orders_view.php" id="dateFilter" class="p-2 col-6 border d-flex flex-column">
+                    <div class="d-flex flex-row row justify-content-evenly">
+                        <div class="form-group col-4">
+                            <label for="year" class="form-label">Year</label>
+                            <select class="dateFilter form-control" name="year">
+                                <option selected hidden>Year</option>
+                                <?php 
+                                    for($i = $selectedYear ; $i>=$selectedYear-40; $i--)
+                                    {
+                                        if($i == 1 && !isset($selectedYear))
+                                        {
+                                            echo '<option selected hidden>Year</option>';
+                                        }
+                                        else
+                                        {
+                                            echo "<option selected hidden>$selectedYear</option>";
+                                        }
+                                        echo '<option value="' . $i . '">' . $i . '</option>';
+                                    }
+                                ?>
+                            </select>
+                        </div>
+
+                        <div class="form-group col-4">
+                            <label for="month" class="form-label">Month</label>
+                            <select name="month" class="dateFilter form-control">
+                                <option selected hidden><?= $selectedMonth ?></option>
+                                <option>January</option>
+                                <option>February</option>
+                                <option>March</option>
+                                <option>April</option>
+                                <option>May</option>
+                                <option>June</option>
+                                <option>July</option>
+                                <option>August</option>
+                                <option>September</option>
+                                <option>October</option>
+                                <option>November</option>
+                                <option>December</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group col-4">
+                            <label for="day" class="form-label">Day</label>
+                            <select name="day" class="dateFilter form-control">
+                                <?php
+                                    echo "<option selected hidden>{$selectedDay}</option>";
+                                    for($i = 1; $i <= cal_days_in_month(CAL_GREGORIAN, $selectedMonthInt, $selectedYear); $i++)
+                                    {
+                                        echo "<option>{$i}</option>";
+                                    }
+                                ?>
+                            </select>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
     <table class="table table-striped table-hover">
         <thead>
             <th>Student Name</th>
