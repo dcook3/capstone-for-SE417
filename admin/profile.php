@@ -34,33 +34,27 @@ if (isset($updateUser)) {
 
     <?php
     $getUinfo = $users->getUserInfoById($userid);
-    if ($getUinfo) {
-
-
-
-
-
-
-     ?>
-
-
+    if ($getUinfo) { ?>
           <div style="width:600px; margin:0px auto">
-
-          <form class="" action="" method="POST">
-          <div class="form-group">
-                <label for="username">Your username</label>
+          <form action="" method="POST">
+              <div class="form-group">
+                <label>Creation Date</label>
+                <input type="datetime-local" name="created_at" value="<?php echo $getUinfo->created_at; ?>" class="form-control">
+              </div>
+              <div class="form-group">
+                <label for="username">Student ID</label>
                 <input type="text" name="username" value="<?php echo $getUinfo->student_id; ?>" class="form-control">
               </div>
               <div class="form-group">
-                <label for="first_name">Your first name</label>
+                <label for="first_name">first name</label>
                 <input type="text" name="first_name" value="<?php echo $getUinfo->first_name; ?>" class="form-control">
               </div>
               <div class="form-group">
-                <label>Your middle name</label>
+                <label>middle name</label>
                 <input type="text" name="middle_name" value="<?php echo $getUinfo->middle_name; ?>" class="form-control">
               </div>
               <div class="form-group">
-                <label for="last_name">Your last name</label>
+                <label for="last_name">last name</label>
                 <input type="text" name="last_name" value="<?php echo $getUinfo->last_name; ?>" class="form-control">
               </div>
               <div class="form-group">
@@ -73,40 +67,33 @@ if (isset($updateUser)) {
               </div>
 
               <?php if (Session::get("roleid") == '1') { ?>
-
-              <div class="form-group
-              <?php if (Session::get("roleid") == '1' && Session::get("id") == $getUinfo->id) {
-                echo "d-none";
-              } ?>
-              ">
+              <div class="form-group <?php if (Session::get("roleid") == '1' && Session::get("id") == $getUinfo->user_id) { echo "d-none"; } ?> ">
                 <div class="form-group">
                   <label for="sel1">Select user Role</label>
                   <select class="form-control" name="roleid" id="roleid">
 
                   <?php
 
-                if($getUinfo->roleid == '1'){?>
+                if($getUinfo->roleid == '1') { ?>
                   <option value="1" selected='selected'>Admin</option>
                   <option value="2">Editor</option>
                   <option value="3">User only</option>
-                <?php }elseif($getUinfo->roleid == '2'){?>
+                <?php }
+                elseif($getUinfo->roleid == '2') {?>
                   <option value="1">Admin</option>
                   <option value="2" selected='selected'>Editor</option>
                   <option value="3">User only</option>
-                <?php }elseif($getUinfo->roleid == '3'){?>
+                <?php } elseif($getUinfo->roleid == '3') {?>
                   <option value="1">Admin</option>
                   <option value="2">Editor</option>
                   <option value="3" selected='selected'>User only</option>
-
-
                 <?php } ?>
-
-
                   </select>
                 </div>
               </div>
 
-          <?php }else{?>
+          <?php }
+          else {?>
             <input type="text" name="roleid" value="<?php echo $getUinfo->roleid; ?>"hidden>
           <?php } ?>
 
@@ -143,13 +130,10 @@ if (isset($updateUser)) {
           </form>
         </div>
 
-      <?php }else{
-
+      <?php }
+      else {
         header('Location:users.php');
       } ?>
-
-
-
       </div>
     </div>
 

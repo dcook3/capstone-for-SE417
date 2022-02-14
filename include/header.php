@@ -89,7 +89,12 @@ $users = new Users();
 
               <a class="nav-link" href="profile.php?id=<?php echo Session::get("id"); ?>"><i class="fab fa-500px mr-2"></i>Profile <span class="sr-only">(current)</span></a>
             </li>
-
+            <li class="nav-item">
+              <a class="nav-link" href="orders_view.php">Orders</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="menu_view.php">Menu</a>
+            </li>
             <li class="nav-item">
               <a class="nav-link" href="?action=logout"><i class="fas fa-sign-out-alt mr-2"></i>Logout</a>
             </li>

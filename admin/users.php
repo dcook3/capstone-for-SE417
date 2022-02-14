@@ -42,23 +42,26 @@ if (isset($activeId)) {
   echo $activeId;
 }
 
-
+$NonUsers = $users->selectAllDisabled();
+foreach ($NonUsers as $value) {
+  echo $value->student_id;
+}
  ?>
       <div class="card ">
         <div class="card-header">
-          <h3><i class="fas fa-users mr-2"></i>Users<span class="float-right">Welcome <strong>
-            <span class="badge badge-lg badge-secondary text-white">
-<?php
-$username = Session::get('student_id');
-if (isset($username)) {
-  echo $username;
-}
- ?></span>
-
-          </strong></span></h3>
+          <h3><span class="pull-left"><i class="fas fa-users mr-2"></i></span><span class="float-right">Welcome <strong>
+            <span class="">
+              <?php
+                $username = Session::get('student_id');
+                if (isset($username)) { echo $username; }?>
+            </span>
+            </strong>
+            </span>
+          </h3>
         </div>
-        <div class="card-body pr-2 pl-2">
 
+        
+        <div class="card-body pr-2 pl-2">
           <table id="example" class="table table-striped table-bordered" style="width:100%">
                   <thead>
                     <tr>
@@ -74,22 +77,15 @@ if (isset($username)) {
                   </thead>
                   <tbody>
                     <?php
-
                       $allUser = $users->selectAllUserData();
-
-                      if ($allUser) {
+                      if ($allUser) 
+                      {
                         $i = 0;
-                        foreach ($allUser as  $value) {
+                        foreach ($allUser as  $value) 
+                        {
                           $i++;
-
                      ?>
-
-                      <tr class="text-center"
-                      <?php if (Session::get("id") == $value->user_id) {
-                        echo "style='background:#d9edf7' ";
-                      } ?>
-                      >
-
+                      <tr class="text-center" <?php if (Session::get("id") == $value->user_id) { echo "style='background:#d9edf7' "; } ?>>
                         <td><?php echo /*"[".$i."]-->".*/$value->user_id; ?></td>
                         <td><?php echo $value->student_id; ?> <br>
                           <?php if ($value->roleid  == '1'){
@@ -119,16 +115,13 @@ if (isset($username)) {
 
                         <td>
                           <?php if ( Session::get("roleid") == '1') {?>
-                            <a class="btn btn-success btn-sm
-                            " href="profile.php?id=<?php echo $value->user_id;?>">View</a>
+                            <!-- View -->
+                            <a class="btn btn-success btn-sm" href="profile.php?id=<?php echo $value->user_id;?>">View</a>
+                            <!-- Edit -->
                             <a class="btn btn-info btn-sm " href="profile.php?id=<?php echo $value->user_id;?>">Edit</a>
-                            <a onclick="return confirm('Are you sure To Delete ?')" class="btn btn-danger
-                    <?php if (Session::get("id") == $value->user_id) {
-                      echo "disabled";
-                    } ?>
-                             btn-sm " href="?remove=<?php echo $value->user_id;?>">Remove</a>
-
-                             <?php if ($value->isActive == '0') {  ?>
+                            <!-- Remove -->
+                            <a onclick="return confirm('Are you sure To Delete ?')" class="btn btn-danger <?php if (Session::get("id") == $value->user_id) { echo "disabled"; } ?>btn-sm " href="?remove=<?php echo $value->user_id;?>">Remove</a>
+                          <?php if ($value->isActive == '0') {  ?>
                                <a onclick="return confirm('Are you sure To Deactive ?')" class="btn btn-warning
                        <?php if (Session::get("id") == $value->user_id) {
                          echo "disabled";
@@ -141,14 +134,14 @@ if (isset($username)) {
                        } ?>
                                 btn-sm " href="?active=<?php echo $value->user_id;?>">Active</a>
                              <?php } ?>
-
-
-
-
-                        <?php  }elseif(Session::get("id") == $value->user_id  && Session::get("roleid") == '2'){ ?>
+                        <?php  }
+                        
+                        elseif(Session::get("id") == $value->user_id  && Session::get("roleid") == '2') { ?>
                           <a class="btn btn-success btn-sm " href="profile.php?id=<?php echo $value->user_id;?>">View</a>
                           <a class="btn btn-info btn-sm " href="profile.php?id=<?php echo $value->user_id;?>">Edit</a>
-                        <?php  }elseif( Session::get("roleid") == '2'){ ?>
+                        <?php  }
+                        
+                        elseif( Session::get("roleid") == '2') { ?>
                           <a class="btn btn-success btn-sm
                           <?php if ($value->roleid == '1') {
                             echo "disabled";
@@ -159,7 +152,9 @@ if (isset($username)) {
                             echo "disabled";
                           } ?>
                           " href="profile.php?id=<?php echo $value->user_id;?>">Edit</a>
-                        <?php }elseif(Session::get("id") == $value->user_id  && Session::get("roleid") == '3'){ ?>
+                        <?php }
+                        
+                        elseif(Session::get("id") == $value->user_id  && Session::get("roleid") == '3') { ?>
                           <a class="btn btn-success btn-sm " href="profile.php?id=<?php echo $value->user_id;?>">View</a>
                           <a class="btn btn-info btn-sm " href="profile.php?id=<?php echo $value->user_id;?>">Edit</a>
                         <?php }else{ ?>
@@ -175,18 +170,15 @@ if (isset($username)) {
                       </tr>
                     <?php }
                   }
-                  else{ ?>
+                  else { ?>
                       <tr class="text-center">
                       <td>No user availabe now !</td>
                     </tr>
                     <?php } ?>
-
                   </tbody>
-
                   </table>
         </div>
       </div>
-
   <?php
   include '../include/footer.php';
 

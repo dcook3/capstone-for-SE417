@@ -26,13 +26,11 @@ class Users {
 
   // Db Property
   private $db;
-
   // Db __construct Method
   public function __construct()
   {
     $this->db = new Database();
   }
-
   // Date formate Method
    public function formatDate($date)
    {
@@ -40,7 +38,6 @@ class Users {
       $strtime = strtotime($date);
     return date('Y-m-d H:i:s', $strtime);
    }
-
   // Check Exist Email Address Method
   public function checkExistEmail($email)
   {
@@ -54,16 +51,28 @@ class Users {
       return false;
     }
   }
-
   // Select All User Method
   public function selectAllUserData()
   {
-    $sql = "SELECT * FROM users ORDER BY user_id DESC";
+    $sql = "SELECT * FROM users ORDER BY user_id";
     $stmt = $this->db->pdo->prepare($sql);
     $stmt->execute();
     return $stmt->fetchAll(PDO::FETCH_OBJ);
   }
-
+  public function selectAllDisabled()
+  {
+    $sql = "SELECT * FROM users WHERE isActive = 1";
+    $stmt = $this->db->pdo->prepare($sql);
+    $stmt->execute();
+    return $stmt->fetchAll(PDO::FETCH_OBJ);
+  }
+  public function selectRoles()
+  {
+    $sql = "SELECT * FROM roles WHERE isActive = 1";
+    $stmt = $this->db->pdo->prepare($sql);
+    $stmt->execute();
+    return $stmt->fetchAll(PDO::FETCH_OBJ);
+  }
   // User login Autho Method
   public function userLoginAutho($email, $password)
   {
@@ -75,7 +84,6 @@ class Users {
     $stmt->execute();
     return $stmt->fetch(PDO::FETCH_OBJ);
   }
-
   // Check User Account Satatus
   public function CheckActiveUser($email)
   {
@@ -86,7 +94,6 @@ class Users {
     $stmt->execute();
     return $stmt->fetch(PDO::FETCH_OBJ);
   }
-
     // User Login Authotication Method
     public function userLoginAuthotication($data)
     {
@@ -98,8 +105,8 @@ class Users {
 
       if ($email == "" || $password == "" ) {
         $msg = '<div class="alert alert-danger alert-dismissible mt-3" id="flash-msg">
-  <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-  <strong>Error !</strong> Email or Password not be Empty !</div>';
+  <strong>Error:</strong> Email or Password not be Empty!
+  <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a></div>';
           return $msg;
 
       }elseif (filter_var($email, FILTER_VALIDATE_EMAIL === FALSE)) {
@@ -131,7 +138,7 @@ class Users {
           Session::set('roleid', $logResult->roleid);
           Session::set('name', $logResult->first_name);
           Session::set('email', $logResult->email);
-          Session::set('username', $logResult->student_id);
+          Session::set('student_id', $logResult->student_id);
           Session::set('logMsg', '<div class="alert alert-success alert-dismissible mt-3" id="flash-msg">
     <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
     <strong>Success !</strong> You are Logged In Successfully !</div>');
@@ -171,7 +178,7 @@ class Users {
       $phone = $data['phone'];
       $roleid = $data['roleid'];
 
-      if ($first_name == "" || $last_name == "" || $student_id == ""|| $email == "" || $phone == ""  ) 
+      if ($first_name == "" || $last_name == "" || $student_id == ""|| $email == "" || $phone == "" ) 
       {
         $msg = '<div class="alert alert-danger alert-dismissible mt-3" id="flash-msg">
   <strong>Error:</strong> Input Fields must not be Empty!
@@ -219,13 +226,13 @@ class Users {
         $result =   $stmt->execute();
 
         if ($result) {
-          echo "<script>location.href='index.php';</script>";
+          echo "<script>location.href='users.php';</script>";
           Session::set('msg', '<div class="alert alert-success alert-dismissible mt-3" id="flash-msg">
           <strong>Success:</strong> Wow, Your Information updated Successfully!
           <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a></div>');
         }
         else {
-          echo "<script>location.href='index.php';</script>";
+          echo "<script>location.href='users.php';</script>";
           Session::set('msg', '<div class="alert alert-danger alert-dismissible mt-3" id="flash-msg">
     <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
     <strong>Error !</strong> Data not inserted !</div>');

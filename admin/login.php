@@ -31,8 +31,7 @@ if (isset($logout)) {
 
 
             <div style="width:450px; margin:0px auto">
-
-            <form class="" action="" method="post">
+            <form action="" method="post">
                 <div class="form-group">
                   <label for="email">Email</label>
                   <input type="email" name="email"  class="form-control">
@@ -44,8 +43,6 @@ if (isset($logout)) {
                 <div class="form-group">
                   <button type="submit" name="login" class="btn btn-success">Login</button>
                 </div>
-
-
             </form>
           </div>
 
