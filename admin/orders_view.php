@@ -225,6 +225,18 @@ include '../include/header.php';
         //Date Filter Code
         var form = document.querySelector('#dateFilter')
         var selects = document.querySelectorAll('select.dateFilter')
+        // var filterDiv = document.querySelector('#dateFilterDiv')
+        // var get
+        // if("<>" == "1"){
+        //     get = true;
+        // }
+        // else{
+        //     get = false;
+        // }
+
+        // if(get){
+        //     filterDiv.classList.remove('collapse')
+        // }
 
         for(let i=0; i<selects.length; i++)
         {
@@ -284,6 +296,8 @@ include '../include/header.php';
                 orderIDInput.value = modalBtns[i].dataset.orderid;
             });
         }
+
+
     </script>
 </body>
 </html>

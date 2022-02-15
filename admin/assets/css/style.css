@@ -1,4 +1,16 @@
 @import url('https://fonts.googleapis.com/css?family=Nunito:300,400,600,700&display=swap');
+body, html, .container-fluid{
+  height: 100%;
+  padding: 0;
+}
+.navbar{
+  margin-bottom:1%;
+}
+.card-footer{
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+}
 body {
 
   line-height: 24px;

@@ -41,7 +41,7 @@ $users = new Users();
         if (isset($_GET['action']) && $_GET['action'] == 'logout') {
         Session::destroy();
     }?> 
-    <div class="container">
+    <div class="container-fluid">
     <nav class="navbar navbar-expand-md text-white navbar-primary bg-primary card-header">
         <a class="navbar-brand text-white" href="index.php"><i class="fas fa-home mr-2"></i></a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
