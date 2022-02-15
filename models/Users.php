@@ -142,7 +142,7 @@ class Users {
           Session::set('logMsg', '<div class="alert alert-success alert-dismissible mt-3" id="flash-msg">
     <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
     <strong>Success !</strong> You are Logged In Successfully !</div>');
-          echo "<script>location.href='users.php';</script>";
+          echo "<script>location.href='orders_view.php';</script>";
 
         }else{
           $msg = '<div class="alert alert-danger alert-dismissible mt-3" id="flash-msg">
@@ -226,13 +226,13 @@ class Users {
         $result =   $stmt->execute();
 
         if ($result) {
-          echo "<script>location.href='users.php';</script>";
+          echo "<script>location.href='orders_view.php';</script>";
           Session::set('msg', '<div class="alert alert-success alert-dismissible mt-3" id="flash-msg">
           <strong>Success:</strong> Wow, Your Information updated Successfully!
           <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a></div>');
         }
         else {
-          echo "<script>location.href='users.php';</script>";
+          echo "<script>location.href='orders_view.php';</script>";
           Session::set('msg', '<div class="alert alert-danger alert-dismissible mt-3" id="flash-msg">
     <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
     <strong>Error !</strong> Data not inserted !</div>');
