@@ -1,5 +1,6 @@
 <?php
-include 'include/header.php';
+$levels = 1;
+include '../include/header.php';
 Session::CheckSession();
 $sId =  Session::get('roleid');
 if ($sId === '1') { ?>
@@ -13,8 +14,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['addUser'])) {
 if (isset($userAdd)) {
   echo $userAdd;
 }
-
-
  ?>
 
 
@@ -28,22 +27,26 @@ if (isset($userAdd)) {
 
             <div style="width:600px; margin:0px auto">
 
-            <form class="" action="" method="post">
-                <div class="form-group pt-3">
-                  <label for="name">Your name</label>
-                  <input type="text" name="name"  class="form-control">
-                </div>
-                <div class="form-group">
+            <form action="" method="post">
+            <div class="form-group pt-3">
                   <label for="username">Your username</label>
                   <input type="text" name="username"  class="form-control">
                 </div>
                 <div class="form-group">
-                  <label for="email">Email address</label>
-                  <input type="email" name="email"  class="form-control">
+                  <label for="first_name">Your first name</label>
+                  <input type="text" name="first_name"  class="form-control">
                 </div>
                 <div class="form-group">
-                  <label for="mobile">Mobile Number</label>
-                  <input type="text" name="mobile"  class="form-control">
+                  <label for="last_name">Your last name</label>
+                  <input type="text" name="last_name"  class="form-control">
+                </div>
+                <div class="form-group">
+                  <label for="phone">Phone</label>
+                  <input type="text" name="phone"  class="form-control">
+                </div>
+                <div class="form-group">
+                  <label for="email">Email</label>
+                  <input type="email" name="email"  class="form-control">
                 </div>
                 <div class="form-group">
                   <label for="password">Password</label>
@@ -73,9 +76,10 @@ if (isset($userAdd)) {
       </div>
 
 <?php
-}else{
+}
+else{
 
-  header('Location:index.php');
+  header('Location:users.php');
 
 
 
@@ -83,6 +87,6 @@ if (isset($userAdd)) {
  ?>
 
   <?php
-  include 'include/footer.php';
+  include '../include/footer.php';
 
   ?>

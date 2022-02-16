@@ -8,68 +8,71 @@
             $item = Menu_Item::getMenuItemByID($_POST["id"]);
             $item->populateIngredientsById();
         }
-        
-        
     }
     include '../include/header.php';
 ?>
-
+<script  src="../models/lucas.js"></script>
 <link rel="stylesheet" href="assets/css/lucas.css">
 <table class = "hidden">
     <tbody>
         <tr class = "ingredientRow" id = "templateRow" data-id = "-1">
             <td><input type = "text" placeholder ="Name"></td>
-            <td><input type="number" min="0.00" max="10000.00" step="0.01" placeholder="Price"/></td>
+            <td><div class="form-control"><input class = "dollaSign" type="number" min="0.00" max="10000.00" step="0.01" placeholder="Price"/></div></td>
             <td><div class="isDefaultWrapper"><label for = "isDefault">Default</label><input type = "checkbox" name = "isDefault" /></div></td>
             <td><button class = "btn btn-primary deleteButton" onclick="deleteRow(this.parentElement.parentElement)"><i class="fas fa-trash-alt"></i></button></td>
         </tr>
     </tbody>
 </table>
-
 <div class="d-flex justify-content-around flex-row">
-    <div class="formWrapper">
+    <div id="formWrapper">
         <div id="topWrapper">
             <button id = "backBtn" class = "btn btn-primary"  data-id = "<?= ($post) ? $item->getMenuItemId() : ""?>">Back</button>
             <h1><?= ($post) ? "Edit" : "Add New" ?> Item</h1>
             <p></p>
         </div>
         <form>
-            <p>Item Name:</p>
-            <input id = "nameInput" type = "text" <?= ($post) ? "value = '{$item->getItemName()}'" : ""?>>
-            <p>Section:</p>
-            <select id = "selectInput">
-                <?php 
-                    foreach(Section::getSections() as $section){
-                        if($post && $section->getSectionId() == $item->getSection()->getSectionId()){
-                            echo "<option selected value = ".$item->getSection()->getSectionId().">". $section->getSectionName() . "</option>";
+            <div class="form-group">
+                <label for = "nameInput" class = "form-label">Item Name:</label>
+                <input id = "nameInput" name = "nameInput" class = "form-control" type = "text" <?= ($post) ? "value = '{$item->getItemName()}'" : ""?>>
+            </div>
+            <div class="form-group">
+                <label for = "selectInput" class = "form-label">Section:</label>
+                <select id = "selectInput" class = "form-control">
+                    <?php 
+                        foreach(Section::getSections() as $section){
+                            if($post && $section->getSectionId() == $item->getSection()->getSectionId()){
+                                echo "<option selected value = ".$item->getSection()->getSectionId().">". $section->getSectionName() . "</option>";
+                            }
+                            else{
+                                echo "<option value = ".$section->getSectionId().">". $section->getSectionName() . "</option>";
+                            }
                         }
-                        else{
-                            echo "<option value = ".$section->getSectionId().">". $section->getSectionName() . "</option>";
-                        }
-                    }
-                ?>
-            </select>
-            <p>Description:</p>
-            <input id = "descriptionInput" type = "text" value = "<?= ($post) ? $item->getItemDescription() : ""?>">
-            <p>Price:</p>
-            <input id = "priceInput" type="number" min="0.00" max="10000.00" step="0.01" <?= ($post) ? "value = '{$item->getItemPrice()}'" : ""?> />
+                    ?>
+                </select>
+            </div>
             
-
-
+            <div class="form-group">
+                <label for = "descriptionInput" class = "form-label">Description:</label>
+                <textarea name = "descriptionInput" id = "descriptionInput" class = "form-control"><?= ($post) ? $item->getItemDescription() : ""?></textarea>
+            </div>
+            <div class="form-group">
+                <p>Price:</p>
+                <input class = "dollaSign" id = "priceInput" type="number" min="0.00" max="10000.00" step="0.01" <?= ($post) ? "value = '{$item->getItemPrice()}'" : ""?> />
+            </div>
         </form>
     </div>
     <div id="ingredientWrapper">
         <table id = "ingredientTable" class = "table table-hover table-striped text-center">
             <thead id = "ingredientHeader">
                 <tr>
-                <td>
-                    <h2>Ingredients</h2>
-                </td>
-                <td></td>
-                <td></td>
-                <td>
-                    <button id = "addIngredientBtn" class = "btn btn-primary">+</button>
-                </td>
+                    <td>
+                        <h2>Ingredients</h2>
+                    </td>
+                    <td></td>
+                    <td></td>
+                    <td>
+                        <button id = "addIngredientBtn" class = "btn btn-primary">+</button>
+                    </td>
                 </tr>
                 
             </thead>
@@ -79,8 +82,21 @@
                     if($post){
                         foreach($item->getIngredients() as $key=>$ingredient){
                             $isDefaultStr = ($ingredient->getIsDefault()) ? "checked" : ""; 
-                            echo("<tr class = 'ingredientRow' data-id = '{$ingredient->getIngredientId()}'><td><input type = 'text' placeholder ='Name' value = '{$ingredient->getIngredientName()}'/></td><td><input type='number' min='0.00' max='10000.00' step='0.01' value = '{$ingredient->getIngredientPrice()}'/></td><td><div class='isDefaultWrapper'><label for = 'isDefault'>Default</label><input type = 'checkbox' name = 'isDefault' {$isDefaultStr}/></div></td><td><button id = 'deleteButton' class = 'btn btn-primary' onclick='deleteRow(this.parentElement.parentElement)'>Delete</button></td></tr>");
-                            
+                            ?>
+                            <tr class = 'ingredientRow' data-id = '<?=$ingredient->getIngredientId()?>'>
+                                <td><input type = 'text' placeholder ='Name' value = '<?=$ingredient->getIngredientName()?>'/></td>
+                                <td><input type='number' min='0.00' max='10000.00' step='0.01' value = '<?=$ingredient->getIngredientPrice()?>'/></td>
+                                <td>
+                                    <div class='isDefaultWrapper'>
+                                        <label for = 'isDefault'>Default</label>
+                                        <input type = 'checkbox' name = 'isDefault' $isDefaultStr/>
+                                    </div>
+                                </td>
+                                <td>
+                                    <button id = 'deleteButton' class = 'btn btn-primary' onclick='deleteRow(this.parentElement.parentElement)'><i class='fas fa-trash-alt'></i></button>
+                                </td>
+                            </tr>
+                            <?php
                         }
                     }
                 ?>
