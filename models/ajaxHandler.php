@@ -31,6 +31,14 @@
                 echo false;
             }
         }
+        else if($_POST['action'] == 'getMenuItemsBySectionId'){
+            if(isset($_POST["section_id"])){
+                echo json_encode(Menu_Item::getMenuItemsBySectionId($_POST["section_id"]));
+            }
+            else{
+                echo false;
+            }
+        }
         else{
             echo 'action not set';
         }

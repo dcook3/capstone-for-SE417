@@ -3,14 +3,14 @@
 
     class Menu_Item{
         
-        private string $menu_item_id;
-        private Section $section;
-        private string $item_name;
-        private string $item_description;
-        private float $item_price;
-        private string $item_img;
-        private Array $itemIngredients;
-
+        public string $menu_item_id;
+        public Section $section;
+        public string $item_name;
+        public string $item_description;
+        public float $item_price;
+        public string $item_img;
+        public Array $itemIngredients;
+        
         function __construct(string $_menu_item_id, Section $_section, string $_item_name, string $_item_description, float $_item_price, string $_item_img){
             $this->menu_item_id = $_menu_item_id;
             $this->section = $_section;
@@ -62,6 +62,28 @@
                                                               $row['item_description'],                                                 // item_description
                                                               floatval($row['item_price']),                                             // item_price
                                                               "data:image/jpg;charset=utf8;base64,".base64_encode($row['item_img'])));
+                }
+                return($menuItemArray);
+            }
+            else{
+                echo 'ERROR FINDING MENU ITEMS';
+            }
+        }
+        static function getMenuItemsBySectionId(string $section_id){
+            global $db;
+            $menuItemArray = Array();
+            $stmt = $db->prepare("SELECT * FROM menu_items WHERE section_id = :section_id");
+            $binds = Array(":section_id" => $section_id);
+            if($stmt->execute($binds)){
+                foreach($stmt->fetchAll(PDO::FETCH_ASSOC) as $row){
+                    $tempItem = new Menu_Item($row["menu_item_id"],                                                                // menu_item_id
+                                                Section::getSectionById($section_id),                                          // section
+                                                $row['item_name'],                                                        // item_name
+                                                $row['item_description'],                                                 // item_description
+                                                floatval($row['item_price']),                                             // item_price
+                                                "data:image/jpg;charset=utf8;base64,".base64_encode($row['item_img']));
+                    $tempItem->populateIngredientsById();
+                    array_push($menuItemArray,  $tempItem);
                 }
                 return($menuItemArray);
             }
@@ -146,8 +168,8 @@
         }
     }
     class Section {
-        private $section_id;
-        private $section_name;
+        public $section_id;
+        public $section_name;
         function __construct($_section_id, $_section_name){
             $this->section_id = $_section_id;
             $this->section_name = $_section_name;
@@ -191,10 +213,10 @@
         }
     }
     class Ingredient{
-        private string $ingredient_id;
-        private string $ingredient_name;
-        private float $ingredient_price;
-        private bool $is_default;
+        public string $ingredient_id;
+        public string $ingredient_name;
+        public float $ingredient_price;
+        public bool $is_default;
 
         function __construct(string $_ingredient_id, string $_ingredient_name, float $_ingredient_price, bool $_is_default){
             $this->ingredient_id = $_ingredient_id;

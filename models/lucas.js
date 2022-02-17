@@ -1,4 +1,4 @@
-console.log("hello")
+
 class Menu_Item{
     constructor(menu_item_id, section, item_name, item_description, item_price, item_img){
         this.menu_item_id = menu_item_id;
@@ -56,6 +56,33 @@ class Menu_Item{
         })
         return data.trim();
     }
+    static async getMenuItemsBySectionId(section_id, callback){
+        $.ajax({
+            url : "../models/ajaxHandler.php",
+            method : "POST",
+            data:{
+                'action' : 'getMenuItemsBySectionId',
+                'section_id' : section_id
+            }
+        })
+        .fail(function(e) {console.log(e)})
+        .done(function(data){
+            var data = JSON.parse(data);
+            var menuItems = Array();
+
+            for(let i = 0; i < data.length; i++){
+                let d = data[i];
+                menuItems[i] = new Menu_Item(d['menu_item_id'], new Section(d['section']['section_id'], [d['section']['section_name']]), d['item_name'], d['item_description'], d['item_price'], d['item_img'])
+                for(let y = 0; y < d['itemIngredients'].length; y++){
+                    let ingredient = d['itemIngredients'][y]
+                    menuItems[i].addIngredient(new Ingredient(ingredient['ingredient_id'], ingredient['ingredient_name'], ingredient['ingredient_price'], ingredient['is_default']))
+                }
+            }
+
+            callback(menuItems)
+
+        })
+    }
     
 }
 
@@ -65,6 +92,8 @@ class Section{
         this.section_id = section_id;
         this.section_name = section_name;
     }
+
+
 }
 
 class Ingredient {
