@@ -1,3 +1,14 @@
+function count(str, find) {
+    return (str.split(find)).length - 1;
+}
+var rootPath = "";
+if(count(window.location.pathname, "/") == 2){
+    $rootPath = "../../"
+}
+else{
+    rootPath = "../"
+}
+
 
 class Menu_Item{
     constructor(menu_item_id, section, item_name, item_description, item_price, item_img){
@@ -15,7 +26,7 @@ class Menu_Item{
     }
     addToDatabase(){
         $.ajax({
-            url : "../models/ajaxHandler.php",
+            url : rootPath+"models/ajaxHandler.php",
             method : "POST",
             data:{
                 'action' : 'addToDB',
@@ -29,7 +40,7 @@ class Menu_Item{
     }
     updateItem(){
         $.ajax({
-            url : "../models/ajaxHandler.php",
+            url : rootPath+"models/ajaxHandler.php",
             method : "POST",
             data:{
                 'action' : 'updateItem',
@@ -43,7 +54,7 @@ class Menu_Item{
     }
     static async deleteItem(menu_item_id){
         let data = await $.ajax({
-            url : "../models/ajaxHandler.php",
+            url : rootPath+"models/ajaxHandler.php",
             method : "POST",
             data:{
                 'action' : 'deleteItem',
@@ -58,7 +69,7 @@ class Menu_Item{
     }
     static async getMenuItemsBySectionId(section_id, callback){
         $.ajax({
-            url : "../models/ajaxHandler.php",
+            url : rootPath+"models/ajaxHandler.php",
             method : "POST",
             data:{
                 'action' : 'getMenuItemsBySectionId',
@@ -72,7 +83,7 @@ class Menu_Item{
 
             for(let i = 0; i < data.length; i++){
                 let d = data[i];
-                menuItems[i] = new Menu_Item(d['menu_item_id'], new Section(d['section']['section_id'], [d['section']['section_name']]), d['item_name'], d['item_description'], d['item_price'], d['item_img'])
+                menuItems[i] = new Menu_Item(d['menu_item_id'], new Section(d['section']['section_id'], d['section']['section_name']), d['item_name'], d['item_description'], d['item_price'], d['item_img'])
                 for(let y = 0; y < d['itemIngredients'].length; y++){
                     let ingredient = d['itemIngredients'][y]
                     menuItems[i].addIngredient(new Ingredient(ingredient['ingredient_id'], ingredient['ingredient_name'], ingredient['ingredient_price'], ingredient['is_default']))
@@ -80,7 +91,7 @@ class Menu_Item{
             }
 
             callback(menuItems)
-
+            
         })
     }
     
@@ -106,7 +117,7 @@ class Ingredient {
     static deleteIngredient(ingredient_id, menu_item_id){
         
         $.ajax({
-            url : "../models/ajaxHandler.php",
+            url : rootPath+"/models/ajaxHandler.php",
             method : "POST",
             data:{
                 'action' : 'deleteIngredient',

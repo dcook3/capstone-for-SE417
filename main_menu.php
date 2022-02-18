@@ -1,6 +1,6 @@
 <?php
 include("header.php");
-include("../models/lucas.php");
+include("models/lucas.php");
 
 $sections = Section::getSections();
 
@@ -16,6 +16,11 @@ $sections = Section::getSections();
     <button id = "btn">+</button>
 </div>
 <div class="slideshowWrapper">
+
+<li id = "templateIngredient" class = "hidden">
+    <input type = "checkbox">
+    <p></p>
+</li>
 
 </div>
 
@@ -36,12 +41,31 @@ $sections = Section::getSections();
 <div id = "itemCards" class = "hidden">
     
 </div>
+
+<div id = "addItemMenu" class = "hidden">
+    <h1>
+
+    </h1>
+    <ul>
+        <li>
+            <h1><h2>Ingredients</h2>
+        </li>
+    </ul>
+    <div class="priceInfo">
+
+    </div>
+    <button>
+        Add to Cart
+    </button>
+</div>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-<script src = "../models/lucas.js"></script>
+<script src = "models/lucas.js"></script>
 <script>
     var sectionCards = document.querySelector("#sectionCards");
     var itemCards = document.querySelector("#itemCards");
     var templateCard = document.querySelector("#templateCard");
+    var templateIngredient = document.querySelector("#templateIngredient");
+    var addItemMenu = document.querySelector("#addItemMenu");
     var menuItems
     var btn = document.querySelector("#btn");
     function sectionClick(id){
@@ -55,7 +79,19 @@ $sections = Section::getSections();
                 card.children[1].innerHTML = menuItems[i].item_description;
                 card.children[2].setAttribute("data-index", i);
                 card.children[2].addEventListener("click", function(e){
-                    console.log(menuItems[e.target.getAttribute("data-index")])
+                    let item = menuItems[e.target.getAttribute("data-index")]
+                    addItemMenu.children[0].innerHTML = item.item_name;
+                    for(let y = 0; y < item.ingredients.length; y++){
+                        let ingredient = templateIngredient.cloneNode(true);
+                        ingredient.classList.remove("hidden");
+                        ingredient.children[0].dataset["id"] = item.ingredients[y].ingredient_id
+                        ingredient.children[1].innerHTML = item.ingredients[y].ingredient_name + ((item.ingredients[y].ingredient_price > 0) ? "(" + item.ingredients[y].ingredient_price + ")" : ""); 
+                        addItemMenu.children[1].appendChild(ingredient);
+                    }
+                    addItemMenu.children[2].innerHTML = "idkyet";
+                    
+                    itemCards.classList.add("hidden");
+                    addItemMenu.classList.remove("hidden");
                 })
             }
             

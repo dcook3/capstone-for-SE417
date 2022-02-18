@@ -59,7 +59,7 @@
             </div>
             <div class="form-group">
                 <p>Price:</p>
-                <input id = "priceInput" type="number" min="0.00" max="10000.00" step="0.01" <?= ($post) ? "value = '{$item->getItemPrice()}'" : ""?> />
+                <input class = "form-control" id = "priceInput" type="number" min="0.00" max="10000.00" step="0.01" <?= ($post) ? "value = '{$item->getItemPrice()}'" : ""?> />
             </div>
         </form>
     </div>
@@ -86,8 +86,8 @@
                             $isDefaultStr = ($ingredient->getIsDefault()) ? "checked" : ""; 
                             ?>
                             <tr class = 'ingredientRow' data-id = '<?=$ingredient->getIngredientId()?>'>
-                                <td><input type = 'text' placeholder ='Name' value = '<?=$ingredient->getIngredientName()?>'/></td>
-                                <td><input type='number' min='0.00' max='10000.00' step='0.01' value = '<?=$ingredient->getIngredientPrice()?>'/></td>
+                                <td><input class = "form-control" type = 'text' placeholder ='Name' value = '<?=$ingredient->getIngredientName()?>'/></td>
+                                <td><input class = "form-control" type='number' min='0.00' max='10000.00' step='0.01' value = '<?=$ingredient->getIngredientPrice()?>'/></td>
                                 <td>
                                     <div class='isDefaultWrapper'>
                                         <label for = 'isDefault'>Default</label>
@@ -142,7 +142,7 @@
     });
     doneBtn.addEventListener("click", async function(e){
         let selectedOption = selectInput.children[selectInput.selectedIndex];
-        item = new Menu_Item((post) ? body.dataset["id"] : "-1", 
+        item = new Menu_Item((post) ? backBtn.dataset["id"] : "-1", 
                                 new Section(selectedOption.value, selectedOption.innerText),
                                 nameInput.value,
                                 descriptionInput.value,
@@ -155,7 +155,7 @@
             item.addIngredient(new Ingredient(ingredientRow.dataset["id"],
                                                 ingredientRow.children[0].children[0].value,
                                                 price,
-                                                ingredientRow.children[2].children[1].checked))
+                                                ingredientRow.children[2].children[0].children[1].checked))
             
         }
         if(!post){
