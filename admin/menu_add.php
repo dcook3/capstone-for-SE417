@@ -1,6 +1,7 @@
 <?php
     $levels = 1;
     include("..\models\lucas.php");
+    
     $post = false;
     if($_SERVER['REQUEST_METHOD']==='POST'){
         if(isset($_POST["id"])){
@@ -10,6 +11,7 @@
         }
     }
     include '../include/header.php';
+    Session::CheckSession();
 ?>
 <script  src="../models/lucas.js"></script>
 <link rel="stylesheet" href="assets/css/lucas.css">

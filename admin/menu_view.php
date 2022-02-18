@@ -3,8 +3,11 @@
 <?php
     $levels = 1;
     include("..\models\lucas.php");
+    
     $menuItems = Menu_Item::getMenuItems();
+    
 include '../include/header.php'; 
+Session::CheckSession();
 ?>
 
 
