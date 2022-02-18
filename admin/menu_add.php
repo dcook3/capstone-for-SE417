@@ -1,6 +1,7 @@
 <?php
     $levels = 1;
     include("..\models\lucas.php");
+    
     $post = false;
     if($_SERVER['REQUEST_METHOD']==='POST'){
         if(isset($_POST["id"])){
@@ -10,14 +11,15 @@
         }
     }
     include '../include/header.php';
+    Session::CheckSession();
 ?>
 <script  src="../models/lucas.js"></script>
 <link rel="stylesheet" href="assets/css/lucas.css">
 <table class = "hidden">
     <tbody>
         <tr class = "ingredientRow" id = "templateRow" data-id = "-1">
-            <td><input type = "text" placeholder ="Name"></td>
-            <td><div class="form-control"><input class = "dollaSign" type="number" min="0.00" max="10000.00" step="0.01" placeholder="Price"/></div></td>
+            <td><input class = "form-control" type = "text" placeholder ="Name"></td>
+            <td><input class = "form-control" type="number" min="0.00" max="10000.00" step="0.01" placeholder="Price"/></td>
             <td><div class="isDefaultWrapper"><label for = "isDefault">Default</label><input type = "checkbox" name = "isDefault" /></div></td>
             <td><button class = "btn btn-primary deleteButton" onclick="deleteRow(this.parentElement.parentElement)"><i class="fas fa-trash-alt"></i></button></td>
         </tr>
@@ -57,7 +59,7 @@
             </div>
             <div class="form-group">
                 <p>Price:</p>
-                <input class = "dollaSign" id = "priceInput" type="number" min="0.00" max="10000.00" step="0.01" <?= ($post) ? "value = '{$item->getItemPrice()}'" : ""?> />
+                <input id = "priceInput" type="number" min="0.00" max="10000.00" step="0.01" <?= ($post) ? "value = '{$item->getItemPrice()}'" : ""?> />
             </div>
         </form>
     </div>

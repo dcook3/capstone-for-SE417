@@ -25,19 +25,7 @@
     background-color: #ddd;
     border-radius: 15px;
 }
-.dollaSign{
-    position:relative;
-    padding-left: 20px;
-}
 
-.dollaSign::after{
-position: absolute;
-    left: 6px;
-    top: 2px;
-    color: black;
-    content: "Email Address idiot";
-    background-color: blue;
-}
 #ingredientBody
 {
     width: 100%;
