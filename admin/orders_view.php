@@ -14,10 +14,9 @@ if($_SERVER['REQUEST_METHOD'] == "GET")
     else
     {
         $todayDate = new DateTime('NOW');
-        $todayDate = getdate($todayDate->getTimestamp());
         $dateString = $todayDate->format('Y-m-d');
-        $selectedDate = strtotime("{$selectedYear}/{$selectedMonthInt}/{$selectedDay}");
-        $results = Order::getOrdersByDT($selectedDate);
+        $selectedDate = new DateTime($dateString);
+        $results = Order::getOrdersByDT($selectedDate->getTimestamp());
     }
 }
 if($_SERVER['REQUEST_METHOD'] == 'POST')
@@ -149,7 +148,7 @@ include '../include/header.php';
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
                     <button type="submit" class="btn btn-primary">Yes</button>
                     <input type="hidden" id="oidInput" name="delOrderID">
-                    <input type='hidden' name='selectedDate' value='$dateString'>
+                    <input type='hidden' name='selectedDate' value='<?= $dateString; ?>'>
                 </form>
             </div>
         </div>

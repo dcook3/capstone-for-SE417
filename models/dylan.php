@@ -1,6 +1,5 @@
 <?php
 include 'db.php';
-include 'lucas.php';
 // SQL Date -> PHP Date
 // $phpdate = strtotime($sqldate);
 // PHP Date -> SQL Date
