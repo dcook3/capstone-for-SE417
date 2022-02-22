@@ -61,6 +61,9 @@
                 <p>Price:</p>
                 <input class = "form-control" id = "priceInput" type="number" min="0.00" max="10000.00" step="0.01" <?= ($post) ? "value = '{$item->getItemPrice()}'" : ""?> />
             </div>
+            <div class = "form-group">
+                <input id = "fileUpload" type="file" accept="image/*"/>
+            </div>
         </form>
     </div>
     <div id="ingredientWrapper">
@@ -109,7 +112,23 @@
             <button id = "doneBtn" class = "btn btn-secondary">Done</button>
         </div>
     </div>
-    
+    <div class="modal fade" id="croppingModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Upload Image</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <img id = "croppedImage" src>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" onclick="">Done</button>
+            </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <script>
@@ -118,20 +137,42 @@
     var ingredientBody = document.querySelector("#ingredientBody")
     var templateRow = document.querySelector("#templateRow")
     var doneBtn = document.querySelector("#doneBtn")
-
+                
     //form inputs
     var nameInput = document.querySelector("#nameInput");
     var selectInput = document.querySelector("#selectInput");
     var descriptionInput = document.querySelector("#descriptionInput");
     var priceInput = document.querySelector("#priceInput");
-    
-    var post
+    var fileUpload = document.querySelector("#fileUpload");
+    var image = document.querySelector("#croppedImage");
+    var cropper;
+    var modal = new bootstrap.Modal(document.querySelector("#croppingModal"));
     if("<?= $post?>" == "1"){
         post = true;
     }
     else{
         post = false;
     }
+    
+    fileUpload.addEventListener("change", function(e){
+        image.src = URL.createObjectURL(fileUpload.files[0])
+        image.src = fileUpload.value
+        cropper = new Cropper(image, {
+        dragMode: 'move',
+        aspectRatio: 16 / 9,
+        autoCropArea: 0.65,
+        restore: false,
+        guides: false,
+        center: false,
+        highlight: false,
+        cropBoxMovable: false,
+        cropBoxResizable: false,
+        toggleDragModeOnDblclick: false,
+      });
+
+      modal.show();
+      
+    })
 
     backBtn.addEventListener("click", function(e){
         window.location.replace("menu_view.php")
