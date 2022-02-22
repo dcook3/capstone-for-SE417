@@ -7,21 +7,15 @@ if($_SERVER['REQUEST_METHOD'] == "GET")
 {
     if(!empty($_GET))
     {
-        $selectedYear = $_GET["year"];
-        $selectedMonth = $_GET["month"];
-        $selectedDay = $_GET["day"];
-        $selectedMonthInt = date_parse($_GET['month'])['month'];
-        $selectedDate = new DateTime("{$selectedYear}/{$selectedMonthInt}/{$selectedDay}");
+        $dateString = $_GET['selectedDate'];
+        $selectedDate = new DateTime($dateString);
         $results = Order::getOrdersByDT($selectedDate->getTimestamp());
     }
     else
     {
         $todayDate = new DateTime('NOW');
         $todayDate = getdate($todayDate->getTimestamp());
-        $selectedYear = $todayDate["year"];
-        $selectedMonth = $todayDate['month'];
-        $selectedMonthInt = date_parse($selectedMonth)['month'];
-        $selectedDay = $todayDate['mday'];
+        $dateString = $todayDate->format('Y-m-d');
         $selectedDate = strtotime("{$selectedYear}/{$selectedMonthInt}/{$selectedDay}");
         $results = Order::getOrdersByDT($selectedDate);
     }
@@ -46,22 +40,23 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
             $feedback = Order::updateOrderStatus($updateOID, false);
         }
     }
-    $selectedYear = $_POST["year"];
-    $selectedMonth = date('F', mktime(0, 0, 0, $_POST['month'], 10));;
-    $selectedDay = $_POST["day"];
-    $selectedMonthInt = $_POST['month'];
-    $selectedDate = new DateTime("{$selectedYear}/{$selectedMonthInt}/{$selectedDay}");
+    $dateString = $_POST['selectedDate'];
+    $selectedDate = new DateTime($dateString);
     $results = Order::getOrdersByDT($selectedDate->getTimestamp());
 }
 include '../include/header.php';
 ?>
     <h2 class="fw-bold text-center">Orders</h2>
     <div class="d-flex flex-column align-items-center">
-        <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#dateFilterDiv">Toggle Date Filter</button>
-        <div class="d-flex mx-3 col-8">
-            <?php include 'tempFilter.php'; ?>
+        <button class="btn btn-secondary mb-3" type="button" data-bs-toggle="collapse" data-bs-target="#dateFilterDiv">Toggle Date Filter</button>
+        <div class="col-3 collapse" id="dateFilterDiv">
             <form method="get" action="orders_view.php" id="dateFilter" class="p-2 col-6 border d-flex flex-column">
-                <input type="date" name="selectedDate">
+                <label for="selectedDate" class="form-label">Pick day to show orders from:</label>
+                <?php if(!isset($_GET['selectedDate'])): ?>
+                    <input type="date" name="selectedDate" class="form-control">
+                <?php else: ?>
+                    <input type="date" name="selectedDate" value="<?= $_GET['selectedDate']; ?>" class="form-control">
+                <?php endif; ?>
             </form>
         </div>
     </div>
@@ -119,9 +114,7 @@ include '../include/header.php';
                                     echo "<form action='orders_view.php' method='post' class='isCompleted'>
                                             <input type='checkbox' name='orderStatus' value='checked'/><label for='orderStatus'>Completed</label>
                                             <input type='hidden' name='updOrderID' value='$id' /> 
-                                            <input type='hidden' name='year' value='$selectedYear'>
-                                            <input type='hidden' name='month' value='$selectedMonthInt'>
-                                            <input type='hidden' name='day' value='$selectedDay'>
+                                            <input type='hidden' name='selectedDate' value='$dateString'>
                                         </form>";
                                 }
                                 else if($row['order_status'] == "1")
@@ -129,9 +122,7 @@ include '../include/header.php';
                                     echo "<form action='orders_view.php' method='post' class='isCompleted'>
                                             <input checked type='checkbox' name='orderStatus' /><label for='orderStatus'>Completed</label>
                                             <input type='hidden' name='updOrderID' value='$id' /> 
-                                            <input type='hidden' name='year' value='$selectedYear'>
-                                            <input type='hidden' name='month' value='$selectedMonthInt'>
-                                            <input type='hidden' name='day' value='$selectedDay'>
+                                            <input type='hidden' name='selectedDate' value='$dateString'>
                                         </form>";
                                 }
                             ?>
@@ -157,10 +148,8 @@ include '../include/header.php';
                 <form class="modal-footer" action="orders_view.php" method="post">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
                     <button type="submit" class="btn btn-primary">Yes</button>
-                    <input type="hidden" id="oidInput" name="delOrderID" value="">
-                    <input type="hidden" name="year" value="<?= $selectedYear ?>">
-                    <input type="hidden" name="month" value="<?= $selectedMonthInt ?>">
-                    <input type="hidden" name="day" value="<?= $selectedDay ?>">
+                    <input type="hidden" id="oidInput" name="delOrderID">
+                    <input type='hidden' name='selectedDate' value='$dateString'>
                 </form>
             </div>
         </div>
@@ -169,33 +158,10 @@ include '../include/header.php';
     <script>
         //Date Filter Code
         var form = document.querySelector('#dateFilter')
-        var selects = document.querySelectorAll('select.dateFilter')
-        // var filterDiv = document.querySelector('#dateFilterDiv')
-        // var get
-        // if("<>" == "1"){
-        //     get = true;
-        // }
-        // else{
-        //     get = false;
-        // }
-
-        // if(get){
-        //     filterDiv.classList.remove('collapse')
-        // }
-
-        for(let i=0; i<selects.length; i++)
-        {
-            selects[i].addEventListener('change', e =>{form.submit()})
-        }
-
-        if(selects[0].value == "Year" || selects[1].value == "Month")
-        {
-            selects[2].disabled = true;
-        }
-        else
-        {
-            selects[2].disabled = false;
-        }
+        document.querySelector('input[type=date]').addEventListener(`change`, e =>{
+            form.submit();
+        })
+        
 
         //Showing/hiding order details code
         var itemLinks = document.querySelectorAll('.toggleDetails');
