@@ -95,9 +95,9 @@ include '../include/header.php';
                                     $out .= "<li><b>{$orderItems[$count]->getQuantity()}x</b> {$item->getItemName()}";
                                     $out .= "<ul>";
                                     $ingredients = $orderItems[$count]->getIngredients();
-                                    foreach($ingredients as $ingRow)
+                                    foreach($ingredients as $ingredient)
                                     {
-                                        $out .= "<li>{$ingRow['ingredient_name']}</li>";
+                                        $out .= "<li>{$ingredient->getIngredientName()}</li>";
                                     }
                                     $out .= "</ul>";
                                     $count++;

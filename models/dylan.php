@@ -1,5 +1,6 @@
 <?php
 include 'db.php';
+include 'lucas.php';
 // SQL Date -> PHP Date
 // $phpdate = strtotime($sqldate);
 // PHP Date -> SQL Date
@@ -7,8 +8,8 @@ include 'db.php';
 
 class Order_Item
 {
-    private $order_item_id, $order_id, $item_id, $qty;
-    private $ingredients = [];
+    protected $order_item_id, $order_id, $item_id, $qty;
+    protected $ingredients = [];
 
     public static function getOrderItemsByOID($orderID)
     {
@@ -55,18 +56,20 @@ class Order_Item
         return $results;
     }
 
-    private function populateIngredientsByOID()
+    protected function populateIngredientsByOID()
     {
         global $db;
         $results = [];
 
-        $SQL = $db->prepare("SELECT ingredient_name, ingredient_price FROM order_item_ingredients INNER JOIN ingredients ON order_item_ingredients.item_ingredient_id = ingredients.ingredient_id WHERE order_item_ingredients.order_item_id = :oid");
+        $SQL = $db->prepare("SELECT ingredients.ingredient_id, ingredient_name, ingredient_price, is_default FROM order_item_ingredients INNER JOIN ingredients ON order_item_ingredients.item_ingredient_id = ingredients.ingredient_id WHERE order_item_ingredients.order_item_id = :oid");
         
         $SQL->bindValue(":oid", $this->order_item_id);
 
         if($SQL->execute() && $SQL->rowCount() > 0)
         {
-            $this->ingredients = $SQL->fetchAll(PDO::FETCH_ASSOC);
+            foreach($SQL->fetchAll(PDO::FETCH_ASSOC) as $row){
+                array_push($this->ingredients, new Ingredient($row["ingredient_id"], $row["ingredient_name"], floatval($row["ingredient_price"]), ($row['is_default'] == '1') ? true : false));
+            }
         }
         else
         {
@@ -94,9 +97,9 @@ class Order_Item
 
 class Order 
 {
-    private $orderID, $first_name, $last_name, $total_price;
-    private $order_items = [];
-    private $menu_items = [];
+    protected $orderID, $first_name, $last_name, $total_price;
+    protected $order_items = [];
+    protected $menu_items = [];
 
     public static function getOrdersByDT($selectedTS)
     {

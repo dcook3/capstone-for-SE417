@@ -52,7 +52,8 @@ $sections = Section::getSections();
         </li>
     </ul>
     <div class="priceInfo">
-
+        <p>Price: </p>
+        <p></p>
     </div>
     <button>
         Add to Cart
@@ -87,8 +88,25 @@ $sections = Section::getSections();
                         ingredient.children[0].dataset["id"] = item.ingredients[y].ingredient_id
                         ingredient.children[1].innerHTML = item.ingredients[y].ingredient_name + ((item.ingredients[y].ingredient_price > 0) ? "(" + item.ingredients[y].ingredient_price + ")" : ""); 
                         addItemMenu.children[1].appendChild(ingredient);
+                        ingredient.children[0].checked = ingredient.is_default;
+                        ingredient.children[0].addEventListener("change", function(e){
+                            console.log(e.target);
+                            console.log(e.target.checked);
+                            let price =  parseFloat(addItemMenu.children[2].children[1].innerHTML);
+                            if(e.target.checked){
+                                price += item.ingredients[y].ingredient_price;
+                            }
+                            else{
+                                price -= item.ingredients[y].ingredient_price;
+                            }
+                            console.log(ingredient);
+                            console.log(price)
+                            addItemMenu.children[2].children[1].innerHTML = price;
+                        })
                     }
-                    addItemMenu.children[2].innerHTML = "idkyet";
+                    
+                    addItemMenu.children[2].children[1].innerHTML = item.item_price;
+                    
                     
                     itemCards.classList.add("hidden");
                     addItemMenu.classList.remove("hidden");
