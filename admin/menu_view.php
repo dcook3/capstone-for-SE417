@@ -30,7 +30,7 @@ Session::CheckSession();
                 Price
             </td>
             <td>
-                <button class = "btn btn-primary" id = "addNewButton">Add New</button>
+                <button class = "btn btn-secondary" id = "addNewButton">Add New</button>
             </td>
         </thead>
         <tbody>
@@ -44,8 +44,8 @@ Session::CheckSession();
                         <td><?= $item->getItemDescription()?></td>
                         <td>$<?= $item->getItemPrice()?></td>
                         <td>
-                            <button class = "btn btn-primary" onclick="edit('<?= $item->getMenuItemId()?>')"><i class="fas fa-pencil-alt"></i></button>
-                            <button class = "btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop<?= $item->getMenuItemId()?>" ><i class="fas fa-trash-alt"></i></button>
+                            <button class = "btn btn-secondary" onclick="edit('<?= $item->getMenuItemId()?>')"><i class="fas fa-pencil-alt"></i></button>
+                            <button class = "btn btn-secondary" data-bs-toggle="modal" data-bs-target="#staticBackdrop<?= $item->getMenuItemId()?>" ><i class="fas fa-trash-alt"></i></button>
                         </td>
 
                     </tr>

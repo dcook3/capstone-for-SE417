@@ -21,14 +21,14 @@
             <td><input class = "form-control" type = "text" placeholder ="Name"></td>
             <td><input class = "form-control" type="number" min="0.00" max="10000.00" step="0.01" placeholder="Price"/></td>
             <td><div class="isDefaultWrapper"><label for = "isDefault">Default</label><input type = "checkbox" name = "isDefault" /></div></td>
-            <td><button class = "btn btn-primary deleteButton" onclick="deleteRow(this.parentElement.parentElement)"><i class="fas fa-trash-alt"></i></button></td>
+            <td><button class = "btn btn-secondary deleteButton" onclick="deleteRow(this.parentElement.parentElement)"><i class="fas fa-trash-alt"></i></button></td>
         </tr>
     </tbody>
 </table>
 <div class="d-flex justify-content-around flex-row">
     <div id="formWrapper">
         <div id="topWrapper">
-            <button id = "backBtn" class = "btn btn-primary"  data-id = "<?= ($post) ? $item->getMenuItemId() : ""?>">Back</button>
+            <button id = "backBtn" class = "btn btn-secondary"  data-id = "<?= ($post) ? $item->getMenuItemId() : ""?>">Back</button>
             <h1><?= ($post) ? "Edit" : "Add New" ?> Item</h1>
             <p></p>
         </div>
@@ -73,7 +73,7 @@
                     <td></td>
                     <td></td>
                     <td>
-                        <button id = "addIngredientBtn" class = "btn btn-primary">+</button>
+                        <button id = "addIngredientBtn" class = "btn btn-secondary">+</button>
                     </td>
                 </tr>
                 
@@ -95,7 +95,7 @@
                                     </div>
                                 </td>
                                 <td>
-                                    <button id = 'deleteButton' class = 'btn btn-primary' onclick='deleteRow(this.parentElement.parentElement)'><i class='fas fa-trash-alt'></i></button>
+                                    <button id = 'deleteButton' class = 'btn btn-secondary' onclick='deleteRow(this.parentElement.parentElement)'><i class='fas fa-trash-alt'></i></button>
                                 </td>
                             </tr>
                             <?php
@@ -106,7 +106,7 @@
         </table>
         <div id="doneBtnWrapper">
             <p></p>
-            <button id = "doneBtn" class = "btn btn-primary">Done</button>
+            <button id = "doneBtn" class = "btn btn-secondary">Done</button>
         </div>
     </div>
     
