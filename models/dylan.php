@@ -224,5 +224,10 @@ class Order
     {
         return $this->order_items;
     }
+
+    public function getOrderID()
+    {
+        return $this->orderID;
+    }
 }
 
