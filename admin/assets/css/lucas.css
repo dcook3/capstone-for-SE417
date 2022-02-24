@@ -25,6 +25,14 @@
     background-color: #ddd;
     border-radius: 15px;
 }
+#previewImg{
+    width: 100%;
+    border: 1px solid black;
+}
+.cropper-container, #croppedImage{
+    width: 100% !important;
+    height: 20vw !important;
+}
 
 #ingredientBody
 {

@@ -62,7 +62,12 @@
                 <input class = "form-control" id = "priceInput" type="number" min="0.00" max="10000.00" step="0.01" <?= ($post) ? "value = '{$item->getItemPrice()}'" : ""?> />
             </div>
             <div class = "form-group">
-                <input id = "fileUpload" type="file" accept="image/*"/>
+                <p>Item Image:</p>
+                <input class = "form-control" id = "fileUpload" type="file" accept="image/*"/>
+            </div>
+            <div class="form-group <?= ($item->getItemImg() != null || $item->getItemImg() == "") ? "hidden": ""?>">
+                <p>Preview:</p>
+                <img id = "previewImg" src = "<?= $item->getItemImg() ?>">
             </div>
         </form>
     </div>
@@ -120,11 +125,14 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <img id = "croppedImage" src>
+                <div class="cropper-container">
+                    <img id = "croppedImage">
+                </div>
+                
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-primary" onclick="">Done</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="cancelCrop()">Cancel</button>
+                <button type="button" class="btn btn-primary" onclick="cropImage()">Done</button>
             </div>
             </div>
         </div>
@@ -145,7 +153,19 @@
     var priceInput = document.querySelector("#priceInput");
     var fileUpload = document.querySelector("#fileUpload");
     var image = document.querySelector("#croppedImage");
-    var cropper;
+    var previewImg = document.querySelector("#previewImg");
+    var cropper = new Cropper(image, {
+        dragMode: 'move',
+        aspectRatio: 16 / 9,
+        autoCropArea: 0.65,
+        restore: false,
+        guides: false,
+        center: true,
+        highlight: false,
+        cropBoxMovable: false,
+        cropBoxResizable: false,
+        toggleDragModeOnDblclick: false,
+      });
     var modal = new bootstrap.Modal(document.querySelector("#croppingModal"));
     if("<?= $post?>" == "1"){
         post = true;
@@ -153,24 +173,25 @@
     else{
         post = false;
     }
-    
+    function cancelCrop(){
+        fileUpload.value = "";
+    }
+    function cropImage(){
+        previewImg.src = cropper.getCroppedCanvas().toDataURL("image/jpeg");
+        previewImg.parentElement.classList.remove("hidden");
+        modal.hide();
+    }
     fileUpload.addEventListener("change", function(e){
-        image.src = URL.createObjectURL(fileUpload.files[0])
-        image.src = fileUpload.value
-        cropper = new Cropper(image, {
-        dragMode: 'move',
-        aspectRatio: 16 / 9,
-        autoCropArea: 0.65,
-        restore: false,
-        guides: false,
-        center: false,
-        highlight: false,
-        cropBoxMovable: false,
-        cropBoxResizable: false,
-        toggleDragModeOnDblclick: false,
-      });
+        
+        modal.show();
+       
+      var reader = new FileReader();
+      reader.addEventListener("load", function(e){
+         cropper.replace(e.target.result);
+      })
+      reader.readAsDataURL(fileUpload.files[0]);
 
-      modal.show();
+      
       
     })
 
@@ -187,8 +208,8 @@
                                 new Section(selectedOption.value, selectedOption.innerText),
                                 nameInput.value,
                                 descriptionInput.value,
-                                priceInput.value,
-                                "")
+                                priceInput.value, 
+                                previewImg.src)
         for(let i = 0; i < ingredientBody.children.length; i++){
             let ingredientRow = ingredientBody.children[i];
             let price = (ingredientRow.children[1].children[0].value == "") ? "0" : ingredientRow.children[1].children[0].value;

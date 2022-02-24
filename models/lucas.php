@@ -32,7 +32,7 @@
                                      $response['item_name'],                                                        // item_name
                                      $response['item_description'],                                                 // item_description
                                      floatval($response['item_price']),                                             // item_price
-                                     "data:image/jpg;charset=utf8;base64,".base64_encode($response['item_img']));   // iem_img
+                                     "".$response['item_img']);   // iem_img
             }
             else{
                 echo 'ERROR FINDING MENU_ITEM WITH ID: ' . $_menu_item_id;
@@ -123,10 +123,9 @@
                     ":item_name" => $this->getItemName(),
                     ":item_description" => $this->getItemDescription(),
                     ":item_price" => $this->getItemPrice(),
-                    ":item_img" => $this->getItemImg(),
+                    ":item_img", $this->getItemImg(),
                     ":menu_item_id" => $this->getMenuItemId()
                 );
-                 
                 var_dump($this);
                 if($stmt->execute($binds)){
                     
