@@ -57,7 +57,7 @@ class Order_Item
         return $results;
     }
 
-    protected function populateIngredientsByOID()
+    public function populateIngredientsByOID()
     {
         global $db;
         $results = [];
@@ -80,9 +80,31 @@ class Order_Item
         return $results;
     } 
 
+    public function updateQuantity($qty, $oiid){
+        global $db;
+
+        $SQL = $db->prepare("UPDATE order_items SET qty = :qty WHERE order_item_id = :oiid");
+
+        $binds = array(
+            ":qty" => $qty,
+            ":oiid" => $oiid
+        )
+
+        if($SQL->execute($binds) && $SQL->rowCount() == 1)
+        {
+            return true;
+        }
+        return false;
+    }
+
     public function getItemID()
     {
         return $this->item_id;
+    }
+
+    public function getOrderItemID()
+    {
+        return $this->order_item_id;
     }
 
     public function getIngredients()
@@ -93,6 +115,10 @@ class Order_Item
     public function getQuantity()
     {
         return $this->qty;
+    }
+
+    public function setQuantity($_qty){
+        $this->qty = $_qty;
     }
 }
 
@@ -179,7 +205,24 @@ class Order
         return ($results);
     }
 
-    public function populateOrderByID($orderID)
+    public static function getIncompleteOrderByUserID($user_id)
+    {
+        global $db;
+        $results = [];
+
+        $SQL = $db->prepare("SELECT * FROM orders WHERE [user_id] = :uid AND order_status = 0")
+
+        $SQL->bindValue(":oid", $orderID);
+
+        if($SQL->execute() && $SQL->rowCount() == 1)
+        {
+            $order = new Order();
+            $order->populateOrderByID($results["order_id"]);
+            return($order);
+        }
+    }
+
+    public static function populateOrderByID($orderID)
     {
         global $db;
         $results = [];

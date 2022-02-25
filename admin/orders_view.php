@@ -1,49 +1,49 @@
 <?php
-$levels = 1;
-include '../models/sql_functions.php';
-date_default_timezone_set("America/New_York");
+    $levels = 1;
+    include '../models/sql_functions.php';
+    date_default_timezone_set("America/New_York");
 
-if($_SERVER['REQUEST_METHOD'] == "GET")
-{
-    if(!empty($_GET))
+    if($_SERVER['REQUEST_METHOD'] == "GET")
     {
-        $dateString = $_GET['selectedDate'];
+        if(!empty($_GET))
+        {
+            $dateString = $_GET['selectedDate'];
+            $selectedDate = new DateTime($dateString);
+            $results = Order::getOrdersByDT($selectedDate->getTimestamp());
+        }
+        else
+        {
+            $todayDate = new DateTime('NOW');
+            $dateString = $todayDate->format('Y-m-d');
+            $selectedDate = new DateTime($dateString);
+            $results = Order::getOrdersByDT($selectedDate->getTimestamp());
+        }
+    }
+    if($_SERVER['REQUEST_METHOD'] == 'POST')
+    {   
+        if(isset($_POST['delOrderID']))
+        {
+            $deleteOID = $_POST['delOrderID'];
+            $feedback = Order::deleteOrder($deleteOID);
+        }
+        else if(isset($_POST['updOrderID']))
+        {
+            if(isset($_POST['orderStatus']))
+            {
+                $updateOID = $_POST['updOrderID'];
+                $feedback = Order::updateOrderStatus($updateOID, true);
+            }
+            else 
+            {
+                $updateOID = $_POST['updOrderID'];
+                $feedback = Order::updateOrderStatus($updateOID, false);
+            }
+        }
+        $dateString = $_POST['selectedDate'];
         $selectedDate = new DateTime($dateString);
         $results = Order::getOrdersByDT($selectedDate->getTimestamp());
     }
-    else
-    {
-        $todayDate = new DateTime('NOW');
-        $dateString = $todayDate->format('Y-m-d');
-        $selectedDate = new DateTime($dateString);
-        $results = Order::getOrdersByDT($selectedDate->getTimestamp());
-    }
-}
-if($_SERVER['REQUEST_METHOD'] == 'POST')
-{   
-    if(isset($_POST['delOrderID']))
-    {
-        $deleteOID = $_POST['delOrderID'];
-        $feedback = Order::deleteOrder($deleteOID);
-    }
-    else if(isset($_POST['updOrderID']))
-    {
-        if(isset($_POST['orderStatus']))
-        {
-            $updateOID = $_POST['updOrderID'];
-            $feedback = Order::updateOrderStatus($updateOID, true);
-        }
-        else 
-        {
-            $updateOID = $_POST['updOrderID'];
-            $feedback = Order::updateOrderStatus($updateOID, false);
-        }
-    }
-    $dateString = $_POST['selectedDate'];
-    $selectedDate = new DateTime($dateString);
-    $results = Order::getOrdersByDT($selectedDate->getTimestamp());
-}
-include '../include/header.php';
+    include '../include/header.php';
 ?>
     <h2 class="fw-bold text-center">Orders</h2>
     <div class="d-flex flex-column align-items-center">
@@ -78,8 +78,7 @@ include '../include/header.php';
                         <td>
                             <a class="toggleDetails" href="">Show Details</a>
                             <?php 
-                                $tempOrder = new Order();
-                                $tempOrder->populateOrderByID($row['order_id']);
+                                $tempOrder = Order::getOrderByID($row['order_id']);
                                 $out = "<ul>";
                                 $count = 0;
                                 foreach($tempOrder->getMenuItems() as $item)
