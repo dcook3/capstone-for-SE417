@@ -7,8 +7,8 @@ include 'db.php';
 
 class Order_Item
 {
-    protected $order_item_id, $order_id, $item_id, $qty;
-    protected $ingredients = [];
+    public $order_item_id, $order_id, $item_id, $qty;
+    public $ingredients = [];
 
     public static function getOrderItemsByOID($orderID)
     {
@@ -29,6 +29,8 @@ class Order_Item
         }
         return $results;
     }
+
+    
 
     public function populateOrderItemByID($oiid)
     {
@@ -96,10 +98,52 @@ class Order_Item
 
 class Order 
 {
-    protected $orderID, $first_name, $last_name, $total_price;
-    protected $order_items = [];
-    protected $menu_items = [];
+    public $orderID, $user_id, $first_name, $last_name, $total_price, $order_status;
+    public $order_items = [];
+    public $menu_items = [];
 
+
+    public static function createOrderIfNoneExists($user_id){
+        global $db;
+
+        $stmt = $db->prepare("SELECT order_id, order_status FROM orders WHERE user_id = :user_id AND (order_status = 0 OR order_status = 1)");
+        $binds = array(
+            ":user_id" =>$user_id
+        );
+
+        if($stmt->execute($binds)){
+            if($stmt->rowCount() == 0){
+                return Order::addOrder($user_id);
+            }
+            else{
+                $results = $stmt->fetchAll(PDO::FETCH_ASSOC)[0];
+                if($results["order_status"] == "1"){
+                    return("1");
+                } 
+                else{
+                    $order = new Order();
+                    $order->populateOrderByID($results["order_id"]);
+                    return($order);
+                }
+            }
+        }
+        else{
+            return($stmt->errorInfo());
+        }
+    }   
+    public static function addOrder($user_id){
+        global $db;
+
+        $stmt = $db->prepare("INSERT INTO orders (user_id, order_datetime, order_status) VALUES (:user_id, CURDATE(), '0')");
+        $binds = array(
+            ":user_id" => $user_id
+        );
+        if($stmt->execute($binds)){
+            $order = new Order();
+            $order->populateOrderByID($db->lastInsertId());
+            return($order);
+        }
+    }
     public static function getOrdersByDT($selectedTS)
     {
         global $db;
@@ -151,6 +195,8 @@ class Order
             $this->orderID = $results["order_id"];
             $this->first_name = $results["first_name"];
             $this->last_name = $results["last_name"];
+            $this->user_id = $results["user_id"];
+            $this->order_status = $results["order_status"];
             $oitems = Order_Item::getOrderItemsByOID($results["order_id"]);
             if(gettype($oitems) != 'string')
             {

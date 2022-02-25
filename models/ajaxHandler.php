@@ -1,6 +1,6 @@
 <?php 
     include('lucas.php');
-    // include('dylan.php');
+    include('dylan.php');
     if($_SERVER['REQUEST_METHOD']==='POST'){
         if($_POST['action'] == 'addToDB'){
             $postItem = $_POST['item'];
@@ -12,7 +12,6 @@
             $postItem = $_POST['item'];
             $item = postToMenuItem($postItem);
             echo $item->updateMenuItem();
-            
         }
         else if($_POST['action'] == 'deleteIngredient'){
             if(isset($_POST["ingredient_id"]) && isset($_POST["menu_item_id"])){
@@ -39,6 +38,17 @@
                 echo false;
             }
         }
+        else if($_POST['action'] == 'createOrderIfNoneExists'){
+            if(isset($_POST["user_id"])){
+                $result = Order::createOrderIfNoneExists($_POST["user_id"]);
+                
+                echo json_encode($result);
+                
+            }
+            else {
+                echo "user_id not set";
+            }
+        }
         else{
             echo 'action not set';
         }
@@ -56,7 +66,6 @@
         if(isset($postItem["ingredients"])){
             foreach($postItem["ingredients"] as $ingredientArr){
                 $checked = ($ingredientArr["is_default"] == "true") ? true : false;
-                var_dump($ingredientArr["is_default"]);
                 $item->addIngredient(new Ingredient($ingredientArr["ingredient_id"], 
                                                     $ingredientArr["ingredient_name"], 
                                                     $ingredientArr["ingredient_price"], 

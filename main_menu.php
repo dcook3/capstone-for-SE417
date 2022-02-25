@@ -55,7 +55,7 @@ $sections = Section::getSections();
         <p>Price: </p>
         <p></p>
     </div>
-    <button>
+    <button id = "addToCartBtn">
         Add to Cart
     </button>
 </div>
@@ -68,6 +68,8 @@ $sections = Section::getSections();
     var templateIngredient = document.querySelector("#templateIngredient");
     var addItemMenu = document.querySelector("#addItemMenu");
     var menuItems
+    var item
+    var addToCartBtn = document.querySelector("#addToCartBtn");
     var btn = document.querySelector("#btn");
     function sectionClick(id){
         Menu_Item.getMenuItemsBySectionId(id, function(_menuItems){
@@ -80,7 +82,7 @@ $sections = Section::getSections();
                 card.children[1].innerHTML = menuItems[i].item_description;
                 card.children[2].setAttribute("data-index", i);
                 card.children[2].addEventListener("click", function(e){
-                    let item = menuItems[e.target.getAttribute("data-index")]
+                    item = menuItems[e.target.getAttribute("data-index")]
                     addItemMenu.children[0].innerHTML = item.item_name;
                     for(let y = 0; y < item.ingredients.length; y++){
                         let ingredient = templateIngredient.cloneNode(true);
@@ -117,6 +119,11 @@ $sections = Section::getSections();
             itemCards.classList.remove("hidden");
         })
     }
+    addToCartBtn.addEventListener("click", function(e){
+        Order.createOrderIfNoneExists("2", function(order){
+            console.log(order);
+        });
+    })
     function selectItem(){
         console.log(i);
     }

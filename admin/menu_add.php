@@ -65,7 +65,7 @@
                 <p>Item Image:</p>
                 <input class = "form-control" id = "fileUpload" type="file" accept="image/*"/>
             </div>
-            <div class="form-group <?= ($item->getItemImg() != null || $item->getItemImg() == "") ? "hidden": ""?>">
+            <div class="form-group <?= ($item->getItemImg() == null || $item->getItemImg() == "") ? "hidden": ""?>">
                 <p>Preview:</p>
                 <img id = "previewImg" src = "<?= $item->getItemImg() ?>">
             </div>
@@ -184,13 +184,13 @@
     fileUpload.addEventListener("change", function(e){
         
         modal.show();
-       
+      
       var reader = new FileReader();
       reader.addEventListener("load", function(e){
          cropper.replace(e.target.result);
       })
       reader.readAsDataURL(fileUpload.files[0]);
-
+      fileUpload.value = "";
       
       
     })
@@ -227,7 +227,7 @@
             item.updateItem();
         }
         setTimeout(function(){
-            window.location.replace("menu_view.php")
+            // window.location.replace("menu_view.php")
         }, 10);
     })
 

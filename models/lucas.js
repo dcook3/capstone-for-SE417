@@ -49,6 +49,7 @@ class Menu_Item{
         })
         .fail(function(e) {console.log(e)})
         .done(function(data){
+            console.log(data)
             return(data);
         })
     }
@@ -97,6 +98,30 @@ class Menu_Item{
     
 }
 
+class Order{
+    constructor(order_id, user_id, order_status){
+        this.order_id = order_id;
+        this.user_id = user_id;
+        this.order_status = order_status;
+    }
+
+    static createOrderIfNoneExists(user_id, callback){
+        $.ajax({
+            url : rootPath+"models/ajaxHandler.php",
+            method : "POST",
+            data:{
+                'action' : 'createOrderIfNoneExists',
+                'user_id' : user_id,
+            }
+        })
+        .fail(function(e) {console.log(e)})
+        .done(function(data){
+            let d = JSON.parse(data);
+            let order = new Order(d["orderID"], d["user_id"], d["order_status"]);
+            callback(order);
+        })
+    }
+}
 
 class Section{
     constructor(section_id, section_name){

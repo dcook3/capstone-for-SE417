@@ -117,16 +117,16 @@
         function updateMenuItem(){
             global $db;
             if($this->getMenuItemId() != '-1'){
-                $stmt = $db->prepare("Update menu_items SET section_id = :section_id, item_name = :item_name, item_description = :item_description, item_price = :item_price, item_img = :item_img WHERE menu_item_id = :menu_item_id;");
+                $stmt = $db->prepare("UPDATE menu_items SET section_id = :section_id, item_name = :item_name, item_description = :item_description, item_price = :item_price, item_img = :item_img WHERE menu_item_id = :menu_item_id;");
                 $binds = array(
                     ":section_id" => $this->getSection()->getSectionId(),
                     ":item_name" => $this->getItemName(),
                     ":item_description" => $this->getItemDescription(),
                     ":item_price" => $this->getItemPrice(),
-                    ":item_img", $this->getItemImg(),
+                    ":item_img" => $this->getItemImg(),
                     ":menu_item_id" => $this->getMenuItemId()
                 );
-                var_dump($this);
+                // var_dump($this);
                 if($stmt->execute($binds)){
                     
                     foreach($this->getIngredients() as $ingredient){
@@ -135,7 +135,7 @@
                     }
                 }
                 else{
-                    return(false);
+                    var_dump($stmt->errorInfo());
                 }
                 
             }
@@ -343,5 +343,7 @@
             return $this->is_default;
         }
     }
+
+    
     
 ?>
