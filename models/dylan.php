@@ -80,7 +80,7 @@ class Order_Item
         return $results;
     } 
 
-    public function updateQuantity($qty, $oiid){
+    public static function updateQuantity($qty, $oiid){
         global $db;
 
         $SQL = $db->prepare("UPDATE order_items SET qty = :qty WHERE order_item_id = :oiid");
