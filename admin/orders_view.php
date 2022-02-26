@@ -78,7 +78,8 @@
                         <td>
                             <a class="toggleDetails" href="">Show Details</a>
                             <?php 
-                                $tempOrder = Order::getOrderByID($row['order_id']);
+                                $tempOrder = new Order();
+                                $tempOrder->populateOrderByID($row['order_id']);
                                 $out = "<ul>";
                                 $count = 0;
                                 foreach($tempOrder->getMenuItems() as $item)

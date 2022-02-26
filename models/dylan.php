@@ -88,7 +88,25 @@ class Order_Item
         $binds = array(
             ":qty" => $qty,
             ":oiid" => $oiid
-        )
+        );
+
+        if($SQL->execute($binds) && $SQL->rowCount() == 1)
+        {
+            return true;
+        }
+        return false;
+    }
+
+    public static function deleteItem($orderID, $itemID)
+    {
+        global $db;
+
+        $SQL = $db->prepare("DELETE FROM order_items WHERE order_item_id = :oiid AND order_id = :oid");
+
+        $binds = array(
+            ":oid" => $orderID,
+            ":oiid" => $itemID
+        );
 
         if($SQL->execute($binds) && $SQL->rowCount() == 1)
         {
@@ -210,19 +228,24 @@ class Order
         global $db;
         $results = [];
 
-        $SQL = $db->prepare("SELECT * FROM orders WHERE [user_id] = :uid AND order_status = 0")
+        $SQL = $db->prepare("SELECT order_id FROM orders WHERE user_id = :uid AND order_status = 0");
 
-        $SQL->bindValue(":oid", $orderID);
+        $SQL->bindValue(":uid", $user_id);
 
         if($SQL->execute() && $SQL->rowCount() == 1)
         {
+            $results = $SQL->fetchAll(PDO::FETCH_ASSOC)[0];
             $order = new Order();
             $order->populateOrderByID($results["order_id"]);
             return($order);
         }
+        else
+        {
+            return false;
+        }
     }
 
-    public static function populateOrderByID($orderID)
+    public function populateOrderByID($orderID)
     {
         global $db;
         $results = [];
