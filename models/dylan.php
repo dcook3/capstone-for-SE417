@@ -9,7 +9,40 @@ class Order_Item
 {
     public $order_item_id, $order_id, $item_id, $qty, $price;
     public $ingredients = [];
+    
+    public function addItemToOrder(){
+        global $db;
+        if($this->order_item_id == "-1"){
+            $stmt = $db->prepare("INSERT INTO order_items (order_id, menu_item_id, qty) VALUES (:order_id, :menu_item_id, :qty)");
+            $binds = array(
+                ":order_id" => $this->order_id,
+                ":menu_item_id" => $this->item_id,
+                ":qty" => $this->qty
+            );
+            if($stmt->execute($binds)){
+                $this->order_item_id = $db->lastInsertId();
+                foreach($this->ingredients as $ingredient){
+                    $ingredientStmt = $db->prepare("INSERT INTO order_item_ingredients (item_ingredient_id, order_item_id) VALUES (:ingredient_id, :order_item_id)");
+                    $ingredientBinds = array(
+                        ":ingredient_id" => $ingredient->getIngredientId(),
+                        ":order_item_id" => $this->order_item_id
+                    );
+                    if(!$ingredientStmt->execute($ingredientBinds)){
+                        return($ingredientStmt->errorInfo());
+                    }
+                    
 
+                }
+                return(true);
+            }
+            else{
+                return($stmt->errorInfo());
+            }
+        }
+        else{
+            return("CAN'T ADD ITEM THAT ALREADY EXISTS");
+        }
+    }
     public static function getOrderItemsByOID($orderID)
     {
         global $db;
@@ -192,6 +225,9 @@ class Order
             return($stmt->errorInfo());
         }
     }   
+    public function addOrderItem(){
+
+    }
     public static function addOrder($user_id){
         global $db;
 

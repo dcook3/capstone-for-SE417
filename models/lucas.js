@@ -98,13 +98,34 @@ class Menu_Item{
     
 }
 
+class Order_Item extends Menu_Item{
+    constructor(menu_item_id, section, item_name, item_description, item_price, item_img, order_item_id, qty){
+        super(menu_item_id, section, item_name, item_description, item_price, item_img);
+        this.order_item_id = order_item_id;
+        this.qty = qty;
+        this.ingredients = Array();
+    }     
+}
+
 class Order{
     constructor(order_id, user_id, order_status){
         this.order_id = order_id;
         this.user_id = user_id;
         this.order_status = order_status;
+        this.order_items = Array();
     }
-
+    addOrderItem(order_item){
+        $.ajax({
+            url : rootPath+"models/ajaxHandler.php",
+            method : "POST",
+            data:{
+                'action' : 'addOrderItem',
+                'order_id': this.order_id,
+                'order_item' : order_item,
+            }
+        })
+        .fail(function(e) {console.log(e)})
+    }
     static createOrderIfNoneExists(user_id, callback){
         $.ajax({
             url : rootPath+"models/ajaxHandler.php",
@@ -118,6 +139,15 @@ class Order{
         .done(function(data){
             let d = JSON.parse(data);
             let order = new Order(d["orderID"], d["user_id"], d["order_status"]);
+            for(let i = 0; i< d["order_items"].legth; i++){
+                let _order_item = d['order_items'][i]
+                let menu_item = d['menu_items'][i]
+                let order_item = new Order_Item(menu_item['menu_item_id'], new Section(menu_item['section']['section_id'], menu_item['section']['section_name']), menu_item['item_name'], menu_item['item_description'], menu_item['item_price'], menu_item['item_img'], _order_item["order_item_id"], _order_item["qty"])
+                for(let y = 0; y < _order_item['ingredients'].length; y++){
+                    let ingredient = _order_item['ingredients'][y];
+                    order_item.addIngredient(new Ingredient(ingredient["ingredient_id"], ingredient["ingredient_name"], ingredient["ingredient_price"], ingredient["is_default"]));
+                }
+            }
             callback(order);
         })
     }
