@@ -48,9 +48,13 @@ $sections = Section::getSections();
     </h1>
     <ul>
         <li>
-            <h1><h2>Ingredients</h2>
+            <h2>Ingredients</h2>
         </li>
     </ul>
+    <div>
+        <p>Quantity</p>
+        <input id = "qtyInput" type = "number" min = "1" max = "10" value = "1">
+    </div>
     <div class="priceInfo">
         <p>Price: </p>
         <p></p>
@@ -67,6 +71,7 @@ $sections = Section::getSections();
     var templateCard = document.querySelector("#templateCard");
     var templateIngredient = document.querySelector("#templateIngredient");
     var addItemMenu = document.querySelector("#addItemMenu");
+    var qtyInput = document.querySelector("#qtyInput");
     var menuItems
     var item
     var addToCartBtn = document.querySelector("#addToCartBtn");
@@ -92,8 +97,6 @@ $sections = Section::getSections();
                         addItemMenu.children[1].appendChild(ingredient);
                         ingredient.children[0].checked = ingredient.is_default;
                         ingredient.children[0].addEventListener("change", function(e){
-                            console.log(e.target);
-                            console.log(e.target.checked);
                             let price =  parseFloat(addItemMenu.children[2].children[1].innerHTML);
                             if(e.target.checked){
                                 price += item.ingredients[y].ingredient_price;
@@ -101,8 +104,6 @@ $sections = Section::getSections();
                             else{
                                 price -= item.ingredients[y].ingredient_price;
                             }
-                            console.log(ingredient);
-                            console.log(price)
                             addItemMenu.children[2].children[1].innerHTML = price;
                         })
                     }
@@ -120,8 +121,22 @@ $sections = Section::getSections();
         })
     }
     addToCartBtn.addEventListener("click", function(e){
-        Order.createOrderIfNoneExists("2", function(order){
-            console.log(order);
+        Order.createOrderIfNoneExists("6", function(order){
+            let order_item = new Order_Item(item.menu_item_id,
+                                            item.section,
+                                            item.item_name, 
+                                            item.item_description, 
+                                            item.item_price, 
+                                            item.item_img,
+                                            "-1",
+                                            qtyInput.value)
+            for(let i = 1; i < addItemMenu.children.length; i++){
+                let checkbox = addItemMenu.children[1].children[i].children[0]
+                if(checkbox.checked){
+                    order_item.addIngredient(new Ingredient(checkbox.dataset["id"], "0", "0", false))
+                }
+            }
+            order.addOrderItem(order_item);
         });
     })
     function selectItem(){

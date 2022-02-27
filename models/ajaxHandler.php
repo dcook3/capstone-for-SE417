@@ -49,11 +49,29 @@
                 echo "user_id not set";
             }
         }
+        else if($_POST['action'] == 'addOrderItem'){
+            if(isset($_POST["order_item"]) && isset($_POST["order_id"])){
+                $order_item = postToOrderItem($_POST["order_item"]);
+                var_dump($order_item);
+                echo $order_item->addItemToOrder();
+            }
+        }
         else{
             echo 'action not set';
         }
     }
 
+    function postToOrderItem($postItem){
+        $order_item = new Order_Item();
+        $order_item->order_item_id = $postItem["order_item_id"];
+        $order_item->order_id = $_POST["order_id"];
+        $order_item->item_id = $postItem["menu_item_id"];
+        $order_item->qty = $postItem["qty"];
+        foreach($postItem["ingredients"] as $ingredient){
+            array_push($order_item->ingredients, postToIngredient($ingredient));
+        }
+        return($order_item);
+    }
 
     function postToMenuItem($postItem){
         $item = new Menu_Item($postItem['menu_item_id'],
@@ -64,14 +82,18 @@
                                 floatval($postItem["item_price"]), 
                                 $postItem["item_img"]);
         if(isset($postItem["ingredients"])){
-            foreach($postItem["ingredients"] as $ingredientArr){
-                $checked = ($ingredientArr["is_default"] == "true") ? true : false;
-                $item->addIngredient(new Ingredient($ingredientArr["ingredient_id"], 
-                                                    $ingredientArr["ingredient_name"], 
-                                                    $ingredientArr["ingredient_price"], 
-                                                    $checked));
+            foreach($postItem["ingredients"] as $postIngredient){
+                $item->addIngredient(postToIngredient($postIngredient));
             }
         }
         return($item);
+    }
+
+    function postToIngredient($ingredient){
+        $checked = ($ingredient["is_default"] == "true") ? true : false;
+        return new Ingredient($ingredient["ingredient_id"], 
+                                $ingredient["ingredient_name"], 
+                                floatval($ingredient["ingredient_price"]), 
+                                $checked);
     }
 ?>

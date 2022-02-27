@@ -28,7 +28,7 @@
 <div class="d-flex justify-content-around flex-row">
     <div id="formWrapper">
         <div id="topWrapper">
-            <button id = "backBtn" class = "btn btn-secondary"  data-id = "<?= ($post) ? $item->getMenuItemId() : ""?>">Back</button>
+            <button id = "backBtn" class = "btn btn-secondary" onclick = "window.location.replace('menu_view.php')" data-id = "<?= ($post) ? $item->getMenuItemId() : ""?>">Back</button>
             <h1><?= ($post) ? "Edit" : "Add New" ?> Item</h1>
             <p></p>
         </div>
@@ -65,9 +65,9 @@
                 <p>Item Image:</p>
                 <input class = "form-control" id = "fileUpload" type="file" accept="image/*"/>
             </div>
-            <div class="form-group <?= ($item->getItemImg() == null || $item->getItemImg() == "") ? "hidden": ""?>">
+            <div class="form-group <?= (!$post || $item->getItemImg() == null || $item->getItemImg() == "") ? "hidden": ""?>">
                 <p>Preview:</p>
-                <img id = "previewImg" src = "<?= $item->getItemImg() ?>">
+                <img id = "previewImg" src = "<?= ($post) ? $item->getItemImg() : "" ?>">
             </div>
         </form>
     </div>
