@@ -90,7 +90,7 @@ class Order_Item
         return $results;
     }
 
-    protected function populateIngredientsByOID()
+    public function populateIngredientsByOID()
     {
         global $db;
         $results = [];
@@ -113,9 +113,49 @@ class Order_Item
         return $results;
     } 
 
+    public static function updateQuantity($qty, $oiid){
+        global $db;
+
+        $SQL = $db->prepare("UPDATE order_items SET qty = :qty WHERE order_item_id = :oiid");
+
+        $binds = array(
+            ":qty" => $qty,
+            ":oiid" => $oiid
+        );
+
+        if($SQL->execute($binds) && $SQL->rowCount() == 1)
+        {
+            return true;
+        }
+        return false;
+    }
+
+    public static function deleteItem($orderID, $itemID)
+    {
+        global $db;
+
+        $SQL = $db->prepare("DELETE FROM order_items WHERE order_item_id = :oiid AND order_id = :oid");
+
+        $binds = array(
+            ":oid" => $orderID,
+            ":oiid" => $itemID
+        );
+
+        if($SQL->execute($binds) && $SQL->rowCount() == 1)
+        {
+            return true;
+        }
+        return false;
+    }
+
     public function getItemID()
     {
         return $this->item_id;
+    }
+
+    public function getOrderItemID()
+    {
+        return $this->order_item_id;
     }
 
     public function getIngredients()
@@ -126,6 +166,10 @@ class Order_Item
     public function getQuantity()
     {
         return $this->qty;
+    }
+
+    public function setQuantity($_qty){
+        $this->qty = $_qty;
     }
 }
 
@@ -213,6 +257,28 @@ class Order
         }
 
         return ($results);
+    }
+
+    public static function getIncompleteOrderByUserID($user_id)
+    {
+        global $db;
+        $results = [];
+
+        $SQL = $db->prepare("SELECT order_id FROM orders WHERE user_id = :uid AND order_status = 0");
+
+        $SQL->bindValue(":uid", $user_id);
+
+        if($SQL->execute() && $SQL->rowCount() == 1)
+        {
+            $results = $SQL->fetchAll(PDO::FETCH_ASSOC)[0];
+            $order = new Order();
+            $order->populateOrderByID($results["order_id"]);
+            return($order);
+        }
+        else
+        {
+            return false;
+        }
     }
 
     public function populateOrderByID($orderID)
