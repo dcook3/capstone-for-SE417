@@ -16,7 +16,7 @@ $users = new Users();
 <?php
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['login'])) {
-   $userLog = $users->userLoginAuthotication($_POST);
+   $userLog = $users->userLogin($_POST);
 }
 if (isset($userLog)) {
   echo $userLog;
