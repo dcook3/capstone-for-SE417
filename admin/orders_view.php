@@ -71,15 +71,17 @@
         <tbody>
             <?php if(gettype($results) != "string"): ?>
                 <?php foreach($results as $row): ?>
+                    <?php 
+                        $tempOrder = new Order();
+                        $tempOrder->populateOrderByID($row['order_id']);
+                    ?> 
                     <tr>
                         <td><?= "{$row['first_name']} {$row['last_name']}" ?></td>
                         <td><?= $row['student_id']; ?></td>
-                        <td>soon to be implemented</td>
+                        <td><?= $tempOrder->calcTotal(); ?></td>
                         <td>
                             <a class="toggleDetails" href="">Show Details</a>
                             <?php 
-                                $tempOrder = new Order();
-                                $tempOrder->populateOrderByID($row['order_id']);
                                 $out = "<ul>";
                                 $count = 0;
                                 foreach($tempOrder->getMenuItems() as $item)
@@ -206,8 +208,6 @@
                 orderIDInput.value = modalBtns[i].dataset.orderid;
             });
         }
-
-
     </script>
 </body>
 </html>

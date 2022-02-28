@@ -43,6 +43,7 @@ class Order_Item
             return("CAN'T ADD ITEM THAT ALREADY EXISTS");
         }
     }
+
     public static function getOrderItemsByOID($orderID)
     {
         global $db;
@@ -62,8 +63,6 @@ class Order_Item
         }
         return $results;
     }
-
-    
 
     public function populateOrderItemByID($oiid)
     {
@@ -373,6 +372,20 @@ class Order
         {
             return "A SQL error occured while attempting to update order status.";
         }
+    }
+
+    public function calcTotal()
+    {
+        $total = 0;
+        foreach($this->order_items as $item)
+        {
+            if($item->price == null)
+            {
+                $item->calcPrice();
+            }
+            $total += $item->getPrice();
+        }
+        return $total + round(($total * 0.07), 2);
     }
 
     public function getMenuItems()

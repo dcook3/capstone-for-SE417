@@ -15,7 +15,8 @@
                     $qty = $_POST['quantity'];
                     if(Order_Item::updateQuantity($qty, $oiid))
                     {
-                        $currentOrder = Order::populateOrderByID($oid);
+                        $currentOrder = new Order();
+                        $currentOrder = $currentOrder->populateOrderByID($oid);
                         $itemsExist = ($currentOrder == false) ? true : false;
                     }
                     else
