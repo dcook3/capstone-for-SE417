@@ -50,4 +50,9 @@ class Session {
       header('Location:orders_view.php');
     }
   }
+  public static function CheckLoginByUser(){
+    if (self::get("login") == TRUE) {
+      header('Location:main_menu.php');
+    }
+  }
 }

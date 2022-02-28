@@ -197,7 +197,7 @@ class Users {
           Session::set('logMsg', '<div class="alert alert-success alert-dismissible mt-3" id="flash-msg">
     <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
     <strong>Success !</strong> You are Logged In Successfully !</div>');
-          echo "<script>location.href='cart.php';</script>";
+          echo "<script>location.href='main_menu.php';</script>";
 
         }else{
           $msg = '<div class="alert alert-danger alert-dismissible mt-3" id="flash-msg">
@@ -438,5 +438,90 @@ class Users {
         return false;
       }
     }
+
+    // User Registration Method
+  public function userRegistration($data)
+  {
+    $username = $data['username'];
+    $first_name = $data['firstName'];
+    $middle_name = $data['middleName'];
+    $last_name = $data['lastName'];
+    $phone = $data['mobile'];
+    $email = $data['email'];
+    $roleid = $data['roleid'];
+    $password = $data['password'];
+
+    $checkEmail = $this->checkExistEmail($email);
+
+    if ($first_name == "" || $username == "" || $email == "" || $phone == "" || $password == "") {
+      $msg = '<div class="alert alert-danger alert-dismissible mt-3" id="flash-msg">
+      <strong>Error</strong>*
+      <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+      </div>';
+        return $msg;
+    } elseif (strlen($username) < 3) {
+      $msg = '<div class="alert alert-danger alert-dismissible mt-3" id="flash-msg">
+              <strong>Error !</strong> Username is too short, at least 3 Characters <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+              </div>';
+        return $msg;
+    } elseif (filter_var($phone,FILTER_SANITIZE_NUMBER_INT) == FALSE) {
+      $msg = '<div class="alert alert-danger alert-dismissible mt-3" id="flash-msg">
+              <strong>Error !</strong> Enter only Number Characters for Mobile number field <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+              </div>';
+        return $msg;
+
+    }elseif(strlen($password) < 5) {
+      $msg = '<div class="alert alert-danger alert-dismissible mt-3" id="flash-msg">
+<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+<strong>Error !</strong> Password at least 6 Characters !</div>';
+        return $msg;
+    }elseif(!preg_match("#[0-9]+#",$password)) {
+      $msg = '<div class="alert alert-danger alert-dismissible mt-3" id="flash-msg">
+<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+<strong>Error !</strong> Your Password Must Contain At Least 1 Number !</div>';
+        return $msg;
+    }elseif(!preg_match("#[a-z]+#",$password)) {
+      $msg = '<div class="alert alert-danger alert-dismissible mt-3" id="flash-msg">
+<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+<strong>Error !</strong> Your Password Must Contain At Least 1 Number !</div>';
+        return $msg;
+    }elseif (filter_var($email, FILTER_VALIDATE_EMAIL === FALSE)) {
+      $msg = '<div class="alert alert-danger alert-dismissible mt-3" id="flash-msg">
+<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+<strong>Error !</strong> Invalid email address !</div>';
+        return $msg;
+    }elseif ($checkEmail == TRUE) {
+      $msg = '<div class="alert alert-danger alert-dismissible mt-3" id="flash-msg">
+<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+<strong>Error !</strong> Email already Exists, please try another Email... !</div>';
+        return $msg;
+    }else{
+
+      $sql = "INSERT INTO users (student_id, first_name, middle_name, last_name, phone, email, password, roleid) VALUES 
+      (:username, :first_name, :middle_name, :last_name, :mobile, :email, :password, :roleid)";
+      $stmt = $this->db->pdo->prepare($sql);
+      $stmt->bindValue(':username', $username);
+      $stmt->bindValue(':first_name', $first_name);
+      $stmt->bindValue(':middle_name', $middle_name);
+      $stmt->bindValue(':last_name', $last_name);
+      $stmt->bindValue(':mobile', $phone);
+      $stmt->bindValue(':email', $email);
+      $stmt->bindValue(':password', SHA1($password));
+      $stmt->bindValue(':roleid', $roleid);
+      $result = $stmt->execute();
+      if ($result) {
+        $msg = '<div class="alert alert-success alert-dismissible mt-3" id="flash-msg">
+  <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+  <strong>Success !</strong> Wow, you have Registered Successfully !</div>';
+          return $msg;
+      }else{
+        $msg = '<div class="alert alert-danger alert-dismissible mt-3" id="flash-msg">
+  <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+  <strong>Error !</strong> Something went Wrong !</div>';
+          return $msg;
+      }
+    }
+  }
+
     
 }

@@ -8,7 +8,7 @@ spl_autoload_register(function($models){
   include 'models/'.$models.".php";
 
 });
-Session::CheckLogin();
+Session::CheckLoginByUser();
 $users = new Users();
 ?>
 
@@ -26,9 +26,6 @@ $logout = Session::get('logout');
 if (isset($logout)) {
   echo $logout;
 }
-
-
-
  ?>
 
 <div class="card ">

@@ -1,10 +1,18 @@
 <?php
 include("header.php");
 include("models/lucas.php");
+include("include/login.php");
 
 $sections = Section::getSections();
 
 ?>
+<?php
+        if (isset($_GET['action']) && $_GET['action'] == 'logout') {
+        Session::destroy();
+}?>
+<li class="nav-item">
+              <a class="nav-link" href="?action=logout"><i class="fas fa-sign-out-alt mr-2"></i>Logout</a>
+</li>
 <link rel ="stylesheet" href = "main_lucas.css">
 <div id = "templateCard" class = "card itemCard hidden">
     <h1 class = "card-title"></h1>
