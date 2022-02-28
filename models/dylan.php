@@ -7,7 +7,7 @@ include 'db.php';
 
 class Order_Item
 {
-    public $order_item_id, $order_id, $item_id, $qty;
+    public $order_item_id, $order_id, $item_id, $qty, $price;
     public $ingredients = [];
     
     public function addItemToOrder(){
@@ -82,6 +82,7 @@ class Order_Item
             $this->item_id = $results['menu_item_id'];
             $this->qty = $results['qty'];
             $this->populateIngredientsByOID();
+            $this->calcPrice();
         }
         else
         {
@@ -146,6 +147,22 @@ class Order_Item
             return true;
         }
         return false;
+    }
+
+    public function calcPrice()
+    {
+        $total_price = 0;
+        foreach($this->ingredients as $ingredient)
+        {
+            $total_price += $ingredient->getIngredientPrice();
+        }
+        $this->price = $total_price + Menu_Item::getMenuItemByID($this->item_id)->getItemPrice();
+        return $this->price;
+    }
+
+    public function getPrice()
+    {
+        return $this->price;
     }
 
     public function getItemID()
