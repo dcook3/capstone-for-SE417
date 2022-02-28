@@ -60,7 +60,7 @@
                                                               $row['item_name'],                                                        // item_name
                                                               $row['item_description'],                                                 // item_description
                                                               floatval($row['item_price']),                                             // item_price
-                                                              "data:image/jpg;charset=utf8;base64,".base64_encode($row['item_img'])));
+                                                              base64_encode($row['item_img'])));
                 }
                 return($menuItemArray);
             }
@@ -80,7 +80,7 @@
                                                 $row['item_name'],                                                        // item_name
                                                 $row['item_description'],                                                 // item_description
                                                 floatval($row['item_price']),                                             // item_price
-                                                "data:image/jpg;charset=utf8;base64,".base64_encode($row['item_img']));
+                                                base64_encode($row['item_img']));
                     $tempItem->populateIngredientsById();
                     array_push($menuItemArray,  $tempItem);
                 }
