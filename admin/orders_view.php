@@ -13,7 +13,7 @@
         }
         else
         {
-            $todayDate = new DateTime('NOW');
+            $todayDate = new DateTime('2022-02-26');
             $dateString = $todayDate->format('Y-m-d');
             $selectedDate = new DateTime($dateString);
             $results = Order::getOrdersByDT($selectedDate->getTimestamp());

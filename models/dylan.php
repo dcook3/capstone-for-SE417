@@ -224,9 +224,7 @@ class Order
             return($stmt->errorInfo());
         }
     }   
-    public function addOrderItem(){
-
-    }
+   
     public static function addOrder($user_id){
         global $db;
 
