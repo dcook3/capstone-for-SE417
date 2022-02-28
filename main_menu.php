@@ -5,11 +5,7 @@ include("models/lucas.php");
 $sections = Section::getSections();
 
 ?>
-<style>
-    .hidden{
-        display: none;
-    }
-</style>
+<link rel ="stylesheet" href = "main_lucas.css">
 <div id = "templateCard" class = "card itemCard hidden">
     <h1 class = "card-title"></h1>
     <p></p>
@@ -29,7 +25,10 @@ $sections = Section::getSections();
         foreach($sections as $section){
     ?>
         <div class="card sectionCard" onclick = "sectionClick('<?= $section->getSectionId()?>')">
-            <h1 class = "card-title"><?= $section->getSectionName()?></h1>
+        <img src = "<?= $section->getSectionImg(); ?>">
+        <div class="card-body">
+                <h1 class = "card-title"><?= $section->getSectionName()?></h1>
+            </div>    
         </div>
 
     <?php
@@ -136,7 +135,8 @@ $sections = Section::getSections();
                     order_item.addIngredient(new Ingredient(checkbox.dataset["id"], "0", "0", false))
                 }
             }
-            order.addOrderItem(order_item);
+            order.addOrderItem(order_item, function(){window.location.replace("cart.php")});
+
         });
     })
     function selectItem(){

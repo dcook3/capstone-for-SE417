@@ -168,20 +168,21 @@
     class Section {
         public $section_id;
         public $section_name;
-        function __construct($_section_id, $_section_name){
+        function __construct($_section_id, $_section_name, $section_img){
             $this->section_id = $_section_id;
             $this->section_name = $_section_name;
+            $this->section_img = $section_img;
         }  
 
         static function getSectionById($_section_id){
             global $db;
             
-            $stmt = $db->prepare("SELECT section_name FROM sections WHERE section_id = :section_id");
+            $stmt = $db->prepare("SELECT section_name, section_img FROM sections WHERE section_id = :section_id");
             $binds = Array(":section_id" => $_section_id);
 
             if($stmt->execute($binds)){
                 $response = $stmt->fetchAll(PDO::FETCH_ASSOC)[0];
-                return new Section($_section_id, $response['section_name']);
+                return new Section($_section_id, $response['section_name'], $response['section_img']);
             }
             else{
                 echo 'ERROR FINDING SECTION WITH ID: ' . $_section_id;
@@ -195,19 +196,21 @@
             $sections = Array();
             if($stmt->execute()){
                 foreach($stmt->fetchAll(PDO::FETCH_ASSOC) as $row){
-                    array_push($sections, new Section($row["section_id"], $row["section_name"]));
+                    array_push($sections, new Section($row["section_id"], $row["section_name"], $row["section_img"]));
                 }
             }
             return $sections;
         }
         
         //GETTERS
-
         function getSectionId(){
             return $this->section_id;
         }
         function getSectionName(){
             return $this->section_name;
+        }
+        function getSectionImg(){
+            return $this->section_img;
         }
     }
     class Ingredient{

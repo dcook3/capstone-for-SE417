@@ -1,0 +1,18 @@
+body, html{
+    height: 100%;
+    width: 100%;
+}
+#sectionCards{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    
+}
+.sectionCard{
+    width: 90%;
+    margin-bottom: 5px;
+}
+.hidden{
+    display: none !important;
+}

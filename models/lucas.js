@@ -114,7 +114,7 @@ class Order{
         this.order_status = order_status;
         this.order_items = Array();
     }
-    addOrderItem(order_item){
+    addOrderItem(order_item, callback){
         $.ajax({
             url : rootPath+"models/ajaxHandler.php",
             method : "POST",
@@ -125,6 +125,7 @@ class Order{
             }
         })
         .fail(function(e) {console.log(e)})
+        .done(callback())
     }
     static createOrderIfNoneExists(user_id, callback){
         $.ajax({
