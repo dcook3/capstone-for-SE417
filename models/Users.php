@@ -20,8 +20,6 @@ class  Database {
   }
 }
 
-include_once 'Session.php';
-
 class Users {
 
   // Db Property
@@ -105,9 +103,9 @@ class Users {
 
       if ($email == "" || $password == "" ) {
         $msg = '<div class="alert alert-danger alert-dismissible mt-3" id="flash-msg">
-  <strong>Error:</strong> Email or Password not be Empty!
-  <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a></div>';
-          return $msg;
+                <strong>Error:</strong> Email or Password not be Empty!
+                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a></div>';
+      return $msg;
 
       }elseif (filter_var($email, FILTER_VALIDATE_EMAIL === FALSE)) {
         $msg = '<div class="alert alert-danger alert-dismissible mt-3" id="flash-msg">
@@ -152,18 +150,61 @@ class Users {
         }
       }
     }
-    // Get Single User Information By Id Method
-    public function getUserInfoById($userid)
+    public function userLogin($data)
     {
-      $sql = "SELECT * FROM users WHERE user_id = :id LIMIT 1";
-      $stmt = $this->db->pdo->prepare($sql);
-      $stmt->bindValue(':id', $userid);
-      $stmt->execute();
-      $result = $stmt->fetch(PDO::FETCH_OBJ);
-      if ($result) {
-        return $result;
+      $email = $data['email'];
+      $password = $data['password'];
+
+
+      $checkEmail = $this->checkExistEmail($email);
+
+      if ($email == "" || $password == "" ) {
+        $msg = '<div class="alert alert-danger alert-dismissible mt-3" id="flash-msg">
+                <strong>Error:</strong> Email or Password not be Empty!
+                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a></div>';
+      return $msg;
+
+      }elseif (filter_var($email, FILTER_VALIDATE_EMAIL === FALSE)) {
+        $msg = '<div class="alert alert-danger alert-dismissible mt-3" id="flash-msg">
+  <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+  <strong>Error !</strong> Invalid email address !</div>';
+          return $msg;
+      }elseif ($checkEmail == FALSE) {
+        $msg = '<div class="alert alert-danger alert-dismissible mt-3" id="flash-msg">
+  <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+  <strong>Error !</strong> Email did not Found, use Register email or password please !</div>';
+          return $msg;
       }else{
-        return false;
+
+
+        $logResult = $this->userLoginAutho($email, $password);
+        $chkActive = $this->CheckActiveUser($email);
+
+        if ($chkActive == TRUE) {
+          $msg = '<div class="alert alert-danger alert-dismissible mt-3" id="flash-msg">
+    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+    <strong>Error !</strong> Sorry, Your account is Diactivated, Contact with Admin !</div>';
+            return $msg;
+        }elseif ($logResult) {
+
+          Session::init();
+          Session::set('login', TRUE);
+          Session::set('id', $logResult->user_id);
+          Session::set('roleid', $logResult->roleid);
+          Session::set('name', $logResult->first_name);
+          Session::set('email', $logResult->email);
+          Session::set('student_id', $logResult->student_id);
+          Session::set('logMsg', '<div class="alert alert-success alert-dismissible mt-3" id="flash-msg">
+    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+    <strong>Success !</strong> You are Logged In Successfully !</div>');
+          echo "<script>location.href='cart.php';</script>";
+
+        }else{
+          $msg = '<div class="alert alert-danger alert-dismissible mt-3" id="flash-msg">
+    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+    <strong>Error</strong>Email or Password did not Matched!</div>';
+            return $msg;
+        }
       }
     }
 
@@ -381,4 +422,21 @@ class Users {
           }
          }
     }
+
+    
+    // Get Single User Information By Id Method
+    public function getUserInfoById($userid)
+    {
+      $sql = "SELECT * FROM users WHERE user_id = :id LIMIT 1";
+      $stmt = $this->db->pdo->prepare($sql);
+      $stmt->bindValue(':id', $userid);
+      $stmt->execute();
+      $result = $stmt->fetch(PDO::FETCH_OBJ);
+      if ($result) {
+        return $result;
+      }else{
+        return false;
+      }
+    }
+    
 }
