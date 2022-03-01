@@ -1,6 +1,4 @@
 <?php
-
-    var_dump($_SERVER['REQUEST_METHOD']);
     $levels = 1;
     $showDetails = false;
     include '../models/sql_functions.php';
