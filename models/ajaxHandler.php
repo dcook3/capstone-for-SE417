@@ -56,6 +56,29 @@
                 echo $order_item->addItemToOrder();
             }
         }
+        else if($_POST['action'] == 'detailsUpdate')
+        {
+            $tempOrder = new Order();
+            $tempOrder->populateOrderByID($_POST['detOrderID']);
+            $out = "<ul>";
+            $count = 0;
+            foreach($tempOrder->getMenuItems() as $item)
+            {
+                $orderItems = $tempOrder->getOrderItems();
+                $item->populateIngredientsById();
+                $out .= "<li><b>{$orderItems[$count]->getQuantity()}x</b> {$item->getItemName()}";
+                $out .= "<ul>";
+                $ingredients = $orderItems[$count]->getIngredients();
+                foreach($ingredients as $ingredient)
+                {
+                    $out .= "<li>{$ingredient->getIngredientName()}</li>";
+                }
+                $out .= "</ul>";
+                $count++;
+            }
+            $out .= "</ul>";
+            echo $out;
+        }
         else{
             echo 'action not set';
         }

@@ -1,5 +1,8 @@
 <?php
+
+    var_dump($_SERVER['REQUEST_METHOD']);
     $levels = 1;
+    $showDetails = false;
     include '../models/sql_functions.php';
     date_default_timezone_set("America/New_York");
 
@@ -39,6 +42,12 @@
                 $feedback = Order::updateOrderStatus($updateOID, false);
             }
         }
+        else if(isset($_POST['showDetails']))
+        {
+            $showDetails = true;
+            $detailOrderID = $_POST['detOrderID'];
+            $detailDateString = $_POST['dateString'];
+        }
         $dateString = $_POST['selectedDate'];
         $selectedDate = new DateTime($dateString);
         $results = Order::getOrdersByDT($selectedDate->getTimestamp());
@@ -71,36 +80,13 @@
         <tbody>
             <?php if(gettype($results) != "string"): ?>
                 <?php foreach($results as $row): ?>
-                    <?php 
-                        $tempOrder = new Order();
-                        $tempOrder->populateOrderByID($row['order_id']);
-                    ?> 
                     <tr>
                         <td><?= "{$row['first_name']} {$row['last_name']}" ?></td>
                         <td><?= $row['student_id']; ?></td>
-                        <td><?= $tempOrder->calcTotal(); ?></td>
+                        <td>no more price :)</td>
                         <td>
-                            <a class="toggleDetails" href="">Show Details</a>
-                            <?php 
-                                $out = "<ul>";
-                                $count = 0;
-                                foreach($tempOrder->getMenuItems() as $item)
-                                {
-                                    $orderItems = $tempOrder->getOrderItems();
-                                    $item->populateIngredientsById();
-                                    $out .= "<li><b>{$orderItems[$count]->getQuantity()}x</b> {$item->getItemName()}";
-                                    $out .= "<ul>";
-                                    $ingredients = $orderItems[$count]->getIngredients();
-                                    foreach($ingredients as $ingredient)
-                                    {
-                                        $out .= "<li>{$ingredient->getIngredientName()}</li>";
-                                    }
-                                    $out .= "</ul>";
-                                    $count++;
-                                }
-                                $out .= "</ul>";
-                                echo $out;
-                            ?>
+                            <a class="toggleDetails" data-oid="<?= $row['order_id'] ?>" data.dateString="<?= $dateString ?>" href="#">Show Details</a>
+                            <div class="details<?= $row['order_id']?>"></div>
                         </td>
                         <td>
                             <button type="button" class="btn btn-primary modalbtn" data-bs-toggle="modal" data-bs-target="#staticBackdrop" data-orderid=<?= $row['order_id'] ?>>
@@ -171,20 +157,40 @@
         {
             for(let i=0; i<itemLinks.length; i++)
             {
-                itemLinks[i].parentElement.children[1].classList.add('d-none');
+                // itemLinks[i].parentElement.children[1].classList.add('d-none');
 
                 itemLinks[i].addEventListener(`click`, e => {
-                    e.preventDefault();
-
-                    let details = e.target.parentElement.children[1];
-                    details.classList.toggle('d-none');
-                    if(details.classList.contains('d-none'))
+                    if(itemLinks[i].classList.contains('dataObtained'))
                     {
-                        e.target.innerHTML = 'Show Details';
+                        itemLinks[i].nextElementSibling.classList.toggle('d-none');
+                        if(itemLinks[i].innerHTML == "Hide Details")
+                        {
+                            itemLinks[i].innerHTML = "Show Details"
+                        }
+                        else
+                        {
+                            itemLinks[i].innerHTML = "Hide Details"
+                        }
                     }
                     else
                     {
-                        e.target.innerHTML = 'Hide Details';
+                        $.ajax(
+                            {
+                                url: '../models/ajaxHandler.php',
+                                method: "POST",
+                                data: 
+                                {
+                                    detOrderID: e.target.dataset.oid,
+                                    action: "detailsUpdate"
+                                }
+                            })
+                            .fail(function(e) {console.log(e)})
+                            .done(function(data)
+                            {
+                                itemLinks[i].nextElementSibling.innerHTML = data;
+                                itemLinks[i].innerHTML = "Hide Details"
+                            })
+                        itemLinks[i].classList.add('dataObtained');
                     }
                 });
             }
