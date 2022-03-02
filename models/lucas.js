@@ -79,6 +79,7 @@ class Menu_Item{
         })
         .fail(function(e) {console.log(e)})
         .done(function(data){
+            console.log(data);
             var data = JSON.parse(data);
             var menuItems = Array();
 

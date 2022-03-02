@@ -65,7 +65,6 @@
             foreach($tempOrder->getMenuItems() as $item)
             {
                 $orderItems = $tempOrder->getOrderItems();
-                $item->populateIngredientsById();
                 $out .= "<li><b>{$orderItems[$count]->getQuantity()}x</b> {$item->getItemName()}";
                 $out .= "<ul>";
                 $ingredients = $orderItems[$count]->getIngredients();
