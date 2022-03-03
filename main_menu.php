@@ -7,38 +7,62 @@ $sections = Section::getSections();
 
 ?>
 <?php
-        if (isset($_GET['action']) && $_GET['action'] == 'logout') {
+    if (isset($_GET['action']) && $_GET['action'] == 'logout') {
         Session::destroy();
-}?>
-<li class="nav-item">
-              <a class="nav-link" href="?action=logout"><i class="fas fa-sign-out-alt mr-2"></i>Logout</a>
-</li>
-<link rel ="stylesheet" href = "main_lucas.css">
-<div id = "templateCard" class = "card itemCard hidden">
-    <h1 class = "card-title"></h1>
-    <p></p>
-    <button id = "btn">+</button>
-</div>
-<div class="slideshowWrapper">
+    }
+?>
 
+<link rel ="stylesheet" href = "main_lucas.css">
+
+
+<!-- TEMPLATE ELEMENTS -->
+<div id = "templateCard" class = "card bg-primary text-white itemCard hidden">
+    <img src = "">
+    <div class="card-body">
+        <h1 class = "card-title"></h1>
+        <p></p>
+        <button id = "btn">+</button>
+    </div>
+    
+</div>
 <li id = "templateIngredient" class = "hidden">
     <input type = "checkbox">
     <p></p>
 </li>
 
+
+<div id="banner">
+    <a id = "backBtn" class = "hidden">
+        <i class="fa fas fa-arrow-left"></i>
+    </a>
+    <p>Special</p>
+    <div id="slideshow">
+        <?php 
+            foreach(Menu_Item::getSpecialItems() as $specialItem){
+                $specialItem->populateImage();
+                if($specialItem->getItemImg() != "" || $specialItem->getItemImg() != NULL)
+        ?>
+                <div class="slide">
+                    <img src = "<?= $specialItem->getItemImg()?>">
+                </div>
+
+        <?php
+            }
+        ?>
+    </div>
 </div>
+
 
 <div id="sectionCards">
     <?php
         foreach($sections as $section){
     ?>
-        <div class="card sectionCard" onclick = "sectionClick('<?= $section->getSectionId()?>')">
+        <div class="card text-white bg-primary sectionCard" onclick = "sectionClick('<?= $section->getSectionId()?>')">
         <img src = "<?= $section->getSectionImg(); ?>">
         <div class="card-body">
                 <h1 class = "card-title"><?= $section->getSectionName()?></h1>
             </div>    
         </div>
-
     <?php
         }
     ?>
@@ -46,7 +70,7 @@ $sections = Section::getSections();
 </div>
 
 <div id = "itemCards" class = "hidden">
-    
+
 </div>
 
 <div id = "addItemMenu" class = "hidden">
@@ -70,6 +94,8 @@ $sections = Section::getSections();
         Add to Cart
     </button>
 </div>
+
+<script src="https://kit.fontawesome.com/4933cad413.js" crossorigin="anonymous"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script src = "models/lucas.js"></script>
 <script>
@@ -83,17 +109,32 @@ $sections = Section::getSections();
     var item
     var addToCartBtn = document.querySelector("#addToCartBtn");
     var btn = document.querySelector("#btn");
+    var backBtn = document.querySelector("#backBtn");
+    class States{
+        static Section = new States("section");
+        static Items = new States("items");
+        static Add = new States("add");
+
+        constructor(name){
+            this.name = name;
+        }
+    }
+    var state = States.Section;
     function sectionClick(id){
-        Menu_Item.getMenuItemsBySectionId(id, function(_menuItems){
+        Menu_Item.getMenuItemsBySectionId(id, true, function(_menuItems){
+            state = States.Items;
+            backBtn.classList.remove("hidden");
             menuItems = _menuItems
             for(let i = 0; i < menuItems.length; i++){
                 itemCards.appendChild(templateCard.cloneNode(true));
-                let card = itemCards.children[i];
-                card.classList.remove("hidden");
+                let card = itemCards.children[i].children[1];
+                card.parentElement.classList.remove("hidden");
+                card.parentElement.children[0].src = menuItems[i].item_img;
                 card.children[0].innerHTML = menuItems[i].item_name;
                 card.children[1].innerHTML = menuItems[i].item_description;
                 card.children[2].setAttribute("data-index", i);
                 card.children[2].addEventListener("click", function(e){
+                    state = States.Add
                     item = menuItems[e.target.getAttribute("data-index")]
                     addItemMenu.children[0].innerHTML = item.item_name;
                     for(let y = 0; y < item.ingredients.length; y++){
@@ -150,7 +191,21 @@ $sections = Section::getSections();
     function selectItem(){
         console.log(i);
     }
-
+    backBtn.addEventListener("click", function(e){
+        switch(state){
+            case States.Items:
+                backBtn.classList.add("hidden");
+                sectionCards.classList.remove("hidden");
+                itemCards.classList.add("hidden");
+                state = States.Section;
+                break
+            case States.Add:
+                itemCards.classList.remove("hidden");
+                addItemMenu.classList.add("hidden");
+                state = States.Items;
+                break
+        }
+    })
     
 </script>
 </body>

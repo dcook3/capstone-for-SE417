@@ -11,13 +11,14 @@ else{
 
 
 class Menu_Item{
-    constructor(menu_item_id, section, item_name, item_description, item_price, item_img){
+    constructor(menu_item_id, section, item_name, item_description, item_price, item_img, is_special){
         this.menu_item_id = menu_item_id;
         this.section = section;
         this.item_name = item_name;
         this.item_description = item_description;
         this.item_img = item_img;
         this.item_price = item_price;
+        this.is_special = is_special;
         this.ingredients = new Array();
     }
     addIngredient(ingredient){
@@ -49,7 +50,6 @@ class Menu_Item{
         })
         .fail(function(e) {console.log(e)})
         .done(function(data){
-            console.log(data)
             return(data);
         })
     }
@@ -68,24 +68,24 @@ class Menu_Item{
         })
         return data.trim();
     }
-    static async getMenuItemsBySectionId(section_id, callback){
+    static async getMenuItemsBySectionId(section_id, wthImg, callback){
         $.ajax({
             url : rootPath+"models/ajaxHandler.php",
             method : "POST",
             data:{
                 'action' : 'getMenuItemsBySectionId',
-                'section_id' : section_id
+                'section_id' : section_id,
+                'wthImg': wthImg
             }
         })
         .fail(function(e) {console.log(e)})
         .done(function(data){
-            console.log(data);
             var data = JSON.parse(data);
             var menuItems = Array();
 
             for(let i = 0; i < data.length; i++){
                 let d = data[i];
-                menuItems[i] = new Menu_Item(d['menu_item_id'], new Section(d['section']['section_id'], d['section']['section_name']), d['item_name'], d['item_description'], d['item_price'], d['item_img'])
+                menuItems[i] = new Menu_Item(d['menu_item_id'], new Section(d['section']['section_id'], d['section']['section_name'], d['section']['section_img']), d['item_name'], d['item_description'], d['item_price'], d['item_img'], d['is_special'])
                 for(let y = 0; y < d['itemIngredients'].length; y++){
                     let ingredient = d['itemIngredients'][y]
                     menuItems[i].addIngredient(new Ingredient(ingredient['ingredient_id'], ingredient['ingredient_name'], ingredient['ingredient_price'], ingredient['is_default']))
@@ -100,8 +100,8 @@ class Menu_Item{
 }
 
 class Order_Item extends Menu_Item{
-    constructor(menu_item_id, section, item_name, item_description, item_price, item_img, order_item_id, qty){
-        super(menu_item_id, section, item_name, item_description, item_price, item_img);
+    constructor(menu_item_id, section, item_name, item_description, item_price, item_img, is_special, order_item_id, qty){
+        super(menu_item_id, section, item_name, item_description, item_price, item_img, is_special);
         this.order_item_id = order_item_id;
         this.qty = qty;
         this.ingredients = Array();
@@ -144,7 +144,7 @@ class Order{
             for(let i = 0; i< d["order_items"].legth; i++){
                 let _order_item = d['order_items'][i]
                 let menu_item = d['menu_items'][i]
-                let order_item = new Order_Item(menu_item['menu_item_id'], new Section(menu_item['section']['section_id'], menu_item['section']['section_name']), menu_item['item_name'], menu_item['item_description'], menu_item['item_price'], menu_item['item_img'], _order_item["order_item_id"], _order_item["qty"])
+                let order_item = new Order_Item(menu_item['menu_item_id'], new Section(menu_item['section']['section_id'], menu_item['section']['section_name'], menu_item['section']['section_img']), menu_item['item_name'], menu_item['item_description'], menu_item['item_price'], menu_item['item_img'], menu_item['is_special'], _order_item["order_item_id"], _order_item["qty"])
                 for(let y = 0; y < _order_item['ingredients'].length; y++){
                     let ingredient = _order_item['ingredients'][y];
                     order_item.addIngredient(new Ingredient(ingredient["ingredient_id"], ingredient["ingredient_name"], ingredient["ingredient_price"], ingredient["is_default"]));
@@ -156,9 +156,10 @@ class Order{
 }
 
 class Section{
-    constructor(section_id, section_name){
+    constructor(section_id, section_name, section_img){
         this.section_id = section_id;
         this.section_name = section_name;
+        this.section_img = section_img;
     }
 
 

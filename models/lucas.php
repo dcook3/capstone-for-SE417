@@ -8,28 +8,30 @@
         public string $item_description;
         public float $item_price;
         public string $item_img;
+        public bool $is_special;
         public Array $itemIngredients;
         
-        function __construct(string $_menu_item_id, Section $_section, string $_item_name, string $_item_description, float $_item_price, string $_item_img){
+        function __construct(string $_menu_item_id, Section $_section, string $_item_name, string $_item_description, float $_item_price, string $_item_img, bool $_is_special){
             $this->menu_item_id = $_menu_item_id;
             $this->section = $_section;
             $this->item_name = $_item_name;
             $this->item_description = $_item_description;
             $this->item_price = $_item_price;
             $this->item_img = $_item_img;
+            $this->is_special = $_is_special;
             $this->itemIngredients = Array();
         }
         /**
          * 
          * Populates a menu item with it's ingredients and returns the object
          */
-        static function getMenuItemById(string $_menu_item_id){
-            
+        
+        static function getMenuItemById(string $_menu_item_id){ 
             global $db;
-            $stmt = $db->prepare("SELECT a.menu_item_id, d.section_id, d.section_name, a.item_name, a.item_description, a.item_price, c.ingredient_id, c.ingredient_name, c.ingredient_price, c.is_default FROM menu_items a INNER JOIN menu_item_ingredients b ON a.menu_item_id = b.menu_item_id INNER JOIN ingredients c ON b.ingredient_id = c.ingredient_id INNER JOIN sections d ON a.section_id = d.section_id WHERE a.menu_item_id = :menu_item_id;");
+            $stmt = $db->prepare("SELECT a.menu_item_id, d.section_id, d.section_name, a.item_name, a.item_description, a.item_price, a.is_special, c.ingredient_id, c.ingredient_name, c.ingredient_price, c.is_default FROM menu_items a LEFT JOIN menu_item_ingredients b ON a.menu_item_id = b.menu_item_id LEFT JOIN ingredients c ON b.ingredient_id = c.ingredient_id LEFT JOIN sections d ON a.section_id = d.section_id WHERE a.menu_item_id = :menu_item_id;");
             $binds = Array(":menu_item_id" => $_menu_item_id);
             
-            if($stmt->execute($binds)){
+            if($stmt->execute($binds) && $stmt->rowCount() > 0){
                 $response = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 $firstItem = $response[0];
                 $menuItem = new Menu_Item($_menu_item_id,                                                                // menu_item_id
@@ -37,7 +39,8 @@
                                      $firstItem['item_name'],                                                        // item_name
                                      $firstItem['item_description'],                                                 // item_description
                                      floatval($firstItem['item_price']),                                             // item_price
-                                     "");      //img
+                                     "",
+                                     ($firstItem['is_special'] == '1') ? true : false);      //img
                 foreach($response as $row){
                     if($row["ingredient_id"] != NULL){
                         $menuItem->addIngredient(new Ingredient($row["ingredient_id"],
@@ -72,10 +75,10 @@
         static function getMenuItems(){
             global $db;
             $menuItemArray = Array();
-            $stmt = $db->prepare("SELECT a.menu_item_id, d.section_id, d.section_name, a.item_name, a.item_description, a.item_price, c.ingredient_id, c.ingredient_name, c.ingredient_price, c.is_default FROM menu_items a LEFT JOIN menu_item_ingredients b ON a.menu_item_id = b.menu_item_id LEFT JOIN ingredients c ON b.ingredient_id = c.ingredient_id INNER JOIN sections d ON a.section_id = d.section_id ORDER BY menu_item_id;");
-            if($stmt->execute()){
+            $stmt = $db->prepare("SELECT a.menu_item_id, d.section_id, d.section_name, a.item_name, a.item_description, a.item_price, a.is_special, c.ingredient_id, c.ingredient_name, c.ingredient_price, c.is_default FROM menu_items a LEFT JOIN menu_item_ingredients b ON a.menu_item_id = b.menu_item_id LEFT JOIN ingredients c ON b.ingredient_id = c.ingredient_id LEFT JOIN sections d ON a.section_id = d.section_id ORDER BY menu_item_id;");
+            if($stmt->execute() && $stmt->rowCount() > 0){
                 $response = $stmt->fetchAll(PDO::FETCH_ASSOC);
-                $menuItem = new Menu_Item("", new Section("", "", ""), "", "", 0, "");
+                $menuItem = new Menu_Item("", new Section("", "", ""), "", "", 0, "", false);
                 foreach($response as $row){
                     if($row["menu_item_id"] != $menuItem->getMenuItemId()){
                         array_push($menuItemArray, new Menu_Item($row["menu_item_id"],                                                                // menu_item_id
@@ -83,7 +86,41 @@
                                                     $row['item_name'],                                                        // item_name
                                                     $row['item_description'],                                                 // item_description
                                                     floatval($row['item_price']),                                             // item_price
-                                                    "")); 
+                                                    "",
+                                                    ($row['is_special'] == '1') ? true : false)); 
+                        
+                        $menuItem = $menuItemArray[count($menuItemArray)-1];
+                    }
+                    if($row["ingredient_id"] != NULL){
+                        $menuItem->addIngredient(new Ingredient($row["ingredient_id"],
+                                                                $row["ingredient_name"],
+                                                                floatval($row["ingredient_price"]), 
+                                                                ($row['is_default'] == '1') ? true : false));
+                    }
+                    
+                }
+                return($menuItemArray);
+            }
+            else{
+                return 'ERROR FINDING MENU ITEMS';
+            }
+        }
+        static function getSpecialItems(){
+            global $db;
+            $menuItemArray = Array();
+            $stmt = $db->prepare("SELECT a.menu_item_id, d.section_id, d.section_name, a.item_name, a.item_description, a.item_price, a.is_special, c.ingredient_id, c.ingredient_name, c.ingredient_price, c.is_default FROM menu_items a LEFT JOIN menu_item_ingredients b ON a.menu_item_id = b.menu_item_id LEFT JOIN ingredients c ON b.ingredient_id = c.ingredient_id LEFT JOIN sections d ON a.section_id = d.section_id WHERE a.is_special = 1 ORDER BY menu_item_id;");
+            if($stmt->execute() && $stmt->rowCount() > 0){
+                $response = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                $menuItem = new Menu_Item("", new Section("", "", ""), "", "", 0, "", false);
+                foreach($response as $row){
+                    if($row["menu_item_id"] != $menuItem->getMenuItemId()){
+                        array_push($menuItemArray, new Menu_Item($row["menu_item_id"],                                                                // menu_item_id
+                                                    new Section($row["section_id"], $row["section_name"], ""),                                          // section
+                                                    $row['item_name'],                                                        // item_name
+                                                    $row['item_description'],                                                 // item_description
+                                                    floatval($row['item_price']),                                             // item_price
+                                                    "",
+                                                    ($row['is_special'] == '1') ? true : false)); 
                         
                         $menuItem = $menuItemArray[count($menuItemArray)-1];
                     }
@@ -104,14 +141,20 @@
         /**
          * Returns an array of menu items selected by the section_id.
          */
-        static function getMenuItemsBySectionId(string $section_id){
+        static function getMenuItemsBySectionId(string $section_id, bool $wthImg){
             global $db;
             $menuItemArray = Array();
-            $stmt = $db->prepare("SELECT a.menu_item_id, d.section_id, d.section_name, a.item_name, a.item_description, a.item_price, c.ingredient_id, c.ingredient_name, c.ingredient_price, c.is_default FROM menu_items a LEFT JOIN menu_item_ingredients b ON a.menu_item_id = b.menu_item_id LEFT JOIN ingredients c ON b.ingredient_id = c.ingredient_id INNER JOIN sections d ON a.section_id = d.section_id WHERE d.section_id = :section_id ORDER BY menu_item_id;");
+            if($wthImg){
+                $sql = "SELECT a.menu_item_id, d.section_id, d.section_name,  a.item_name, a.item_description, a.item_price, a.item_img, a.is_special, c.ingredient_id, c.ingredient_name, c.ingredient_price, c.is_default FROM menu_items a LEFT JOIN menu_item_ingredients b ON a.menu_item_id = b.menu_item_id LEFT JOIN ingredients c ON b.ingredient_id = c.ingredient_id LEFT JOIN sections d ON a.section_id = d.section_id WHERE d.section_id = :section_id ORDER BY menu_item_id;";
+            }
+            else{
+                $sql = "SELECT a.menu_item_id, d.section_id, d.section_name, a.item_name, a.item_description, a.item_price, a.is_special, c.ingredient_id, c.ingredient_name, c.ingredient_price, c.is_default FROM menu_items a LEFT JOIN menu_item_ingredients b ON a.menu_item_id = b.menu_item_id LEFT JOIN ingredients c ON b.ingredient_id = c.ingredient_id LEFT JOIN sections d ON a.section_id = d.section_id WHERE d.section_id = :section_id ORDER BY menu_item_id;";
+            }
+            $stmt = $db->prepare($sql);
             $binds = Array(":section_id" => $section_id);
-            if($stmt->execute($binds)){
+            if($stmt->execute($binds) && $stmt->rowCount() > 0){
                 $response = $stmt->fetchAll(PDO::FETCH_ASSOC);
-                $menuItem = new Menu_Item("", new Section("", "", ""), "", "", 0, "");
+                $menuItem = new Menu_Item("", new Section("", "", ""), "", "", 0, "", false);
                 foreach($response as $row){
                     if($row["menu_item_id"] != $menuItem->getMenuItemId()){
                         array_push($menuItemArray, new Menu_Item($row["menu_item_id"],                                                                // menu_item_id
@@ -119,7 +162,8 @@
                                                     $row['item_name'],                                                        // item_name
                                                     $row['item_description'],                                                 // item_description
                                                     floatval($row['item_price']),                                             // item_price
-                                                    "")); 
+                                                    ($wthImg) ? $row['item_img'] : "",
+                                                    ($row['is_special'] == '1') ? true : false)); 
                         
                         $menuItem = $menuItemArray[count($menuItemArray)-1];
                     }
@@ -133,10 +177,16 @@
                 }
                 return($menuItemArray);
             }
+            else if($stmt->rowCount() == 0){
+                return(Array());
+            }
             else{
-                echo 'ERROR FINDING MENU ITEMS';
+                var_dump($stmt->errorInfo());
             }
         }
+        /**
+         * Adds ingredient to ingredient array
+         */
         function addIngredient(Ingredient $ingredient){
             array_push($this->itemIngredients, $ingredient);
         }
@@ -145,13 +195,14 @@
          */
         function addToDB(){
             global $db;
-            $stmt = $db->prepare("INSERT INTO menu_items (section_id, item_name, item_description, item_price, item_img) VALUES (:section_id, :item_name, :item_description, :item_price, :item_img)");
+            $stmt = $db->prepare("INSERT INTO menu_items (section_id, item_name, item_description, item_price, item_img, is_special) VALUES (:section_id, :item_name, :item_description, :item_price, :item_img, :is_special)");
             $binds = array(
                 ":section_id" => $this->getSection()->getSectionId(),
                 ":item_name" => $this->getItemName(),
                 ":item_description" => $this->getItemDescription(),
                 ":item_price" => $this->getItemPrice(),
-                ":item_img" => $this->getItemImg()
+                ":item_img" => $this->getItemImg(),
+                ":is_special" => $this->getIsSpecial()
             );
 
             if($stmt->execute($binds)){
@@ -167,16 +218,17 @@
         function updateMenuItem(){
             global $db;
             if($this->getMenuItemId() != '-1'){
-                $stmt = $db->prepare("UPDATE menu_items SET section_id = :section_id, item_name = :item_name, item_description = :item_description, item_price = :item_price, item_img = :item_img WHERE menu_item_id = :menu_item_id;");
+                $stmt = $db->prepare("UPDATE menu_items SET section_id = :section_id, item_name = :item_name, item_description = :item_description, item_price = :item_price, item_img = :item_img, is_special = :is_special WHERE menu_item_id = :menu_item_id;");
                 $binds = array(
                     ":section_id" => $this->getSection()->getSectionId(),
                     ":item_name" => $this->getItemName(),
                     ":item_description" => $this->getItemDescription(),
                     ":item_price" => $this->getItemPrice(),
                     ":item_img" => $this->getItemImg(),
-                    ":menu_item_id" => $this->getMenuItemId()
+                    ":is_special" => $this->getIsSpecial(),
+                    ":menu_item_id" => $this->getMenuItemId(),
                 );
-                // var_dump($this);
+                var_dump($this);
                 if($stmt->execute($binds)){
                     
                     foreach($this->getIngredients() as $ingredient){
@@ -191,7 +243,16 @@
             }
         }
 
-        
+        function populateImage(){
+            global $db;
+            $stmt = $db->prepare("SELECT item_img FROM menu_items WHERE menu_item_id = :menu_item_id");
+            $binds = array(
+                ":menu_item_id" => $this->getMenuItemId()
+            );
+            if($stmt->execute($binds)){
+                $this->item_img = $stmt->fetchAll(PDO::FETCH_ASSOC)[0]["item_img"];
+            }
+        }
         function getMenuItemId(){
             return $this->menu_item_id;
         }
@@ -209,6 +270,9 @@
         }
         function getItemImg(){
             return $this->item_img;
+        }
+        function getIsSpecial(){
+            return $this->is_special;
         }
         function getIngredients(){
             return $this->itemIngredients;

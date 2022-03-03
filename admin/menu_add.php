@@ -7,7 +7,7 @@
         if(isset($_POST["id"])){
             $post = true;
             $item = Menu_Item::getMenuItemByID($_POST["id"]);
-            $item->populateIngredientsById();
+            $item->populateImage();
         }
     }
     include '../include/header.php';
@@ -58,15 +58,19 @@
                 <textarea name = "descriptionInput" id = "descriptionInput" class = "form-control"><?= ($post) ? $item->getItemDescription() : ""?></textarea>
             </div>
             <div class="form-group">
-                <p>Price:</p>
-                <input class = "form-control" id = "priceInput" type="number" min="0.00" max="10000.00" step="0.01" <?= ($post) ? "value = '{$item->getItemPrice()}'" : ""?> />
+                <label for = "priceInput" class = "form-label">Price:</label>
+                <input name = "priceInput" class = "form-control" id = "priceInput" type="number" min="0.00" max="10000.00" step="0.01" <?= ($post) ? "value = '{$item->getItemPrice()}'" : ""?> />
+            </div>
+            <div class = "form-group special-group">
+                <label for = "descriptionInput" class = "form-label">Special Item:</label> 
+                <input name = "specialInput" class = "form-check-input" id = "specialInput" type="checkbox" <?= ($post && $item->getIsSpecial()) ? "checked" : "" ?>/>
             </div>
             <div class = "form-group">
-                <p>Item Image:</p>
-                <input class = "form-control" id = "fileUpload" type="file" accept="image/*"/>
+                <label for = "descriptionInput" class = "form-label">Item Image:</label>
+                <input name = "fileUpload" class = "form-control" id = "fileUpload" type="file" accept="image/*"/>
             </div>
             <div class="form-group <?= (!$post || $item->getItemImg() == null || $item->getItemImg() == "") ? "hidden": ""?>">
-                <p>Preview:</p>
+                <label class = "form-label">Preview:</label>
                 <img id = "previewImg" src = "<?= ($post) ? $item->getItemImg() : "" ?>">
             </div>
         </form>
@@ -99,7 +103,7 @@
                                 <td>
                                     <div class='isDefaultWrapper'>
                                         <label for = 'isDefault'>Default</label>
-                                        <input type = 'checkbox' name = 'isDefault' $isDefaultStr/>
+                                        <input type = 'checkbox' name = 'isDefault' <?= $isDefaultStr ?>/>
                                     </div>
                                 </td>
                                 <td>
@@ -151,6 +155,7 @@
     var selectInput = document.querySelector("#selectInput");
     var descriptionInput = document.querySelector("#descriptionInput");
     var priceInput = document.querySelector("#priceInput");
+    var specialInput = document.querySelector("#specialInput");
     var fileUpload = document.querySelector("#fileUpload");
     var image = document.querySelector("#croppedImage");
     var previewImg = document.querySelector("#previewImg");
@@ -209,7 +214,8 @@
                                 nameInput.value,
                                 descriptionInput.value,
                                 priceInput.value, 
-                                previewImg.src)
+                                previewImg.src,
+                                specialInput.checked)
         for(let i = 0; i < ingredientBody.children.length; i++){
             let ingredientRow = ingredientBody.children[i];
             let price = (ingredientRow.children[1].children[0].value == "") ? "0" : ingredientRow.children[1].children[0].value;
@@ -227,7 +233,7 @@
             item.updateItem();
         }
         setTimeout(function(){
-            // window.location.replace("menu_view.php")
+            window.location.replace("menu_view.php")
         }, 10);
     })
 
