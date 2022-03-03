@@ -26,9 +26,15 @@
          * Populates a menu item with it's ingredients and returns the object
          */
         
-        static function getMenuItemById(string $_menu_item_id){ 
+        static function getMenuItemById(string $_menu_item_id, bool $wthImg){ 
             global $db;
-            $stmt = $db->prepare("SELECT a.menu_item_id, d.section_id, d.section_name, a.item_name, a.item_description, a.item_price, a.is_special, c.ingredient_id, c.ingredient_name, c.ingredient_price, c.is_default FROM menu_items a LEFT JOIN menu_item_ingredients b ON a.menu_item_id = b.menu_item_id LEFT JOIN ingredients c ON b.ingredient_id = c.ingredient_id LEFT JOIN sections d ON a.section_id = d.section_id WHERE a.menu_item_id = :menu_item_id;");
+            if($wthImg){
+                $sql = "SELECT a.menu_item_id, d.section_id, d.section_name, a.item_name, a.item_description, a.item_price, a.item_img, a.is_special, c.ingredient_id, c.ingredient_name, c.ingredient_price, c.is_default FROM menu_items a LEFT JOIN menu_item_ingredients b ON a.menu_item_id = b.menu_item_id LEFT JOIN ingredients c ON b.ingredient_id = c.ingredient_id LEFT JOIN sections d ON a.section_id = d.section_id WHERE a.menu_item_id = :menu_item_id;";
+            }
+            else{
+                $sql = "SELECT a.menu_item_id, d.section_id, d.section_name, a.item_name, a.item_description, a.item_price, a.is_special, c.ingredient_id, c.ingredient_name, c.ingredient_price, c.is_default FROM menu_items a LEFT JOIN menu_item_ingredients b ON a.menu_item_id = b.menu_item_id LEFT JOIN ingredients c ON b.ingredient_id = c.ingredient_id LEFT JOIN sections d ON a.section_id = d.section_id WHERE a.menu_item_id = :menu_item_id;";
+            }
+            $stmt = $db->prepare($sql);
             $binds = Array(":menu_item_id" => $_menu_item_id);
             
             if($stmt->execute($binds) && $stmt->rowCount() > 0){
@@ -39,7 +45,7 @@
                                      $firstItem['item_name'],                                                        // item_name
                                      $firstItem['item_description'],                                                 // item_description
                                      floatval($firstItem['item_price']),                                             // item_price
-                                     "",
+                                     ($wthImg) ? $firstItem['item_img'] : "",
                                      ($firstItem['is_special'] == '1') ? true : false);      //img
                 foreach($response as $row){
                     if($row["ingredient_id"] != NULL){

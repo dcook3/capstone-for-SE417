@@ -35,21 +35,30 @@ $sections = Section::getSections();
     <a id = "backBtn" class = "hidden">
         <i class="fa fas fa-arrow-left"></i>
     </a>
-    <p>Special</p>
+    <p id = "specialTag">Special</p>
     <div id="slideshow">
         <?php 
+            $i = 0;
+            
             foreach(Menu_Item::getSpecialItems() as $specialItem){
+                
                 $specialItem->populateImage();
                 if($specialItem->getItemImg() != "" || $specialItem->getItemImg() != NULL)
         ?>
-                <div class="slide">
-                    <img src = "<?= $specialItem->getItemImg()?>">
+                <div class="slide <?= ($i > 0) ? "hidden" : ""?>">
+                    <img data-id = "<?= $specialItem->getMenuItemId()?>" src = "<?= $specialItem->getItemImg()?>">
                 </div>
 
         <?php
+            $i++;
             }
         ?>
     </div>
+    <div id = "addItemImg" class = "hidden">
+        <img>
+    </div>
+    
+
 </div>
 
 
@@ -73,27 +82,37 @@ $sections = Section::getSections();
 
 </div>
 
-<div id = "addItemMenu" class = "hidden">
+<form id = "addItemMenu" class = "hidden">
+    <div class="form-group">
     <h1>
 
     </h1>
+    </div>
+    <div class="form-group">
     <ul>
         <li>
             <h2>Ingredients</h2>
         </li>
     </ul>
-    <div>
-        <p>Quantity</p>
-        <input id = "qtyInput" type = "number" min = "1" max = "10" value = "1">
     </div>
-    <div class="priceInfo">
-        <p>Price: </p>
-        <p></p>
+    <div class="form-group">
+        <div>
+            <p>Quantity</p>
+            <input id = "qtyInput" type = "number" min = "1" max = "10" value = "1">
+        </div>
     </div>
-    <button id = "addToCartBtn">
-        Add to Cart
-    </button>
-</div>
+    <div class="form-group">
+        <div class="priceInfo">
+            <p>Price: </p>
+            <p></p>
+        </div>
+    </div>
+    <div class="form-group" id = "btnGroup">
+        <button id = "addToCartBtn" class = 'btn btn-secondary'>
+            Add to Cart
+        </button>
+    </div>
+    </form>
 
 <script src="https://kit.fontawesome.com/4933cad413.js" crossorigin="anonymous"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
@@ -110,16 +129,56 @@ $sections = Section::getSections();
     var addToCartBtn = document.querySelector("#addToCartBtn");
     var btn = document.querySelector("#btn");
     var backBtn = document.querySelector("#backBtn");
+    var slides = document.querySelectorAll(".slide");
+    var slideshow = document.querySelector("#slideshow");
+    var addItemImg = document.querySelector("#addItemImg");
+    var slideIndex = 0;
+    var specialTag = document.querySelector("#specialTag");
     class States{
         static Section = new States("section");
         static Items = new States("items");
         static Add = new States("add");
+        static AddSpecial = new States("AddSpecial");
 
         constructor(name){
             this.name = name;
         }
     }
     var state = States.Section;
+    function gotoAddItemMenu(_item){
+        item = _item
+        addItemMenu.children[0].children[0].innerHTML = item.item_name;
+        addItemMenu.children[3].children[0].children[1].innerHTML = item.item_price;
+        for(let y = 0; y < item.ingredients.length; y++){
+            let ingredient = templateIngredient.cloneNode(true);
+            ingredient.children[0].dataset["id"] = item.ingredients[y].ingredient_id
+            ingredient.classList.remove("hidden");
+            ingredient.children[1].innerHTML = item.ingredients[y].ingredient_name + ((item.ingredients[y].ingredient_price > 0) ? "(" + item.ingredients[y].ingredient_price + ")" : ""); 
+            addItemMenu.children[1].children[0].appendChild(ingredient);
+            ingredient.children[0].checked = ingredient.is_default;
+            ingredient.children[0].addEventListener("change", function(e){
+                
+                let price = parseFloat(addItemMenu.children[3].children[0].children[1].innerHTML);
+                if(e.target.checked){
+                    price += item.ingredients[y].ingredient_price;
+                }
+                else{
+                    price -= item.ingredients[y].ingredient_price;
+                }
+                addItemMenu.children[3].children[0].children[1].innerHTML = price;
+            })
+        }
+        addItemImg.children[0].src = item.item_img;
+        specialTag.classList.add("hidden");
+        backBtn.classList.remove("hidden");
+        slideshow.classList.add("hidden");
+        addItemImg.classList.remove("hidden")
+        sectionCards.classList.remove("hidden");
+        sectionCards.classList.add("hidden");
+        itemCards.classList.remove("hidden");
+        itemCards.classList.add("hidden");
+        addItemMenu.classList.remove("hidden");
+    }
     function sectionClick(id){
         Menu_Item.getMenuItemsBySectionId(id, true, function(_menuItems){
             state = States.Items;
@@ -134,33 +193,9 @@ $sections = Section::getSections();
                 card.children[1].innerHTML = menuItems[i].item_description;
                 card.children[2].setAttribute("data-index", i);
                 card.children[2].addEventListener("click", function(e){
-                    state = States.Add
-                    item = menuItems[e.target.getAttribute("data-index")]
-                    addItemMenu.children[0].innerHTML = item.item_name;
-                    for(let y = 0; y < item.ingredients.length; y++){
-                        let ingredient = templateIngredient.cloneNode(true);
-                        ingredient.classList.remove("hidden");
-                        ingredient.children[0].dataset["id"] = item.ingredients[y].ingredient_id
-                        ingredient.children[1].innerHTML = item.ingredients[y].ingredient_name + ((item.ingredients[y].ingredient_price > 0) ? "(" + item.ingredients[y].ingredient_price + ")" : ""); 
-                        addItemMenu.children[1].appendChild(ingredient);
-                        ingredient.children[0].checked = ingredient.is_default;
-                        ingredient.children[0].addEventListener("change", function(e){
-                            let price =  parseFloat(addItemMenu.children[2].children[1].innerHTML);
-                            if(e.target.checked){
-                                price += item.ingredients[y].ingredient_price;
-                            }
-                            else{
-                                price -= item.ingredients[y].ingredient_price;
-                            }
-                            addItemMenu.children[2].children[1].innerHTML = price;
-                        })
-                    }
+                    state = States.Add;
+                    gotoAddItemMenu(menuItems[e.target.getAttribute("data-index")])
                     
-                    addItemMenu.children[2].children[1].innerHTML = item.item_price;
-                    
-                    
-                    itemCards.classList.add("hidden");
-                    addItemMenu.classList.remove("hidden");
                 })
             }
             
@@ -200,12 +235,46 @@ $sections = Section::getSections();
                 state = States.Section;
                 break
             case States.Add:
+                addItemImg.classList.add("hidden");
+                specialTag.classList.remove("hidden");
+                slideshow.classList.remove("hidden");
                 itemCards.classList.remove("hidden");
                 addItemMenu.classList.add("hidden");
                 state = States.Items;
                 break
+            case States.AddSpecial:
+                addItemImg.classList.add("hidden");
+                specialTag.classList.remove("hidden");
+                slideshow.classList.remove("hidden");
+                itemCards.classList.add("hidden");
+                sectionCards.classList.remove("hidden");
+                backBtn.classList.add("hidden");
+                addItemMenu.classList.add("hidden");
+                state = States.Section;
+                break
         }
     })
+    for(let i = 0; i < slides.length; i++){
+        slides[i].children[0].addEventListener("click", function(e){
+            Menu_Item.getMenuItemByID(e.target.dataset["id"], false, function(menuItem){
+                state = States.AddSpecial;
+                menuItem.item_img = e.target.src;
+                gotoAddItemMenu(menuItem);
+            })
+        })
+    }
+    showSlides();
+    async function showSlides(){
+        slides[slideIndex].classList.add("hidden");
+        if(slideIndex < slides.length-1){
+            slideIndex+= 1;
+        }
+        else{
+            slideIndex = 0;
+        }
+        slides[slideIndex].classList.remove("hidden");
+        setTimeout(showSlides, 7000)
+    }
     
 </script>
 </body>

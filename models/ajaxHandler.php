@@ -39,6 +39,15 @@
                     echo false;
                 }
                 break;
+            case 'getMenuItemByID':
+                $wthImg = (isset($_POST["wthImg"])) ? (($_POST["wthImg"] == "true") ? true : false) : false;
+                if(isset($_POST["menu_item_id"])){
+                    echo json_encode(Menu_Item::getMenuItemById($_POST["menu_item_id"], $wthImg));
+                }
+                else{
+                    echo false;
+                }
+                break;
             case 'createOrderIfNoneExists':
                 if(isset($_POST["user_id"])){
                     $result = Order::createOrderIfNoneExists($_POST["user_id"]);

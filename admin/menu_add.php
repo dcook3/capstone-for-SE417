@@ -6,7 +6,7 @@
     if($_SERVER['REQUEST_METHOD']==='POST'){
         if(isset($_POST["id"])){
             $post = true;
-            $item = Menu_Item::getMenuItemByID($_POST["id"]);
+            $item = Menu_Item::getMenuItemByID($_POST["id"], true);
             $item->populateImage();
         }
     }

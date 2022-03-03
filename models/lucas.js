@@ -68,6 +68,29 @@ class Menu_Item{
         })
         return data.trim();
     }
+    static getMenuItemByID(menu_item_id, wthImg, callback){
+        $.ajax({
+            url : rootPath+"models/ajaxHandler.php",
+            method : "POST",
+            data:{
+                'action' : 'getMenuItemByID',
+                'menu_item_id' : menu_item_id,
+                'wthImg': wthImg
+            }
+        })
+        .fail(function(e) {console.log(e)})
+        .done(function(data){
+            var d = JSON.parse(data);
+            
+            let menuItem = new Menu_Item(d['menu_item_id'], new Section(d['section']['section_id'], d['section']['section_name'], d['section']['section_img']), d['item_name'], d['item_description'], d['item_price'], d['item_img'], d['is_special'])
+            for(let y = 0; y < d['itemIngredients'].length; y++){
+                let ingredient = d['itemIngredients'][y]
+                menuItem.addIngredient(new Ingredient(ingredient['ingredient_id'], ingredient['ingredient_name'], ingredient['ingredient_price'], ingredient['is_default']))
+            }
+            callback(menuItem)
+            
+        })
+    }
     static async getMenuItemsBySectionId(section_id, wthImg, callback){
         $.ajax({
             url : rootPath+"models/ajaxHandler.php",
