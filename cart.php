@@ -1,8 +1,10 @@
 <?php 
     $levels = 0;
     $subtotal = 0;
+    include 'header.php';
     include 'models/dylan.php';
     include 'models/lucas.php';
+    include 'models/Session.php';
 
     if($_SERVER['REQUEST_METHOD'] == "POST")
     {
@@ -41,8 +43,15 @@
     }
     else
     {
-        //How to get current user's id? What to do if not a user?
-        $currentOrder = Order::getIncompleteOrderByUserID(1);
+        if(Session::CheckLoginByUser())
+        {
+            $currentOrder = Order::getIncompleteOrderByUserID(Session::get('id'));
+        }
+        else
+        {
+            $currentOrder = Order::getIncompleteOrderByUserID(6);
+            //header("Location: register.php"); //Pass param to let user know they need an account?
+        }
         $itemsExist = ($currentOrder == false) ? false : true;
     }
 
@@ -56,16 +65,15 @@
         $menuItems = [];
         $orderItems = [];
     }
-    
 ?>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <a href="#" onclick="window.location.href = window.history.back(1);"><i class="fa fas fa-arrow-left"></i></a>
 <h2>Cart</h2>
-<?php if($itemsExist && $currentOrder): ?>
+<?php if($itemsExist && $currentOrder != null): ?>
     <?php for($i = 0; $i < count($menuItems); $i++): ?>
-        <div class="col-6 d-flex flex-column justify-content-between">
+        <div class="col-6 d-row flex-column justify-content-between align-items-center">
             <span><?= $menuItems[$i]->getItemName() ?></span>
-            <div class="quantitySelector" data-oid="<?= $currentOrder->getOrderID() ?>">
+            <div class="quantitySelector d-flex flex-row justify-content-around" data-oid="<?= $currentOrder->getOrderID() ?>">
                 <input type="button" value="-">
                 <input type="number" min="0" class="quantity" data-oid="<?= $currentOrder->getOrderID() ?>" data-oiid="<?= $orderItems[$i]->getOrderItemID(); ?>" data-action="updateQuantity" value="<?= $orderItems[$i]->getQuantity(); ?>">
                 <input type="button" value="+">
@@ -82,14 +90,16 @@
     ?>
 <?php else: ?>
     <div>
-        <p><a href="menu_view.php">See menu to add items</a></p>
+        <p><a href="main_menu.php">See menu to add items</a></p>
     </div>
 <?php endif; ?>
 
 <div>
-    <p>Subtotal: <b><?= $subtotal ?></b></p>
-    <p>Tax: <b><?= $tax ?></b></p>
-    <button>PayPal <b><?= $total ?></b></button>
+    <?php if($itemsExist && $currentOrder != null): ?>
+        <p>Subtotal: <b><?= $subtotal ?></b></p>
+        <p>Tax: <b><?= $tax ?></b></p>
+        <button>PayPal <b><?= $total ?></b></button>
+    <?php endif; ?>
 </div>
 <script>
     var qtySelectors = document.querySelectorAll(".quantitySelector");

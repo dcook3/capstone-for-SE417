@@ -155,7 +155,7 @@ class Order_Item
         {
             $total_price += $ingredient->getIngredientPrice();
         }
-        $this->price = $total_price + Menu_Item::getMenuItemByID($this->item_id)->getItemPrice();
+        $this->price = $total_price + Menu_Item::getMenuItemByID($this->item_id, false)->getItemPrice();
         return $this->price;
     }
 
@@ -320,7 +320,7 @@ class Order
                 {
                     $oitem = new Order_Item();
                     $oitem->populateOrderItemByID($OI["order_item_id"]);
-                    $item = Menu_Item::getMenuItemByID($OI["menu_item_id"]);
+                    $item = Menu_Item::getMenuItemByID($OI["menu_item_id"], false);
                     array_push($this->order_items, $oitem);
                     array_push($this->menu_items ,$item);
                 }
