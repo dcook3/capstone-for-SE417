@@ -19,9 +19,15 @@ $sections = Section::getSections();
 <div id = "templateCard" class = "card bg-primary text-white itemCard hidden">
     <img src = "">
     <div class="card-body">
-        <h1 class = "card-title"></h1>
-        <p></p>
-        <button id = "btn">+</button>
+        <div class = "cardTop">
+            <h1 class = "card-title"></h1>
+            <p class = "cardPrice"></p>
+        </div>
+        <p class = "cardDescription"></p>
+        <div class = "plsBtnFlex">
+            <div></div>
+            <button id = "btn" class = "btn btn-secondary">+</button>
+        </div>
     </div>
     
 </div>
@@ -81,40 +87,34 @@ $sections = Section::getSections();
 <div id = "itemCards" class = "hidden">
 
 </div>
+<div id="addItemWrapper">
+    <form id = "addItemMenu" class = "hidden">
+        <div class="form-group">
+        <h1>
 
-<form id = "addItemMenu" class = "hidden">
-    <div class="form-group">
-    <h1>
-
-    </h1>
-    </div>
-    <div class="form-group">
-    <ul>
-        <li>
-            <h2>Ingredients</h2>
-        </li>
-    </ul>
-    </div>
-    <div class="form-group">
-        <div>
-            <p>Quantity</p>
-            <input id = "qtyInput" type = "number" min = "1" max = "10" value = "1">
+        </h1>
         </div>
-    </div>
-    <div class="form-group">
-        <div class="priceInfo">
-            <p>Price: </p>
-            
+        <div class="form-group">
+        <ul>
+            <li>
+                <h2>Ingredients</h2>
+            </li>
+        </ul>
         </div>
-    </div>
-    <div class="form-group" id = "btnGroup">
-        <button id = "addToCartBtn" class = 'btn btn-secondary'>
-            <span>Add To Cart</span>
-            <span></span>
-        </button>
-    </div>
+        <div class="form-group">
+            <div>
+                <p>Quantity</p>
+                <input id = "qtyInput" type = "number" min = "1" max = "10" value = "1">
+            </div>
+        </div>
+        <div class="form-group mt-auto" id = "btnGroup">
+            <button id = "addToCartBtn" class = 'btn btn-secondary'>
+                <span>Add To Cart</span>
+                <span></span>
+            </button>
+        </div>
     </form>
-
+</div>
 <script src="https://kit.fontawesome.com/4933cad413.js" crossorigin="anonymous"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script src = "models/lucas.js"></script>
@@ -149,7 +149,7 @@ $sections = Section::getSections();
     function gotoAddItemMenu(_item){
         item = _item
         addItemMenu.children[0].children[0].innerHTML = item.item_name;
-        addToCartBtn.children[1].innerHTML = item.item_price;
+        addToCartBtn.children[1].innerHTML = "$" + item.item_price;
         for(let y = 0; y < item.ingredients.length; y++){
             let ingredient = templateIngredient.cloneNode(true);
             ingredient.children[0].dataset["id"] = item.ingredients[y].ingredient_id
@@ -166,7 +166,7 @@ $sections = Section::getSections();
                 else{
                     price -= item.ingredients[y].ingredient_price;
                 }
-                addToCartBtn.children[1].innerHTML = price;
+                addToCartBtn.children[1].innerHTML =  "$" + price;
             })
         }
         addItemImg.children[0].src = item.item_img;
@@ -190,10 +190,11 @@ $sections = Section::getSections();
                 let card = itemCards.children[i].children[1];
                 card.parentElement.classList.remove("hidden");
                 card.parentElement.children[0].src = menuItems[i].item_img;
-                card.children[0].innerHTML = menuItems[i].item_name;
+                card.children[0].children[0].innerHTML = menuItems[i].item_name;
+                card.children[0].children[1].innerHTML = "$" + menuItems[i].item_price;
                 card.children[1].innerHTML = menuItems[i].item_description;
-                card.children[2].setAttribute("data-index", i);
-                card.children[2].addEventListener("click", function(e){
+                card.children[2].children[1].setAttribute("data-index", i);
+                card.children[2].children[1].addEventListener("click", function(e){
                     state = States.Add;
                     gotoAddItemMenu(menuItems[e.target.getAttribute("data-index")])
                     

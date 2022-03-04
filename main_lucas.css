@@ -49,11 +49,12 @@ background: radial-gradient(circle, rgba(255,255,255,1) 0%, rgba(0,0,0,1) 87%);
     
 }
 #addItemMenu{
-    height: auto;
+    
+    position: relative;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: space-between;
+    /* justify-content: space-between; */
 }
 
 #backBtn{
@@ -64,14 +65,30 @@ background: radial-gradient(circle, rgba(255,255,255,1) 0%, rgba(0,0,0,1) 87%);
     top: 2vw;
     font-size: 1.5em;
 }
+#addItemWrapper{
+    height: 100%;
+    width: 100%;
+}
 #addToCartBtn{
+    
     display: flex;
     justify-content: space-between;
     width: 100%;
 }
+
 .form-group{
     width: 90%;
 }
 .hidden{
     display: none !important;
+}
+.cardTop{
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+}
+.plsBtnFlex{
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
 }
