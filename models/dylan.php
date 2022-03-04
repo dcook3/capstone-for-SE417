@@ -13,11 +13,12 @@ class Order_Item
     public function addItemToOrder(){
         global $db;
         if($this->order_item_id == "-1"){
-            $stmt = $db->prepare("INSERT INTO order_items (order_id, menu_item_id, qty) VALUES (:order_id, :menu_item_id, :qty)");
+            $stmt = $db->prepare("INSERT INTO order_items (order_id, menu_item_id, qty) VALUES (:order_id, :menu_item_id, :qty); UPDATE orders SET order_price = order_price + :order_price WHERE order_id = :order_id");
             $binds = array(
                 ":order_id" => $this->order_id,
                 ":menu_item_id" => $this->item_id,
-                ":qty" => $this->qty
+                ":qty" => $this->qty,
+                ":order_price" => $this->calcPrice()
             );
             if($stmt->execute($binds)){
                 $this->order_item_id = $db->lastInsertId();
