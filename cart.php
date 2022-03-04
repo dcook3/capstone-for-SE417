@@ -51,8 +51,7 @@
         }
         else
         {
-            $currentOrder = Order::getIncompleteOrderByUserID(6);
-            //header("Location: register.php"); //Pass param to let user know they need an account?
+            header("Location: register.php"); //Pass param to let user know they need an account?
         }
         $itemsExist = ($currentOrder == false) ? false : true;
     }

@@ -87,6 +87,18 @@
                 $out .= "</ul>";
                 echo $out;
             }
+            case 'trackerStatus':
+            {
+                $isComplete = false;
+                $temp = "fail";
+                while($isComplete == false){
+                    if(Order::getOrderStatusByUID($_POST['userID']) == 1)
+                    {
+                        $isComplete = true;
+                    }
+                }
+                echo 'success';
+            }
             default:
                 echo 'action not set';
                 break;

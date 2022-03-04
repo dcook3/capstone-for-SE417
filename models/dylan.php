@@ -294,6 +294,28 @@ class Order
         }
     }
 
+    public static function getOrderByUserID($user_id)
+    {
+        global $db;
+        $results = [];
+
+        $SQL = $db->prepare("SELECT order_id FROM orders WHERE user_id = :uid");
+
+        $SQL->bindValue(":uid", $user_id);
+
+        if($SQL->execute() && $SQL->rowCount() == 1)
+        {
+            $results = $SQL->fetchAll(PDO::FETCH_ASSOC)[0];
+            $order = new Order();
+            $order->populateOrderByID($results["order_id"]);
+            return($order);
+        }
+        else
+        {
+            return false;
+        }
+    }
+
     public function populateOrderByID($orderID)
     {
         global $db;
@@ -369,6 +391,23 @@ class Order
         {
             return "A SQL error occured while attempting to update order status.";
         }
+    }
+
+    public static function getOrderStatusByUID($uid){
+        global $db;
+
+        $SQL = $db->prepare("SELECT order_status FROM orders WHERE user_id = :uid");
+
+        $SQL->bindValue(":uid", $uid);
+
+        if($SQL->execute() && $SQL->rowCount() == 1){
+            return $SQL->fetchAll(PDO::FETCH_ASSOC)[0]['order_status'];
+        }
+        else
+        {
+            return "SQL Error occured on fetching order status";
+        }
+
     }
 
     public function calcTotal()
