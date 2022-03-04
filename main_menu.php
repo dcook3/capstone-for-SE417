@@ -104,12 +104,13 @@ $sections = Section::getSections();
     <div class="form-group">
         <div class="priceInfo">
             <p>Price: </p>
-            <p></p>
+            
         </div>
     </div>
     <div class="form-group" id = "btnGroup">
         <button id = "addToCartBtn" class = 'btn btn-secondary'>
-            Add to Cart
+            <span>Add To Cart</span>
+            <span></span>
         </button>
     </div>
     </form>
@@ -148,7 +149,7 @@ $sections = Section::getSections();
     function gotoAddItemMenu(_item){
         item = _item
         addItemMenu.children[0].children[0].innerHTML = item.item_name;
-        addItemMenu.children[3].children[0].children[1].innerHTML = item.item_price;
+        addToCartBtn.children[1].innerHTML = item.item_price;
         for(let y = 0; y < item.ingredients.length; y++){
             let ingredient = templateIngredient.cloneNode(true);
             ingredient.children[0].dataset["id"] = item.ingredients[y].ingredient_id
@@ -165,7 +166,7 @@ $sections = Section::getSections();
                 else{
                     price -= item.ingredients[y].ingredient_price;
                 }
-                addItemMenu.children[3].children[0].children[1].innerHTML = price;
+                addToCartBtn.children[1].innerHTML = price;
             })
         }
         addItemImg.children[0].src = item.item_img;

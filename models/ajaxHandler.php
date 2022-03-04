@@ -102,6 +102,7 @@
         $order_item->order_id = $_POST["order_id"];
         $order_item->item_id = $postItem["menu_item_id"];
         $order_item->qty = $postItem["qty"];
+        $order_item->price = $postItem["item_price"];
         foreach($postItem["ingredients"] as $ingredient){
             array_push($order_item->ingredients, postToIngredient($ingredient));
         }
