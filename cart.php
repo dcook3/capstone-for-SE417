@@ -33,7 +33,9 @@
                         //display failed delete error
                     }
                     break;
-                $currentOrder = Order::populateOrderByID($oid);
+                
+                $currentOrder = new Order();
+                $currentOrder = $currentOrder->populateOrderByID($oid);
             }
         }
         else
@@ -67,32 +69,36 @@
     }
 ?>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<link rel="stylesheet" href="dylan_styles.css">
 <a href="#" onclick="window.location.href = window.history.back(1);"><i class="fa fas fa-arrow-left"></i></a>
 <h2>Cart</h2>
-<?php if($itemsExist && $currentOrder != null): ?>
-    <?php for($i = 0; $i < count($menuItems); $i++): ?>
-        <div class="col-6 d-row flex-column justify-content-between align-items-center">
-            <span><?= $menuItems[$i]->getItemName() ?></span>
-            <div class="quantitySelector d-flex flex-row justify-content-around" data-oid="<?= $currentOrder->getOrderID() ?>">
-                <input type="button" value="-">
-                <input type="number" min="0" class="quantity" data-oid="<?= $currentOrder->getOrderID() ?>" data-oiid="<?= $orderItems[$i]->getOrderItemID(); ?>" data-action="updateQuantity" value="<?= $orderItems[$i]->getQuantity(); ?>">
-                <input type="button" value="+">
+<div class="d-flex flex-column align-items-center">
+    <?php if($itemsExist && $currentOrder != null): ?>
+        <?php for($i = 0; $i < count($menuItems); $i++): ?>
+            <div class="m-1 rounded d-flex flex-row align-items-center bg-light border p-1">
+                <span><?= $menuItems[$i]->getItemName() ?></span>
+                <div class="col-4 quantitySelector d-flex flex-row justify-content-around align-items-center input-group" data-oid="<?= $currentOrder->getOrderID() ?>">
+                    <input type="button" class="btn btn-outline-secondary" id="button-addon1" value="-">
+                    <input type="number" class="form-control col-2" min="0" class="quantity" data-oid="<?= $currentOrder->getOrderID() ?>" data-oiid="<?= $orderItems[$i]->getOrderItemID(); ?>" data-action="updateQuantity" value="<?= $orderItems[$i]->getQuantity(); ?>">
+                    <input type="button" class="btn btn-outline-secondary" id="button-addon2" value="+">
+                </div>
+                <span><?= $orderItems[$i]->getPrice(); ?></span>
+                <a class="text-decoration-none delItemBtn" data-oid="<?= $currentOrder->getOrderID() ?>" data-oiid="<?= $orderItems[$i]->getOrderItemID(); ?>" data-action="deleteItem"><i class="fas fa-trash-alt"></i></a>
             </div>
-            <span><?= $orderItems[$i]->getPrice(); ?></span>
-            <button class="btn btn-secondary delItemBtn" data-oid="<?= $currentOrder->getOrderID() ?>" data-oiid="<?= $orderItems[$i]->getOrderItemID(); ?>" data-action="deleteItem"><i class="fas fa-trash-alt"></i></a>
-        </div>
-        <?php
-            $subtotal += $orderItems[$i]->getPrice();
+            <?php
+                $subtotal += $orderItems[$i]->getPrice();
+            ?>
+        <?php endfor; 
+            $tax = round(($subtotal * 0.07), 2);
+            $total = $subtotal + $tax;
         ?>
-    <?php endfor; 
-          $tax = round(($subtotal * 0.07), 2);
-          $total = $subtotal + $tax;
-    ?>
-<?php else: ?>
-    <div>
-        <p><a href="main_menu.php">See menu to add items</a></p>
-    </div>
-<?php endif; ?>
+    <?php else: ?>
+        <div>
+            <p><a href="main_menu.php">See menu to add items</a></p>
+        </div>
+    <?php endif; ?>
+</div>
+
 
 <div>
     <?php if($itemsExist && $currentOrder != null): ?>

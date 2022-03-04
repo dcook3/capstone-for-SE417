@@ -70,7 +70,7 @@ class Order_Item
         global $db;
         $results = [];
 
-        $SQL = $db->prepare("SELECT * FROM order_items WHERE order_item_id = :oid;");
+        $SQL = $db->prepare("SELECT order_item_id, order_id, order_items.menu_item_id, qty, item_price FROM order_items INNER JOIN menu_items ON order_items.menu_item_id= menu_items.menu_item_id WHERE order_items.order_item_id = :oid;");
 
         $SQL->bindValue(":oid", $oiid, PDO::PARAM_INT);
 
@@ -82,7 +82,7 @@ class Order_Item
             $this->item_id = $results['menu_item_id'];
             $this->qty = $results['qty'];
             $this->populateIngredientsByOID();
-            $this->calcPrice();
+            $this->price = $results['item_price'];
         }
         else
         {
@@ -151,12 +151,10 @@ class Order_Item
 
     public function calcPrice()
     {
-        $total_price = 0;
         foreach($this->ingredients as $ingredient)
         {
-            $total_price += $ingredient->getIngredientPrice();
+            $this->price += $ingredient->getIngredientPrice();
         }
-        $this->price += $total_price;
         return $this->price;
     }
 
@@ -390,6 +388,11 @@ class Order
     public function getMenuItems()
     {
         return $this->menu_items;
+    }
+
+    public function getPrice()
+    {
+        return $this->price;
     }
 
     public function setMenuItems($arr)

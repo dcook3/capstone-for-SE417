@@ -16,7 +16,6 @@
             case 'deleteIngredient':
                 if(isset($_POST["ingredient_id"]) && isset($_POST["menu_item_id"])){
                     echo Ingredient::deleteIngredientById($_POST["ingredient_id"], $_POST["menu_item_id"]);
-
                 }
                 else{
                     echo false;

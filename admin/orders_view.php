@@ -51,6 +51,7 @@
         $results = Order::getOrdersByDT($selectedDate->getTimestamp());
     }
     include '../include/header.php';
+    var_dump($_POST);
 ?>
     <h2 class="fw-bold text-center">Orders</h2>
     <div class="d-flex flex-column align-items-center">
@@ -81,7 +82,7 @@
                     <tr>
                         <td><?= "{$row['first_name']} {$row['last_name']}" ?></td>
                         <td><?= $row['student_id']; ?></td>
-                        <td>no more price :)</td>
+                        <td><?= $row['order_price'] ?></td>
                         <td>
                             <a class="toggleDetails" data-oid="<?= $row['order_id'] ?>" data.dateString="<?= $dateString ?>" href="#">Show Details</a>
                             <div class="details<?= $row['order_id']?>"></div>
@@ -185,6 +186,7 @@
                             .fail(function(e) {console.log(e)})
                             .done(function(data)
                             {
+                                data = data.replace("action not set", "")
                                 itemLinks[i].nextElementSibling.innerHTML = data;
                                 itemLinks[i].innerHTML = "Hide Details"
                             })
