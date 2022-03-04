@@ -82,7 +82,7 @@
                     <tr>
                         <td><?= "{$row['first_name']} {$row['last_name']}" ?></td>
                         <td><?= $row['student_id']; ?></td>
-                        <td id="priceCol<?= $row['order_id'] ?>">no more price :)</td>
+                        <td><?= $row['order_price'] ?></td>
                         <td>
                             <a class="toggleDetails" data-oid="<?= $row['order_id'] ?>" data.dateString="<?= $dateString ?>" href="#">Show Details</a>
                             <div class="details<?= $row['order_id']?>"></div>
@@ -179,7 +179,7 @@
                                 method: "POST",
                                 data: 
                                 {
-                                    order: JSON.stringify(),
+                                    detOrderID: e.target.dataset.oid,
                                     action: "detailsUpdate"
                                 }
                             })

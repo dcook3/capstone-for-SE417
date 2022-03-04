@@ -70,7 +70,7 @@ class Order_Item
         global $db;
         $results = [];
 
-        $SQL = $db->prepare("SELECT order_item_id, order_id, menu_item_id, qty, item_price FROM order_items INNER JOIN menu_items WHERE order_item_id = :oid;");
+        $SQL = $db->prepare("SELECT order_item_id, order_id, order_items.menu_item_id, qty, item_price FROM order_items INNER JOIN menu_items ON order_items.menu_item_id= menu_items.menu_item_id WHERE order_items.order_item_id = :oid;");
 
         $SQL->bindValue(":oid", $oiid, PDO::PARAM_INT);
 
