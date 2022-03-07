@@ -108,8 +108,7 @@ $sections = Section::getSections();
                 <input id = "qtyInput" type = "number" min = "1" max = "10" value = "1">
             </div>
         </div>
-        <div class="form-group " id = "btnGroup">
-            <button id = "addToCartBtn" class = 'btn btn-secondary'>
+        
         <div class="form-group">
             <div>
                 <p>Extra Notes:</p>

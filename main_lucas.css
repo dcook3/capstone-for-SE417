@@ -116,3 +116,19 @@ background: radial-gradient(circle, rgba(255,255,255,1) 0%, rgba(0,0,0,1) 87%);
     width: 100%;
     justify-content: space-between;
 }
+
+
+/* Profile Page */
+
+#profileWrapper{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+}
+.topProfileBtns{
+    width: 100%;
+    position: relative;
+}
