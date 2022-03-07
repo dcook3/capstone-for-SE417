@@ -6,6 +6,7 @@ include("include/login.php");
 $sections = Section::getSections();
 
 ?>
+<script src="https://kit.fontawesome.com/4933cad413.js" crossorigin="anonymous"></script>
 <?php
     if (isset($_GET['action']) && $_GET['action'] == 'logout') {
         Session::destroy();
@@ -107,13 +108,25 @@ $sections = Section::getSections();
                 <input id = "qtyInput" type = "number" min = "1" max = "10" value = "1">
             </div>
         </div>
-        <div class="form-group mt-auto" id = "btnGroup">
-            <button id = "addToCartBtn" class = 'btn btn-secondary'>
+        <div class="form-group">
+            <div>
+                <p>Extra Notes:</p>
+                <textarea id = "notesInput" class = "form-control"></textarea>
+            </div>
+        </div>
+        
+    </form>
+    <div id = "btnGroup">
+            <button id = "addToCartBtn" class = 'btn btn-secondary hidden'>
                 <span>Add To Cart</span>
                 <span></span>
             </button>
-        </div>
-    </form>
+    </div>
+    
+    <button type="button" class="btn btn-secondary btn-circle" id = "cartBtn" onclick="window.location.replace('cart.php')">
+    <img src = "cart-shopping-solid.svg">
+    </button>
+    
 </div>
 <script src="https://kit.fontawesome.com/4933cad413.js" crossorigin="anonymous"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
@@ -128,6 +141,8 @@ $sections = Section::getSections();
     var menuItems
     var item
     var addToCartBtn = document.querySelector("#addToCartBtn");
+    var cartBtn = document.querySelector("#cartBtn");
+    var notesInput = document.querySelector("#notesInput")
     var btn = document.querySelector("#btn");
     var backBtn = document.querySelector("#backBtn");
     var slides = document.querySelectorAll(".slide");
@@ -148,10 +163,12 @@ $sections = Section::getSections();
     var state = States.Section;
     function gotoAddItemMenu(_item){
         item = _item
+        addItemMenu.children[1].children[0].innerHTML = "";
         addItemMenu.children[0].children[0].innerHTML = item.item_name;
         addToCartBtn.children[1].innerHTML = "$" + item.item_price;
         for(let y = 0; y < item.ingredients.length; y++){
             let ingredient = templateIngredient.cloneNode(true);
+            
             ingredient.children[0].dataset["id"] = item.ingredients[y].ingredient_id
             ingredient.classList.remove("hidden");
             ingredient.children[1].innerHTML = item.ingredients[y].ingredient_name + ((item.ingredients[y].ingredient_price > 0) ? "(" + item.ingredients[y].ingredient_price + ")" : ""); 
@@ -170,6 +187,8 @@ $sections = Section::getSections();
             })
         }
         addItemImg.children[0].src = item.item_img;
+        cartBtn.classList.add("hidden");
+        addToCartBtn.classList.remove("hidden");
         specialTag.classList.add("hidden");
         backBtn.classList.remove("hidden");
         slideshow.classList.add("hidden");
@@ -185,6 +204,7 @@ $sections = Section::getSections();
             state = States.Items;
             backBtn.classList.remove("hidden");
             menuItems = _menuItems
+            itemCards.innerHTML = "";
             for(let i = 0; i < menuItems.length; i++){
                 itemCards.appendChild(templateCard.cloneNode(true));
                 let card = itemCards.children[i].children[1];
@@ -214,7 +234,8 @@ $sections = Section::getSections();
                                             item.item_price, 
                                             item.item_img,
                                             "-1",
-                                            qtyInput.value)
+                                            qtyInput.value,
+                                            notesInput.value)
             for(let i = 1; i < addItemMenu.children.length; i++){
                 let checkbox = addItemMenu.children[1].children[i].children[0]
                 if(checkbox.checked){
@@ -237,6 +258,8 @@ $sections = Section::getSections();
                 state = States.Section;
                 break
             case States.Add:
+                cartBtn.classList.remove("hidden");
+                addToCartBtn.classList.add("hidden")
                 addItemImg.classList.add("hidden");
                 specialTag.classList.remove("hidden");
                 slideshow.classList.remove("hidden");
@@ -245,6 +268,8 @@ $sections = Section::getSections();
                 state = States.Items;
                 break
             case States.AddSpecial:
+                cartBtn.classList.remove("hidden");
+                addToCartBtn.classList.add("hidden")
                 addItemImg.classList.add("hidden");
                 specialTag.classList.remove("hidden");
                 slideshow.classList.remove("hidden");

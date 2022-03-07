@@ -123,10 +123,11 @@ class Menu_Item{
 }
 
 class Order_Item extends Menu_Item{
-    constructor(menu_item_id, section, item_name, item_description, item_price, item_img, is_special, order_item_id, qty){
+    constructor(menu_item_id, section, item_name, item_description, item_price, item_img, is_special, order_item_id, qty, item_notes){
         super(menu_item_id, section, item_name, item_description, item_price, item_img, is_special);
         this.order_item_id = order_item_id;
         this.qty = qty;
+        this.item_notes = item_notes
         this.ingredients = Array();
     }     
 }
