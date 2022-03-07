@@ -2,7 +2,8 @@
     include('lucas.php');
     include('dylan.php');
     if($_SERVER['REQUEST_METHOD']==='POST'){
-        switch($_POST['action']){
+        switch($_POST['action'])
+        {
             case 'addToDB':
                 $postItem = $_POST['item'];
                 $item = postToMenuItem($postItem);
@@ -66,7 +67,6 @@
                 }
                 break;
             case 'detailsUpdate':
-            {
                 $tempOrder = new Order();
                 $tempOrder->populateOrderByID($_POST['detOrderID']);
                 $out = "<ul>";
@@ -81,14 +81,15 @@
                     {
                         $out .= "<li>{$ingredient->getIngredientName()}</li>";
                     }
+                    $out .= "<li><b>Notes:</b> {$orderItems[$count]->getNotes()}</li>";
                     $out .= "</ul>";
                     $count++;
                 }
                 $out .= "</ul>";
                 echo $out;
-            }
+                break;
+
             case 'trackerStatus':
-            {
                 $isComplete = false;
                 $temp = "fail";
                 while($isComplete == false){
@@ -98,7 +99,7 @@
                     }
                 }
                 echo 'success';
-            }
+            
             default:
                 echo 'action not set';
                 break;

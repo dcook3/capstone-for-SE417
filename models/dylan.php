@@ -7,10 +7,11 @@ include 'db.php';
 
 class Order_Item
 {
-    public $order_item_id, $order_id, $item_id, $qty, $price;
+    public $order_item_id, $order_id, $item_id, $qty, $price, $notes;
     public $ingredients = [];
     
-    public function addItemToOrder(){
+    public function addItemToOrder()
+    {
         global $db;
         if($this->order_item_id == "-1"){
             $stmt = $db->prepare("INSERT INTO order_items (order_id, menu_item_id, qty) VALUES (:order_id, :menu_item_id, :qty); UPDATE orders SET order_price = order_price + :order_price WHERE order_id = :order_id");
@@ -70,7 +71,7 @@ class Order_Item
         global $db;
         $results = [];
 
-        $SQL = $db->prepare("SELECT order_item_id, order_id, order_items.menu_item_id, qty, item_price FROM order_items INNER JOIN menu_items ON order_items.menu_item_id= menu_items.menu_item_id WHERE order_items.order_item_id = :oid;");
+        $SQL = $db->prepare("SELECT order_item_id, order_id, order_items.menu_item_id, qty, item_price, item_notes FROM order_items INNER JOIN menu_items ON order_items.menu_item_id= menu_items.menu_item_id WHERE order_items.order_item_id = :oid;");
 
         $SQL->bindValue(":oid", $oiid, PDO::PARAM_INT);
 
@@ -83,6 +84,7 @@ class Order_Item
             $this->qty = $results['qty'];
             $this->populateIngredientsByOID();
             $this->price = $results['item_price'];
+            $this->notes = $results['item_notes'];
         }
         else
         {
@@ -183,6 +185,10 @@ class Order_Item
         return $this->qty;
     }
 
+    public function getNotes(){
+        return $this->notes;
+    }
+
     public function setQuantity($_qty){
         $this->qty = $_qty;
     }
@@ -190,7 +196,7 @@ class Order_Item
 
 class Order 
 {
-    public $orderID, $user_id, $first_name, $last_name, $total_price, $order_status;
+    public $orderID, $user_id, $first_name, $last_name, $total_price, $order_status, $order_notes;
     public $order_items = [];
     public $menu_items = [];
 
@@ -211,7 +217,7 @@ class Order
                 $results = $stmt->fetchAll(PDO::FETCH_ASSOC)[0];
                 if($results["order_status"] == "1"){
                     return("1");
-                } 
+                }
                 else{
                     $order = new Order();
                     $order->populateOrderByID($results["order_id"]);
