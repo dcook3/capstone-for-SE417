@@ -1,61 +1,95 @@
-<?php
-$levels = 0;
-$filepath = realpath(dirname(__FILE__));
-include_once "models/Session.php";
-Session::init();
-spl_autoload_register(function($models){
+<?php require_once 'includes/config.php'; ?>
+<?php isset($_SERVER['HTTP_REFERER']) && !isset($_SESSION['REFERER']) ? $_SESSION['REFERER'] = $_SERVER['HTTP_REFERER'] : 0;
+isset($_SESSION['USER']) ? redirect("index") : 0; ?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta content="" name="">
+	<meta content="" name="">
+	<link rel="icon" type="image/png" href="" />
+	<link rel="stylesheet" type="text/css" href="lib/bootstrap/css/bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="lib/font-awesome/css/font-awesome.min.css">
+	<link rel="stylesheet" type="text/css" href="lib/login/css/util.css">
+	<link rel="stylesheet" type="text/css" href="lib/login/css/main.css">
+	<link rel="stylesheet" type="text/css" href="lib/css/style.css">
+	<link rel="stylesheet" type="text/css" href="lib/login/css/login.css">
+	<title>Document</title>
+</head>
+<body>
+	<div class="limiter">
+		<div class="container-login100">
+			<div class="wrap-login100">
+				<?php
+				if (isset($_GET['forgotPassword'])) {
+					include('forgotPassword.php');
+				} else {
+					include('loginAccount.php');
+				}
+				?>
+				<script>
+					// Example starter JavaScript for disabling form submissions if there are invalid fields
+					(function() {
+						'use strict';
+						window.addEventListener('load', function() {
+							// Fetch all the forms we want to apply custom Bootstrap validation styles to
+							var forms = document.getElementsByClassName('needs-validation');
+							// Loop over them and prevent submission
+							var validation = Array.prototype.filter.call(forms, function(form) {
+								form.addEventListener('submit', function(event) {
+									if (form.checkValidity() === false) {
+										event.preventDefault();
+										event.stopPropagation();
+									}
+									form.classList.add('was-validated');
+								}, false);
+							});
+						}, false);
+					})();
+				</script>
 
-  include 'models/'.$models.".php";
+				<div class="login100-more">
+					<div id="header">
+						<div id="logo" class="pull-left">
+							<h1><a href="index" class="scrollto">Wesbite</a></h1>
+							<a href="index"><img src="" alt="" title="" /></a>
+						</div>
+					</div>
+					<footer id="footer">
+						<div class="container">
+							<div class="row">
+								<?php isset($_SERVER['HTTP_REFERER']) ? $goback = $_SERVER['HTTP_REFERER'] : $goback = "index" ?>
+								<a href="<?php echo $goback; ?>"><button class="login100-form-btn">Go back</button></a>
+							</div>
+						</div>
+					</footer>
+				</div>
 
-});
-Session::CheckLoginByUser();
-$users = new Users();
-?>
+			</div>
+		</div>
+	</div>
+	<div id="preloader"></div>
 
-
-<?php
-
-if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['login'])) {
-   $userLog = $users->userLogin($_POST);
-}
-if (isset($userLog)) {
-  echo $userLog;
-}
-
-$logout = Session::get('logout');
-if (isset($logout)) {
-  echo $logout;
-}
- ?>
-
-<div class="card ">
-  <div class="card-header">
-          <h3 class='text-center'><i class="fas fa-sign-in-alt mr-2"></i>User login</h3>
-        </div>
-        <div class="card-body">
-            <div style="width:450px; margin:0px auto">
-            <form action="" method="post">
-                <div class="form-group">
-                  <label for="email">Email</label>
-                  <input type="email" name="email"  class="form-control">
-                </div>
-                <div class="form-group">
-                  <label for="password">Password</label>
-                  <input type="password" name="password"  class="form-control">
-                </div>
-                <div class="form-group">
-                  <button type="submit" name="login" class="btn btn-success">Login</button>
-                </div>
-            </form>
-          </div>
-
-
-        </div>
-      </div>
-
-
-
-  <?php
-  include 'include/footer.php';
-
-  ?>
+	<script src="lib/jquery/jquery.min.js"></script>
+	<script src="lib/login/vendor/bootstrap/js/popper.js"></script>
+	<script src="lib/bootstrap/js/bootstrap.min.js"></script>
+	<script src="lib/bootstrap/js/bootstrap.bundle.min.js"></script>
+	<script src="lib/login/js/main.js"></script>
+	<script src="lib/wow/wow.min.js"></script>
+	<script src="lib/superfish/hoverIntent.js"></script>
+	<script src="lib/superfish/superfish.min.js"></script>
+	<script src="lib/touchSwipe/jquery.touchSwipe.min.js"></script>
+	<script src="lib/waypoints/waypoints.min.js"></script>
+	<script src="lib/counterup/counterup.min.js"></script>
+	<script src="lib/isotope/isotope.pkgd.min.js"></script>
+	<script src="lib/owlcarousel/owl.carousel.min.js"></script>
+	<script src="js/main.js"></script>			
+	<script>
+		$(function() {
+			$('[data-toggle="tooltip"]').tooltip();
+		})
+	</script>
+</body>
+</html>

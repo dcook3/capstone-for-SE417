@@ -1,5 +1,6 @@
 <?php
-include("header.php");
+include("includes/front/top.php");
+include("includes/front/header_static.php");
 include("models/lucas.php");
 include("include/login.php");
 
@@ -306,5 +307,4 @@ $sections = Section::getSections();
     }
     
 </script>
-</body>
-</html>
+<?php include("includes/front/footer.php"); ?>

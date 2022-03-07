@@ -1,0 +1,12 @@
+.input-textarea {
+    height: 112px;
+    align-items: center;
+}
+
+.wrap-input100 {
+    border-radius: 5px;
+}
+
+.focus-input100 {
+    border-radius: 5px;
+}
