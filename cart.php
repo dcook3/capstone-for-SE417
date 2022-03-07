@@ -51,7 +51,8 @@
         }
         else
         {
-            header("Location: register.php"); //Pass param to let user know they need an account?
+            $currentOrder = Order::getIncompleteOrderByUserID(6);
+            //header("Location: register.php"); //Pass param to let user know they need an account?
         }
         $itemsExist = ($currentOrder == false) ? false : true;
     }
@@ -74,15 +75,15 @@
 <div class="d-flex flex-column align-items-center">
     <?php if($itemsExist && $currentOrder != null): ?>
         <?php for($i = 0; $i < count($menuItems); $i++): ?>
-            <div class="m-1 rounded d-flex flex-row align-items-center bg-light border p-1">
+            <div class="m-1 col-10 rounded d-flex flex-row align-items-center bg-light border p-1">
                 <span><?= $menuItems[$i]->getItemName() ?></span>
-                <div class="col-4 quantitySelector d-flex flex-row justify-content-around align-items-center input-group" data-oid="<?= $currentOrder->getOrderID() ?>">
+                <div class="quantitySelector mx-2 d-flex flex-row justify-content-around align-items-center input-group" data-oid="<?= $currentOrder->getOrderID() ?>">
                     <input type="button" class="btn btn-outline-secondary" id="button-addon1" value="-">
                     <input type="number" class="form-control col-2" min="0" class="quantity" data-oid="<?= $currentOrder->getOrderID() ?>" data-oiid="<?= $orderItems[$i]->getOrderItemID(); ?>" data-action="updateQuantity" value="<?= $orderItems[$i]->getQuantity(); ?>">
                     <input type="button" class="btn btn-outline-secondary" id="button-addon2" value="+">
                 </div>
-                <span><?= $orderItems[$i]->getPrice(); ?></span>
-                <a class="text-decoration-none delItemBtn" data-oid="<?= $currentOrder->getOrderID() ?>" data-oiid="<?= $orderItems[$i]->getOrderItemID(); ?>" data-action="deleteItem"><i class="fas fa-trash-alt"></i></a>
+                <span class="me-1">$<?= $orderItems[$i]->getPrice() * $orderItems[$i]->getQuantity(); ?></span>
+                <a class="btn btn-secondary text-decoration-none delItemBtn" data-oid="<?= $currentOrder->getOrderID() ?>" data-oiid="<?= $orderItems[$i]->getOrderItemID(); ?>" data-action="deleteItem"><i class="fas fa-trash-alt"></i></a>
             </div>
             <?php
                 $subtotal += $orderItems[$i]->getPrice();

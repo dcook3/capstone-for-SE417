@@ -14,7 +14,7 @@
         }
         else
         {
-            $todayDate = new DateTime('2022-02-26');
+            $todayDate = new DateTime('NOW');
             $dateString = $todayDate->format('Y-m-d');
             $selectedDate = new DateTime($dateString);
             $results = Order::getOrdersByDT($selectedDate->getTimestamp());
@@ -51,7 +51,6 @@
         $results = Order::getOrdersByDT($selectedDate->getTimestamp());
     }
     include '../include/header.php';
-    var_dump($_POST);
 ?>
     <h2 class="fw-bold text-center">Orders</h2>
     <div class="d-flex flex-column align-items-center">
@@ -88,7 +87,7 @@
                             <div class="details<?= $row['order_id']?>"></div>
                         </td>
                         <td>
-                            <button type="button" class="btn btn-primary modalbtn" data-bs-toggle="modal" data-bs-target="#staticBackdrop" data-orderid=<?= $row['order_id'] ?>>
+                            <button type="button" class="btn btn-secondary modalbtn" data-bs-toggle="modal" data-bs-target="#staticBackdrop" data-orderid=<?= $row['order_id'] ?>>
                                 <i class="fas fa-trash-alt"></i>
                             </button>
                         </td>
@@ -119,7 +118,7 @@
                 <tr><td><?= $results ?><td></tr>
             <?php endif; ?>
         </tbody>
-    </table>           
+    </table>
    
     <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
         <div class="modal-dialog">
