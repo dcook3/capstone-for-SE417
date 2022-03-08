@@ -109,7 +109,7 @@ class user
 
 		$name = $fname . " " . $lname;
 		// $cc = "email@gmail.com";
-		$_SERVER['SERVER_PORT'] == 80 ? $port = "http://" : $port = "https://ascapstone.herokuapp.com";
+		$_SERVER['SERVER_PORT'] == 80 ? $port = "http://localhost/" : $port = "https://ascapstone.herokuapp.com/";
 
 		$message = $port . $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF'] . '?key=' . base64_encode($verify_key) . '&s=2&email=' . base64_encode($email);
 		$subject = 'Website - Email verification';
@@ -309,7 +309,7 @@ class user
 				$subject = "Website Restaurant - Forgot Password";
 				$message = "Click on the link below to change your password. This link expires in 5 minutes. \n";
 				if ($_SERVER['SERVER_PORT'] == 8080) {
-					$host = "http://";
+					$host = "http://localhost/";
 				} else {
 					$host = "https://ascapstone.herokuapp.com/";
 				}
