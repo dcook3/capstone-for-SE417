@@ -2,6 +2,8 @@
     $levels = 0;
     $subtotal = 0;
     include 'header.php';
+    //include 'includes/front/top.php';
+    //include 'includes/front/header_static.php';
     include 'models/dylan.php';
     include 'models/lucas.php';
     include 'models/Session.php';
@@ -11,7 +13,11 @@
         if(isset($_POST['action']))
         {
             $oid = $_POST['orderID'];
-            $oiid = $_POST['orderItemID'];
+            if(isset($_POST['orderItemID']))
+            {
+                $oiid = $_POST['orderItemID'];
+            }
+            
             switch ($_POST['action']) {
                 case "updateQuantity":
                     $qty = $_POST['quantity'];
@@ -32,6 +38,10 @@
                     {
                         //display failed delete error
                     }
+                    break;
+                case "updateStatus":
+                    Order::updateOrderStatus($oid, 2);
+                    header("Location: tracker.php");
                     break;
                 
                 $currentOrder = new Order();
@@ -70,7 +80,8 @@
 ?>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <link rel="stylesheet" href="dylan_styles.css">
-<a href="#" onclick="window.location.href = window.history.back(1);"><i class="fa fas fa-arrow-left"></i></a>
+<link rel="stylesheet" href="main_lucas.css">
+<a href="index.php"><i class="fa fas fa-arrow-left"></i></a>
 <h2>Cart</h2>
 <div class="d-flex flex-column align-items-center">
     <?php if($itemsExist && $currentOrder != null): ?>
@@ -78,20 +89,14 @@
             <div class="m-1 col-10 rounded d-flex flex-row align-items-center bg-light border p-1">
                 <span><?= $menuItems[$i]->getItemName() ?></span>
                 <div class="quantitySelector mx-2 d-flex flex-row justify-content-around align-items-center input-group" data-oid="<?= $currentOrder->getOrderID() ?>">
-                    <input type="button" class="btn btn-outline-secondary" id="button-addon1" value="-">
+                    <input type="button" class="btn btn-secondary" id="button-addon1" value="-">
                     <input type="number" class="form-control col-2" min="0" class="quantity" data-oid="<?= $currentOrder->getOrderID() ?>" data-oiid="<?= $orderItems[$i]->getOrderItemID(); ?>" data-action="updateQuantity" value="<?= $orderItems[$i]->getQuantity(); ?>">
-                    <input type="button" class="btn btn-outline-secondary" id="button-addon2" value="+">
+                    <input type="button" class="btn btn-secondary" id="button-addon2" value="+">
                 </div>
-                <span class="me-1">$<?= $orderItems[$i]->getPrice() * $orderItems[$i]->getQuantity(); ?></span>
+                <span class="me-1 price" data-price="<?= $orderItems[$i]->getPrice()?>" data-quantity="<?= $orderItems[$i]->getQuantity()?>" ><?= $orderItems[$i]->getPrice() * $orderItems[$i]->getQuantity(); ?></span>
                 <a class="btn btn-secondary text-decoration-none delItemBtn" data-oid="<?= $currentOrder->getOrderID() ?>" data-oiid="<?= $orderItems[$i]->getOrderItemID(); ?>" data-action="deleteItem"><i class="fas fa-trash-alt"></i></a>
             </div>
-            <?php
-                $subtotal += $orderItems[$i]->getPrice();
-            ?>
-        <?php endfor; 
-            $tax = round(($subtotal * 0.07), 2);
-            $total = $subtotal + $tax;
-        ?>
+        <?php endfor; ?>
     <?php else: ?>
         <div>
             <p><a href="main_menu.php">See menu to add items</a></p>
@@ -102,26 +107,39 @@
 
 <div>
     <?php if($itemsExist && $currentOrder != null): ?>
-        <p>Subtotal: <b><?= $subtotal ?></b></p>
-        <p>Tax: <b><?= $tax ?></b></p>
-        <button>PayPal <b><?= $total ?></b></button>
+        <p>Subtotal: <b id="subtotal"></b></p>
+        <p>Tax: <b id="tax"></b></p>
+        <div class="d-flex justify-content-center mt-5"><button id="addToCartBtn" class ='btn btn-secondary' data-oid="<?= $currentOrder->getOrderID() ?>">Finalize Order <b id="total"></b></button></div>
     <?php endif; ?>
 </div>
 <script>
     var qtySelectors = document.querySelectorAll(".quantitySelector");
+    var spans = document.querySelectorAll(".price");
+    var subtotal = 0;
 
+    
     for(let i = 0; i < qtySelectors.length; i++)
     {
         qtySelectors[i].children[1].addEventListener('change', e => {
-            $.post('cart.php', {
+            $.post( 'cart.php',
+            {
                 orderID: e.target.dataset.oid,
                 orderItemID: e.target.dataset.oiid,
                 quantity: e.target.value,
                 action: e.target.dataset.action
-            });
+            })
         });
         qtySelectors[i].firstElementChild.addEventListener('click', e => {
             qtySelectors[i].children[1].value--;
+
+            for(let i=0; i<spans.length; i++)
+            {
+                var temp = qtySelectors[i].children[1].value * Number(spans[i].dataset.price);
+                spans[i].innerHTML = `$${temp}`
+                subtotal += temp;
+            }
+            $("$subtotal").innerHTML = temp;
+
             $.post('cart.php', {
                 orderID: e.target.parentElement.children[1].dataset.oid,
                 orderItemID: e.target.parentElement.children[1].dataset.oiid,
@@ -131,6 +149,16 @@
         });
         qtySelectors[i].lastElementChild.addEventListener('click', e => {
             qtySelectors[i].children[1].value++;
+
+            for(let i=0; i < spans.length; i++)
+            {
+                var temp = qtySelectors[i].children[1].value * Number(spans[i].dataset.price);
+                spans[i].innerHTML = `$${temp}`
+                subtotal += temp;
+            }
+            $("$subtotal").innerHTML = temp;
+            
+            
             $.post('cart.php', {
                 orderID: e.target.parentElement.children[1].dataset.oid,
                 orderItemID: e.target.parentElement.children[1].dataset.oiid,
@@ -153,5 +181,13 @@
             });
         });
     }
+
+    document.querySelector("#addToCartBtn").addEventListener('click', e =>{
+        $.post('cart.php', {
+            orderID: e.target.dataset.oid,
+            action: "updateStatus"
+        });
+        
+    })
 </script>
 <script src="https://kit.fontawesome.com/4933cad413.js" crossorigin="anonymous"></script>
