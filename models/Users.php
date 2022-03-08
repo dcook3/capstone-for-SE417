@@ -267,13 +267,13 @@ class Users {
         $result =   $stmt->execute();
 
         if ($result) {
-          echo "<script>location.href='orders_view.php';</script>";
+          echo "<script dataset-contains:'SUCCESS'>location.href='orders_view.php';</script>";
           Session::set('msg', '<div class="alert alert-success alert-dismissible mt-3" id="flash-msg">
           <strong>Success:</strong> Wow, Your Information updated Successfully!
           <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a></div>');
         }
         else {
-          echo "<script>location.href='orders_view.php';</script>";
+          echo "<script dataset-contains:'ERROR'>location.href='orders_view.php';</script>";
           Session::set('msg', '<div class="alert alert-danger alert-dismissible mt-3" id="flash-msg">
     <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
     <strong>Error !</strong> Data not inserted !</div>');

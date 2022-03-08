@@ -1,20 +1,21 @@
 <?php
-    include("header.php");
+    include("includes/front/top.php");
+    include("includes/front/header_static.php");
+    include("models/lucas.php");
+    include("include/login.php");
 ?>
 <link rel ="stylesheet" href = "main_lucas.css">
 <script src="https://kit.fontawesome.com/4933cad413.js" crossorigin="anonymous"></script>
 
+<div id="headerBackground">
 
+</div>
 <div id="profileWrapper">
     <div class="topProfileBtns">
-        <a id = "backBtn">
-            <i class="fa fas fa-arrow-left"></i>
-        </a>
-        <a id = "editBtn" >
-            <i class="fas fa-pencil-alt"></i>
-        </a>
+        
+        
     </div>
-    <form>
+    <form id = "profileForm">
         <div class="form-group">
             <label>First name:</label>
             <input type = "text" name = "firstName" id = "firstName">
@@ -32,10 +33,6 @@
             <input type = "text" name = "phone" id = "phone">
         </div>
         <div class="form-group">
-            <label>2nd Phone Number:</label>
-            <input type = "text" name = "phone2" id = "phone2">
-        </div>
-        <div class="form-group">
             <label>Email:</label>
             <input type = "text" name = "email" id = "email">
         </div>
@@ -50,3 +47,12 @@
         <button class = "btn btn-secondary" id="submitUpdateBtn">Submit Update</button>
     </div>
 </div>
+
+<script>
+    var backBtn = document.querySelector("#backBtn");
+    backBtn.classList.remove("btn-hidden")
+
+    backBtn.addEventListener("click", function(e){
+        window.location.replace("index.php")
+    })
+</script>

@@ -1,6 +1,7 @@
 <?php 
     include('lucas.php');
     include('dylan.php');
+    include('../includes/functions.php');
     if($_SERVER['REQUEST_METHOD']==='POST'){
         switch($_POST['action'])
         {
@@ -99,7 +100,12 @@
                     }
                 }
                 echo 'success';
-            
+                break;  
+            case 'updateUser':
+                if(isset($post["user"])){
+
+                }
+                break;
             default:
                 echo 'action not set';
                 break;

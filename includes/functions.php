@@ -91,7 +91,23 @@ class user
 			}
 		}
 	}
-
+	public function updateUser($user_id){
+		$stmt = $this->con->prepare("UPDATE user SET student_id = :student_id, first_name = :first_name, last_name = :last_name, email = :email, phone = :phone WHERE user_id = :user_id");
+		$binds = array(
+			":student_id" => $this->student_id,
+			":first_name" => $this->fname,
+			":last_name" => $this->lname,
+			":email" => $this->email,
+			":phone" => $this->phone,
+			":user_id" => $user_id
+		);
+		if($stmt->execute($binds)){
+			return"true";
+		}
+		else{
+			var_dump($stmt->error);
+		}
+	}
 	public function verify_email_register(&$email, &$fname, &$lname, &$verify_key) {		//CALLED IN THE PREVIOUS FUNCTION
 		$mail = new PHPMailer;
 		$mail->isSMTP();
