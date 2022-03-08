@@ -1,5 +1,4 @@
 <?php
-
 function setMessage($error) {
 	echo '<div class="alert alert-danger alert-dismissible fade show" role="alert">
 		  ' . $error . '
@@ -43,12 +42,10 @@ class user
 		$this->temp = $this->flag = 0;
 		require 'PHPMailer/PHPMailerAutoload.php';		
 	}
-	public function __destruct()
-	{
+	public function __destruct() {
 		$this->con->disconnect();
 	}
-	public function register_account()		//http://localhost/as_capstone/register
-	{
+	public function register_account() {//http://localhost/as_capstone/register
 		if (isset($_POST['register_submit']) && !isset($_GET['s'])) {
 			$pass = md5($this->con->escape($_POST['pass']));
 			$pass_confirm = md5($this->con->escape($_POST['pass_confirm']));
@@ -95,11 +92,10 @@ class user
 		}
 	}
 
-	public function verify_email_register(&$email, &$fname, &$lname, &$verify_key)		//CALLED IN THE PREVIOUS FUNCTION
-	{
+	public function verify_email_register(&$email, &$fname, &$lname, &$verify_key) {		//CALLED IN THE PREVIOUS FUNCTION
 		$mail = new PHPMailer;
 		$mail->isSMTP();
-		$mail->SMTPDebug = 2;
+		//$mail->SMTPDebug = 2;
 
 		$config = parse_ini_file('dbconfig.ini', true);
 
@@ -113,7 +109,7 @@ class user
 
 		$name = $fname . " " . $lname;
 		// $cc = "email@gmail.com";
-		$_SERVER['SERVER_PORT'] == 80 ? $port = "http://" : $port = "https://";
+		$_SERVER['SERVER_PORT'] == 80 ? $port = "http://" : $port = "https://ascapstone.herokuapp.com";
 
 		$message = $port . $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF'] . '?key=' . base64_encode($verify_key) . '&s=2&email=' . base64_encode($email);
 		$subject = 'Website - Email verification';
@@ -140,8 +136,7 @@ class user
 		}
 	}
 
-	public function resend_verify_email()		//register?s=1&cid=Mzc=
-	{
+	public function resend_verify_email() {//register?s=1&cid=Mzc=
 		if (isset($_GET['resend']) && !isset($_GET['cid'])) {
 			$this->email = base64_decode($_GET['resend']);
 			$this->sql = "SELECT c.first_name, c.last_name, c.email, c.verify_key FROM user c WHERE c.email = ?";
@@ -238,8 +233,7 @@ class user
 		}
 	}
 
-	public function login()
-	{
+	public function login() {
 		if (isset($_POST['login_submit'])) {
 			if (isset($_SESSION['USER'])) {
 				unset($_SESSION['USER']);
@@ -264,7 +258,6 @@ class user
 				if (!$isLogin) {
 					setMessage("The email and password combination didn't match. Please try again. ");
 				} else {
-					//$this->delete_cart();
 					$_SESSION['USER'] = array('NAME' => $this->fname . " " . $this->lname, 'EMAIL' => $this->email, 'USERID' => $user_id);
 					unset($_SESSION['location_query']);
 					unset($_SESSION['REFERER']);
@@ -274,8 +267,7 @@ class user
 		}
 	}
 
-	public function send_mail($receiver_email, $receiver_name, $message, $subject)
-	{
+	public function send_mail($receiver_email, $receiver_name, $message, $subject) {
 		$mail = new PHPMailer;
 		$mail->isSMTP();
 		$mail->SMTPDebug = 2;
@@ -296,8 +288,7 @@ class user
 			return 0;
 		}
 	}
-	public function forgotPassword()
-	{
+	public function forgotPassword() {
 		if (isset($_GET['forgotPassword']) && isset($_POST['forgot_submit']) && !isset($_GET['key']) && !isset($_GET['ts'])) {
 			$this->flag = 0;
 			$this->email = $_POST['email'];
@@ -320,7 +311,7 @@ class user
 				if ($_SERVER['SERVER_PORT'] == 8080) {
 					$host = "http://";
 				} else {
-					$host = "https://";
+					$host = "https://ascapstone.herokuapp.com/";
 				}
 				$this->datetime = new DateTime();
 				$this->time = new DateTime();
