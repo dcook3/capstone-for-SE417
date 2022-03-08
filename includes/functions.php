@@ -270,7 +270,7 @@ class user
 	public function send_mail($receiver_email, $receiver_name, $message, $subject) {
 		$mail = new PHPMailer;
 		$mail->isSMTP();
-		$mail->SMTPDebug = 2;
+		//$mail->SMTPDebug = 2;
 		$config = parse_ini_file('dbconfig.ini', true);
 		$mail->Host = 'smtp.gmail.com'; // Which SMTP server to use.
 		$mail->Port = 587; // Which port to use, 587 is the default port for TLS security.
