@@ -311,7 +311,7 @@ class user
 				if ($_SERVER['SERVER_PORT'] == 8080) {
 					$host = "http://";
 				} else {
-					$host = "https://ascapstone.herokuapp.com/";
+					$host = "https://ascapstone.herokuapp.com";
 				}
 				$this->datetime = new DateTime();
 				$this->time = new DateTime();
