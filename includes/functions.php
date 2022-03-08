@@ -309,14 +309,15 @@ class user
 				$subject = "Website Restaurant - Forgot Password";
 				$message = "Click on the link below to change your password. This link expires in 5 minutes. \n";
 				if ($_SERVER['SERVER_PORT'] == 8080) {
-					$host = "http://localhost/";
+					$host = "http://";
 				} else {
-					$host = "https://ascapstone.herokuapp.com/";
+					$host = "https://ascapstone.herokuapp.com";
 				}
 				$this->datetime = new DateTime();
 				$this->time = new DateTime();
 				$this->time = $this->datetime->getTimestamp();
-				$message .= $host . $_SERVER['SERVER_NAME'] . $_SERVER['PHP_SELF'] . "?" . $_SERVER['QUERY_STRING'] . "&key=" . base64_encode($verify_key) . "&ts=" . base64_encode($this->time);
+				//$message .= $host . $_SERVER['SERVER_NAME'] . $_SERVER['PHP_SELF'] . "?" . $_SERVER['QUERY_STRING'] . "&key=" . base64_encode($verify_key) . "&ts=" . base64_encode($this->time);
+				$message .= $host . $_SERVER['QUERY_STRING'] . "&key=" . base64_encode($verify_key) . "&ts=" . base64_encode($this->time);
 				if ($this->send_mail($this->email, $name, $message, $subject)) {
 					successMessage("A password reset link has been sent to " . $this->email . ". Please check your mail. ");
 				} else {
