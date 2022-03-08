@@ -1,3 +1,4 @@
+<IfModule mod_rewrite.c>
 RewriteEngine on
 RewriteCond %{HTTPS} !=on
 RewriteCond %{REQUEST_FILENAME} !-d
@@ -14,3 +15,4 @@ php_flag report_memleaks on
 php_value docref_root 0
 php_value docref_ext 0
 php_value error_reporting -1
+</IfModule>
