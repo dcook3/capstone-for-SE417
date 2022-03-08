@@ -9,7 +9,7 @@
 	<meta content="" name="">
 
 	<!-- Bootstrap CSS File -->
-	<link href="lib/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+	<link href="include/bootstrap.css" rel="stylesheet">
 
 	<!-- Libraries CSS Files -->
 	<link href="lib/vendor/fontawesome-free/css/all.min.css" rel="stylesheet">	

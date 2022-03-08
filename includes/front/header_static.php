@@ -1,7 +1,11 @@
   <header id="header">
     <div class="container-fluid">
+      <a id = "backBtn" class = "btn-hidden pull-left">
+          <i class="fa fas fa-arrow-left"></i>
+      </a>
       <div id="logo" class="pull-left">
-        <h1><a href="index" class="scrollto">Tiger Eats</a></h1>
+      
+        <h1><a href="index" class="scrollto text-decoration-none" style = "border-left: 4px solid #ecae4f;">Tiger Eats</a></h1>
         <a href="index"><img src="" alt="" title="" /></a>
       </div>
 

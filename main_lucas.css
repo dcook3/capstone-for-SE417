@@ -56,14 +56,21 @@ background: radial-gradient(circle, rgba(255,255,255,1) 0%, rgba(0,0,0,1) 87%);
     align-items: center;
     /* justify-content: space-between; */
 }
+.btn-hidden{
+    width: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: hidden;
+    transition-duration: 1s;
+}
 
 #backBtn{
     z-index: 100;
     color: #ecae4f;
-    position: absolute;
-    left: 2vw;
-    top: 2vw;
     font-size: 1.5em;
+    margin-right: 5px;
+    padding-bottom: 10px;
+    line-height: 1;
 }
 #addItemWrapper{
     width: 100%;

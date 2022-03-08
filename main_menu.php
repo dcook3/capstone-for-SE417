@@ -40,9 +40,7 @@ $sections = Section::getSections();
 
 
 <div id="banner">
-    <a id = "backBtn" class = "hidden">
-        <i class="fa fas fa-arrow-left"></i>
-    </a>
+    
     <p id = "specialTag">Special</p>
     <div id="slideshow">
         <?php 
@@ -92,16 +90,16 @@ $sections = Section::getSections();
 <div id="addItemWrapper">
     <form id = "addItemMenu" class = "hidden">
         <div class="form-group">
-        <h1>
+            <h1>
 
-        </h1>
+            </h1>
         </div>
         <div class="form-group">
-        <ul>
-            <li>
-                <h2>Ingredients</h2>
-            </li>
-        </ul>
+            <ul>
+                <li>
+                    <h2>Ingredients</h2>
+                </li>
+            </ul>
         </div>
         <div class="form-group">
             <div>
@@ -109,8 +107,6 @@ $sections = Section::getSections();
                 <input id = "qtyInput" type = "number" min = "1" max = "10" value = "1">
             </div>
         </div>
-        <div class="form-group " id = "btnGroup">
-            <button id = "addToCartBtn" class = 'btn btn-secondary'>
         <div class="form-group">
             <div>
                 <p>Extra Notes:</p>
@@ -120,10 +116,10 @@ $sections = Section::getSections();
         
     </form>
     <div id = "btnGroup">
-            <button id = "addToCartBtn" class = 'btn btn-secondary hidden'>
-                <span>Add To Cart</span>
-                <span></span>
-            </button>
+        <button id = "addToCartBtn" class = 'btn btn-secondary hidden'>
+            <span>Add To Cart</span>
+            <span></span>
+        </button>
     </div>
     
     <button type="button" class="btn btn-secondary btn-circle" id = "cartBtn" onclick="window.location.replace('cart.php')">
@@ -193,7 +189,7 @@ $sections = Section::getSections();
         cartBtn.classList.add("hidden");
         addToCartBtn.classList.remove("hidden");
         specialTag.classList.add("hidden");
-        backBtn.classList.remove("hidden");
+        backBtn.classList.remove("btn-hidden");
         slideshow.classList.add("hidden");
         addItemImg.classList.remove("hidden")
         sectionCards.classList.remove("hidden");
@@ -205,7 +201,7 @@ $sections = Section::getSections();
     function sectionClick(id){
         Menu_Item.getMenuItemsBySectionId(id, true, function(_menuItems){
             state = States.Items;
-            backBtn.classList.remove("hidden");
+            backBtn.classList.remove("btn-hidden");
             menuItems = _menuItems
             itemCards.innerHTML = "";
             for(let i = 0; i < menuItems.length; i++){
@@ -255,7 +251,7 @@ $sections = Section::getSections();
     backBtn.addEventListener("click", function(e){
         switch(state){
             case States.Items:
-                backBtn.classList.add("hidden");
+                backBtn.classList.add("btn-hidden");
                 sectionCards.classList.remove("hidden");
                 itemCards.classList.add("hidden");
                 state = States.Section;
@@ -278,7 +274,7 @@ $sections = Section::getSections();
                 slideshow.classList.remove("hidden");
                 itemCards.classList.add("hidden");
                 sectionCards.classList.remove("hidden");
-                backBtn.classList.add("hidden");
+                backBtn.classList.add("btn-hidden");
                 addItemMenu.classList.add("hidden");
                 state = States.Section;
                 break
