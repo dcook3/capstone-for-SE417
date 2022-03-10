@@ -64,7 +64,6 @@
             case 'addOrderItem':
                 if(isset($_POST["order_item"]) && isset($_POST["order_id"])){
                     $order_item = postToOrderItem($_POST["order_item"]);
-                    var_dump($order_item);
                     echo $order_item->addItemToOrder();
                 }
                 break;
@@ -105,15 +104,20 @@
             case 'updateUser':
                 if(isset($_POST["user"])){
                     $user = new User();
+                    session_start();
                     
+
                     $postUser = $_POST["user"];
-                    var_dump($postUser);
                     $user->email = $postUser["email"];
                     $user->fname = $postUser["fname"];
                     $user->lname = $postUser["lname"];
                     $user->phone = $postUser["phone"];
                     $user->student_id = $postUser["student_id"];
-                    echo $user->updateUser($postUser["user_id"]);
+                    $user->user_id = $postUser["user_id"];
+                    if($user->updateUser()){
+                        $_SESSION['USER'] = $user;
+                    }
+
                 }
                 break;
             default:

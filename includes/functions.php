@@ -92,22 +92,17 @@ class user
 			}
 		}
 	}
-	public function updateUser($user_id){
-		$stmt = $this->con->prepare("UPDATE user SET student_id = :student_id, first_name = :first_name, last_name = :last_name, email = :email, phone = :phone WHERE user_id = :user_id");
-		$binds = array(
-			":student_id" => $this->student_id,
-			":first_name" => $this->fname,
-			":last_name" => $this->lname,
-			":email" => $this->email,
-			":phone" => $this->phone,
-			":user_id" => $user_id
-		);
-		var_dump($binds);
-		if($stmt->execute($binds)){
-			return"true";
+	public function updateUser(){
+		$stmt = $this->con->prepare("UPDATE user SET student_id = ?, first_name = ?, last_name = ?, email = ?, phone = ? WHERE user_id = ?");
+		
+		mysqli_stmt_bind_param($stmt, "ssssss", $this->student_id, $this->fname, $this->lname, $this->email, $this->phone, $this->user_id);
+		if(mysqli_stmt_execute($stmt)){
+			
+			return true;
+			
 		}
 		else{
-			var_dump($stmt->error);
+			var_dump($stmt);
 		}
 	}
 	public function verify_email_register(&$email, &$fname, &$lname, &$verify_key) {		//CALLED IN THE PREVIOUS FUNCTION
@@ -266,7 +261,7 @@ class user
 			$this->send_query = $this->con->prepare($this->sql);
 
 			mysqli_stmt_bind_param($this->send_query, "ssii", $this->email, $pass, $this->temp, $this->temp);
-			mysqli_stmt_bind_result($this->send_query, $this->fname, $this->lname, $user_id, $this->email, $this->phone);
+			mysqli_stmt_bind_result($this->send_query, $this->fname, $this->lname, $this->user_id, $this->email, $this->phone);
 
 			if (isset($this->send_query) && mysqli_stmt_execute($this->send_query)) {
 				while (mysqli_stmt_fetch($this->send_query)) {

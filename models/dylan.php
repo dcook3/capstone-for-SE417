@@ -14,28 +14,40 @@ class Order_Item
     {
         global $db;
         if($this->order_item_id == "-1"){
-            $stmt = $db->prepare("INSERT INTO order_items (order_id, menu_item_id, qty) VALUES (:order_id, :menu_item_id, :qty); UPDATE orders SET order_price = order_price + :order_price WHERE order_id = :order_id");
+            $stmt = $db->prepare("INSERT INTO order_items (order_id, menu_item_id, qty) VALUES (:order_id, :menu_item_id, :qty); ");
             $binds = array(
                 ":order_id" => $this->order_id,
                 ":menu_item_id" => $this->item_id,
                 ":qty" => $this->qty,
-                ":order_price" => $this->calcPrice()
             );
+            $stmt2 = $db->prepare("UPDATE orders SET order_price = (order_price + :order_price) WHERE order_id = :order_id;");
+            $binds2 = array(
+                ":order_price" => $this->calcPrice(),
+                ":order_id" => $this->order_id
+            );
+            var_dump($binds2);
             if($stmt->execute($binds)){
                 $this->order_item_id = $db->lastInsertId();
-                foreach($this->ingredients as $ingredient){
-                    $ingredientStmt = $db->prepare("INSERT INTO order_item_ingredients (item_ingredient_id, order_item_id) VALUES (:ingredient_id, :order_item_id)");
-                    $ingredientBinds = array(
-                        ":ingredient_id" => $ingredient->getIngredientId(),
-                        ":order_item_id" => $this->order_item_id
-                    );
-                    if(!$ingredientStmt->execute($ingredientBinds)){
-                        return($ingredientStmt->errorInfo());
+                if($stmt2->execute($binds2)){
+                    foreach($this->ingredients as $ingredient){
+                        $ingredientStmt = $db->prepare("INSERT INTO order_item_ingredients (item_ingredient_id, order_item_id) VALUES (:ingredient_id, :order_item_id)");
+                        $ingredientBinds = array(
+                            ":ingredient_id" => $ingredient->getIngredientId(),
+                            ":order_item_id" => $this->order_item_id
+                        );
+                        if(!$ingredientStmt->execute($ingredientBinds)){
+                            return($ingredientStmt->errorInfo());
+                        }
+                        
+    
                     }
-                    
-
+                    return(true);
                 }
-                return(true);
+                else{
+                    return($stmt->errorInfo());
+                }
+            
+                
             }
             else{
                 return($stmt->errorInfo());
@@ -157,6 +169,7 @@ class Order_Item
         {
             $this->price += $ingredient->getIngredientPrice();
         }
+        $this->price = $this->price *$this->getQuantity();
         return $this->price;
     }
 
@@ -215,14 +228,10 @@ class Order
             }
             else{
                 $results = $stmt->fetchAll(PDO::FETCH_ASSOC)[0];
-                if($results["order_status"] == "1"){
-                    return("1");
-                }
-                else{
-                    $order = new Order();
-                    $order->populateOrderByID($results["order_id"]);
-                    return($order);
-                }
+                $order = new Order();
+                $order->populateOrderByID($results["order_id"]);
+                return($order);
+                
             }
         }
         else{
@@ -233,7 +242,7 @@ class Order
     public static function addOrder($user_id){
         global $db;
 
-        $stmt = $db->prepare("INSERT INTO orders (user_id, order_datetime, order_status) VALUES (:user_id, CURDATE(), '0')");
+        $stmt = $db->prepare("INSERT INTO orders (user_id, order_datetime, order_status, order_price) VALUES (:user_id, CURDATE(), '0', 0)");
         $binds = array(
             ":user_id" => $user_id
         );
@@ -249,7 +258,7 @@ class Order
         $results = [];
 
         //SQL tables got changed around double check names
-        $SQL = $db->prepare("SELECT * FROM orders INNER JOIN users ON users.user_id = orders.user_id WHERE order_datetime >= STR_TO_DATE(:datestart, '%Y-%m-%d %H:%i:%s') AND order_datetime <= STR_TO_DATE(:dateend, '%Y-%m-%d %H:%i:%s') ORDER BY order_status ASC, order_datetime ASC;");
+        $SQL = $db->prepare("SELECT * FROM orders INNER JOIN user ON user.user_id = orders.user_id WHERE order_datetime >= STR_TO_DATE(:datestart, '%Y-%m-%d %H:%i:%s') AND order_datetime <= STR_TO_DATE(:dateend, '%Y-%m-%d %H:%i:%s') ORDER BY order_status ASC, order_datetime ASC;");
 
         $SQLdateStart = new DateTime(date( 'Y-m-d H:i:s', $selectedTS));
         $SQLdateEnd = $SQLdateStart;
@@ -328,7 +337,7 @@ class Order
         $results = [];
 
         //SQL tables got changed around double check names
-        $SQL = $db->prepare("SELECT * FROM orders INNER JOIN users ON users.user_id = orders.user_id WHERE order_id = :oid;");
+        $SQL = $db->prepare("SELECT * FROM orders INNER JOIN user ON user.user_id = orders.user_id WHERE order_id = :oid;");
 
         $SQL->bindValue(":oid", $orderID);
         

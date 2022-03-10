@@ -174,7 +174,9 @@ class Order{
             }
         })
         .fail(function(e) {console.log(e)})
-        .done(callback())
+        .done(function(data){
+            callback(data)
+        })
     }
     static createOrderIfNoneExists(user_id, callback){
         $.ajax({
@@ -187,9 +189,10 @@ class Order{
         })
         .fail(function(e) {console.log(e)})
         .done(function(data){
+            console.log(data);
             let d = JSON.parse(data);
             let order = new Order(d["orderID"], d["user_id"], d["order_status"]);
-            for(let i = 0; i< d["order_items"].legth; i++){
+            for(let i = 0; i< d["order_items"].legnth; i++){
                 let _order_item = d['order_items'][i]
                 let menu_item = d['menu_items'][i]
                 let order_item = new Order_Item(menu_item['menu_item_id'], new Section(menu_item['section']['section_id'], menu_item['section']['section_name'], menu_item['section']['section_img']), menu_item['item_name'], menu_item['item_description'], menu_item['item_price'], menu_item['item_img'], menu_item['is_special'], _order_item["order_item_id"], _order_item["qty"])

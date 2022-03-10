@@ -5,7 +5,6 @@ include("models/lucas.php");
 include("include/login.php");
 
 $sections = Section::getSections();
-
 ?>
 <script src="https://kit.fontawesome.com/4933cad413.js" crossorigin="anonymous"></script>
 <?php
@@ -16,7 +15,7 @@ $sections = Section::getSections();
 
 <link rel ="stylesheet" href = "main_lucas.css">
 
-
+<div class="hidden" id = "user_id" data-id = "<?= isset($_SESSION['USER']) ? $_SESSION['USER']->user_id : "-1"?>"></div>
 <!-- TEMPLATE ELEMENTS -->
 <div id = "templateCard" class = "card bg-primary text-white itemCard hidden">
     <img src = "">
@@ -95,7 +94,7 @@ $sections = Section::getSections();
             </h1>
         </div>
         <div class="form-group">
-            <ul>
+            <ul id = "ingredients">
                 <li>
                     <h2>Ingredients</h2>
                 </li>
@@ -104,7 +103,11 @@ $sections = Section::getSections();
         <div class="form-group">
             <div>
                 <p>Quantity</p>
-                <input id = "qtyInput" type = "number" min = "1" max = "10" value = "1">
+                <div class="quantitySelector  d-flex flex-row justify-content-around align-items-center input-group">
+                    <input type="button" class="btn btn-secondary" id="button-addon1" value="-">
+                    <input id = "qtyInput" type="number" class="form-control" min="1" class="quantity" data-action="updateQuantity" value="1">
+                    <input type="button" class="btn btn-secondary" id="button-addon2" value="+">
+                </div>
             </div>
         </div>
         <div class="form-group">
@@ -125,8 +128,26 @@ $sections = Section::getSections();
     <button type="button" class="btn btn-secondary btn-circle" id = "cartBtn" onclick="window.location.replace('cart.php')">
     <img src = "cart-shopping-solid.svg">
     </button>
-    
-</div>
+    <div class="modal fade" id="croppingModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Upload Image</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="cropper-container">
+                    <img id = "croppedImage">
+                </div>
+                
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="cancelCrop()">Cancel</button>
+                <button type="button" class="btn btn-primary" onclick="cropImage()">Done</button>
+            </div>
+            </div>
+        </div>
+    </div>
 <script src="https://kit.fontawesome.com/4933cad413.js" crossorigin="anonymous"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script src = "models/lucas.js"></script>
@@ -138,6 +159,7 @@ $sections = Section::getSections();
     var addItemMenu = document.querySelector("#addItemMenu");
     var qtyInput = document.querySelector("#qtyInput");
     var menuItems
+    var user_id = document.querySelector("#user_id").dataset["id"]
     var item
     var addToCartBtn = document.querySelector("#addToCartBtn");
     var cartBtn = document.querySelector("#cartBtn");
@@ -149,6 +171,12 @@ $sections = Section::getSections();
     var addItemImg = document.querySelector("#addItemImg");
     var slideIndex = 0;
     var specialTag = document.querySelector("#specialTag");
+    var plsBtn = document.querySelector("#button-addon2")
+    var mnsBtn = document.querySelector("#button-addon1")
+    var ingredientsUL = document.querySelector("#ingredients");
+    window.addEventListener('load', (event) => {
+        var modal = new bootstrap.Modal(document.querySelector("#croppingModal"));
+    });
     class States{
         static Section = new States("section");
         static Items = new States("items");
@@ -159,44 +187,71 @@ $sections = Section::getSections();
             this.name = name;
         }
     }
+
+    plsBtn.addEventListener("click", function(e){
+        qtyInput.value = parseInt(qtyInput.value) + 1;
+        calcPrice();
+    })
+    mnsBtn.addEventListener("click", function(e){
+        if(parseInt(qtyInput.value) > 1)
+        {
+            qtyInput.value = parseInt(qtyInput.value) - 1;
+        }
+        else{
+            qtyInput.value = 1;
+        }
+        
+        calcPrice();
+    })
+
+
+    function calcPrice(){
+        price = item.item_price;
+        for(let i = 0; i < ingredientsUL.children.length; i++){
+            let ingredient = ingredientsUL.children[i]
+            if(ingredient.children[0].checked){
+                price += parseFloat(ingredient.dataset["ingredientPrice"])
+            }
+        }
+        price = price * parseInt(qtyInput.value);
+        addToCartBtn.children[1].innerHTML = "$" + price.toFixed(2);
+    }
     var state = States.Section;
     function gotoAddItemMenu(_item){
-        item = _item
-        addItemMenu.children[1].children[0].innerHTML = "";
-        addItemMenu.children[0].children[0].innerHTML = item.item_name;
-        addToCartBtn.children[1].innerHTML = "$" + item.item_price;
-        for(let y = 0; y < item.ingredients.length; y++){
-            let ingredient = templateIngredient.cloneNode(true);
-            
-            ingredient.children[0].dataset["id"] = item.ingredients[y].ingredient_id
-            ingredient.classList.remove("hidden");
-            ingredient.children[1].innerHTML = item.ingredients[y].ingredient_name + ((item.ingredients[y].ingredient_price > 0) ? "(" + item.ingredients[y].ingredient_price + ")" : ""); 
-            addItemMenu.children[1].children[0].appendChild(ingredient);
-            ingredient.children[0].checked = ingredient.is_default;
-            ingredient.children[0].addEventListener("change", function(e){
-                
-                let price = parseFloat(addItemMenu.children[3].children[0].children[1].innerHTML);
-                if(e.target.checked){
-                    price += item.ingredients[y].ingredient_price;
-                }
-                else{
-                    price -= item.ingredients[y].ingredient_price;
-                }
-                addToCartBtn.children[1].innerHTML =  "$" + price;
-            })
+        if(user_id == "-1"){
+            window.location.replace("login.php");
         }
-        addItemImg.children[0].src = item.item_img;
-        cartBtn.classList.add("hidden");
-        addToCartBtn.classList.remove("hidden");
-        specialTag.classList.add("hidden");
-        backBtn.classList.remove("btn-hidden");
-        slideshow.classList.add("hidden");
-        addItemImg.classList.remove("hidden")
-        sectionCards.classList.remove("hidden");
-        sectionCards.classList.add("hidden");
-        itemCards.classList.remove("hidden");
-        itemCards.classList.add("hidden");
-        addItemMenu.classList.remove("hidden");
+        else
+        {
+            item = _item
+            addItemMenu.children[1].children[0].innerHTML = "";
+            addItemMenu.children[0].children[0].innerHTML = item.item_name;
+            addToCartBtn.children[1].innerHTML = "$" + item.item_price;
+            for(let y = 0; y < item.ingredients.length; y++){
+                let ingredient = templateIngredient.cloneNode(true);
+                ingredient.dataset["ingredientPrice"] = item.ingredients[y].ingredient_price;
+                ingredient.children[0].dataset["id"] = item.ingredients[y].ingredient_id
+                ingredient.classList.remove("hidden");
+                ingredient.children[1].innerHTML = item.ingredients[y].ingredient_name + ((item.ingredients[y].ingredient_price > 0) ? "(" + item.ingredients[y].ingredient_price + ")" : ""); 
+                addItemMenu.children[1].children[0].appendChild(ingredient);
+                ingredient.children[0].checked = ingredient.is_default;
+                ingredient.children[0].addEventListener("change", function(e){
+                   calcPrice();
+                })
+            }
+            addItemImg.children[0].src = item.item_img;
+            cartBtn.classList.add("hidden");
+            addToCartBtn.classList.remove("hidden");
+            specialTag.classList.add("hidden");
+            backBtn.classList.remove("btn-hidden");
+            slideshow.classList.add("hidden");
+            addItemImg.classList.remove("hidden")
+            sectionCards.classList.remove("hidden");
+            sectionCards.classList.add("hidden");
+            itemCards.classList.remove("hidden");
+            itemCards.classList.add("hidden");
+            addItemMenu.classList.remove("hidden");
+        }
     }
     function sectionClick(id){
         Menu_Item.getMenuItemsBySectionId(id, true, function(_menuItems){
@@ -223,26 +278,35 @@ $sections = Section::getSections();
             sectionCards.classList.add("hidden");
             itemCards.classList.remove("hidden");
         })
+        
     }
     addToCartBtn.addEventListener("click", function(e){
-        Order.createOrderIfNoneExists("6", function(order){
-            let order_item = new Order_Item(item.menu_item_id,
-                                            item.section,
-                                            item.item_name, 
-                                            item.item_description, 
-                                            item.item_price, 
-                                            item.item_img,
-                                            "-1",
-                                            qtyInput.value,
-                                            notesInput.value)
-            for(let i = 1; i < addItemMenu.children.length; i++){
-                let checkbox = addItemMenu.children[1].children[i].children[0]
-                if(checkbox.checked){
-                    order_item.addIngredient(new Ingredient(checkbox.dataset["id"], "0", "0", false))
-                }
-            }
-            order.addOrderItem(order_item, function(){window.location.replace("cart.php")});
+        Order.createOrderIfNoneExists(user_id, function(order){
+            if(order.order_status != 1){
 
+                
+                let order_item = new Order_Item(item.menu_item_id,
+                                                item.section,
+                                                item.item_name, 
+                                                item.item_description, 
+                                                item.item_price, 
+                                                item.item_img,
+                                                item.is_special,
+                                                "-1",
+                                                qtyInput.value,
+                                                notesInput.value)
+                for(let i = 1; i < addItemMenu.children.length; i++){
+                    let checkbox = addItemMenu.children[1].children[0].children[i].children[0]
+                    if(checkbox.checked){
+                        order_item.addIngredient(new Ingredient(checkbox.dataset["id"], "0",checkbox.parentElement.dataset["ingredientPrice"], false))
+                    }
+                }
+                console.log(order_item);
+                order.addOrderItem(order_item, function(data){console.log(data)});
+            }
+            else{
+                modal.show();
+            }
         });
     })
     function selectItem(){
