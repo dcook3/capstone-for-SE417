@@ -23,7 +23,13 @@ class connectDB
 	}
 	public function disconnect()
 	{
-		return mysqli_close($this->connection);
+		// try{
+		// 	$r = mysqli_close($this->connection);
+		// }
+		// catch (Exception $e){
+		// 	$r= 'connection already closed';
+		// }
+		// return $r;
 	}
 	public function query($sql)
 	{
@@ -31,11 +37,11 @@ class connectDB
 	}
 	public function last_id()
 	{
-		mysqli_insert_id($this->connection);
+		return mysqli_insert_id($this->connection);
 	}
 	public function prepare_last_id()
 	{
-		mysqli_stmt_insert_id($this->connection);
+		return mysqli_stmt_insert_id($this->connection);
 	}
 	public function confirm($result)
 	{

@@ -2,6 +2,7 @@
     include('lucas.php');
     include('dylan.php');
     include('../includes/functions.php');
+    include('../includes/connectDB.php');
     if($_SERVER['REQUEST_METHOD']==='POST'){
         switch($_POST['action'])
         {
@@ -102,8 +103,17 @@
                 echo 'success';
                 break;  
             case 'updateUser':
-                if(isset($post["user"])){
-
+                if(isset($_POST["user"])){
+                    $user = new User();
+                    
+                    $postUser = $_POST["user"];
+                    var_dump($postUser);
+                    $user->email = $postUser["email"];
+                    $user->fname = $postUser["fname"];
+                    $user->lname = $postUser["lname"];
+                    $user->phone = $postUser["phone"];
+                    $user->student_id = $postUser["student_id"];
+                    echo $user->updateUser($postUser["user_id"]);
                 }
                 break;
             default:

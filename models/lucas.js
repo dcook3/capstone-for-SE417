@@ -8,7 +8,31 @@ if(count(window.location.pathname, "/") == 2){
 else{
     rootPath = "../"
 }
+class User{
+    constructor(user_id, email, fname, lname, phone, student_id){
+        this.user_id = user_id;
+        this.email = email;
+        this.fname = fname;
+        this.lname = lname;
+        this.phone = phone;
+        this.student_id = student_id;
+    }
 
+    updateUser(){
+        $.ajax({
+            url:rootPath+"models/ajaxHandler.php",
+            method : "POST",
+            data:{
+                'action' : 'updateUser',
+                'user'   : user
+            }
+        })
+        .fail(function(e){console.log(e)})
+        .done(function(data){
+            console.log(data);
+        })
+    }
+}
 
 class Menu_Item{
     constructor(menu_item_id, section, item_name, item_description, item_price, item_img, is_special){

@@ -30,7 +30,7 @@ class user
 {
 	private $con, $sql, $send_query, $get, $row, $datetime;
 	public $temp, $flag;
-	public $email, $fname, $lname, $phone, $student_id;
+	public $email, $fname, $lname, $phone, $student_id, $user_id;
 
 	public function __construct()	//constructor to connect to DB
 	{
@@ -40,7 +40,8 @@ class user
 		date_default_timezone_set('America/New_York');
 		$this->datetime = date("Y-m-d H:i:s");
 		$this->temp = $this->flag = 0;
-		require 'PHPMailer/PHPMailerAutoload.php';		
+		$filepath = realpath(dirname(__FILE__));
+		require $filepath.'/../PHPMailer/PHPMailerAutoload.php';		
 	}
 	public function __destruct() {
 		$this->con->disconnect();
@@ -101,6 +102,7 @@ class user
 			":phone" => $this->phone,
 			":user_id" => $user_id
 		);
+		var_dump($binds);
 		if($stmt->execute($binds)){
 			return"true";
 		}
@@ -260,11 +262,11 @@ class user
 			$this->email = $this->con->escape($_POST['email']);
 			$pass = md5($this->con->escape($_POST['pass']));
 
-			$this->sql = "SELECT c.first_name, c.last_name, c.user_id FROM user c, login_info l WHERE c.email = l.email AND l.email = ? AND l.password = ? AND c.isVerified = ? AND c.login_access = ?";
+			$this->sql = "SELECT c.first_name, c.last_name, c.user_id, c.email, c.phone  FROM user c, login_info l WHERE c.email = l.email AND l.email = ? AND l.password = ? AND c.isVerified = ? AND c.login_access = ?";
 			$this->send_query = $this->con->prepare($this->sql);
 
 			mysqli_stmt_bind_param($this->send_query, "ssii", $this->email, $pass, $this->temp, $this->temp);
-			mysqli_stmt_bind_result($this->send_query, $this->fname, $this->lname, $user_id);
+			mysqli_stmt_bind_result($this->send_query, $this->fname, $this->lname, $user_id, $this->email, $this->phone);
 
 			if (isset($this->send_query) && mysqli_stmt_execute($this->send_query)) {
 				while (mysqli_stmt_fetch($this->send_query)) {
@@ -274,7 +276,7 @@ class user
 				if (!$isLogin) {
 					setMessage("The email and password combination didn't match. Please try again. ");
 				} else {
-					$_SESSION['USER'] = array('NAME' => $this->fname . " " . $this->lname, 'EMAIL' => $this->email, 'USERID' => $user_id);
+					$_SESSION['USER'] =$this;
 					unset($_SESSION['location_query']);
 					unset($_SESSION['REFERER']);
 					redirect("index");

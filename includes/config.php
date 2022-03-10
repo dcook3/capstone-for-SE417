@@ -27,7 +27,7 @@ if(!isset($_SESSION['location_query']))
 	date_default_timezone_set('America/New_York');
 	$datetime = date("Y-m-d H:i:s");
 
-	isset($_SESSION['USER']['EMAIL']) ? $email = $_SESSION['USER']['EMAIL'] : $email = "public";
+	isset($_SESSION['USER']->email) ? $email = $_SESSION['USER']->email : $email = "public";
 
 	$page_accessed = $_SERVER['PHP_SELF'] . "?" . $_SERVER['QUERY_STRING'];
 	$sql = "INSERT INTO `login_user_ip` (`email`, `ip`, `user_agent`, `date_accessed`, `page_accessed`) VALUES ('{$email}', '{$ipaddress}', '{$user_agent}', '{$datetime}', '{$page_accessed}')";
