@@ -1,12 +1,12 @@
 <?php include('includes/front/top.php'); ?>
-<?php if (!isset($_SESSION['ADMIN']['ADMINID'])) {
-	redirect("index");
-}
+<?php //if (!isset($_SESSION['ADMIN']['ADMINID'])) {
+	//redirect("index");
+//}
 ?>
 
 <?php
     $levels = 1;
-    include("..\models\lucas.php");
+    include("..\includes\models\lucas.php");
     
     $menuItems = Menu_Item::getMenuItems();
     

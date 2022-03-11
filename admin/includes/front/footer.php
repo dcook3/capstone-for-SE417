@@ -15,19 +15,7 @@
   <!-- Custom scripts for all pages-->
   <script src="js/sb-admin-2.min.js"></script>
 </script>
-<script>
-  var x = screen.width;
-  var element, name, arr;
-  if(x < 768)
-  {
-      element = document.getElementById("accordionSidebar");
-      name = "toggled";
-      arr = element.className.split(" ");
-      if (arr.indexOf(name) == -1) {
-        element.className += " " + name;
-      }
-  }
-</script>
+
 
 <script>
 // Example starter JavaScript for disabling form submissions if there are invalid fields
