@@ -5,7 +5,7 @@ if (!isset($_SESSION['ADMIN']['ADMINID'])) {
 }
     $levels = 1;
     $showDetails = false;
-    include '../models/sql_functions.php';
+    include '../includes/models/sql_functions.php';
     date_default_timezone_set("America/New_York");
 
     if($_SERVER['REQUEST_METHOD'] == "GET")
@@ -178,7 +178,7 @@ if (!isset($_SESSION['ADMIN']['ADMINID'])) {
                     {
                         $.ajax(
                             {
-                                url: '../models/ajaxHandler.php',
+                                url: '../includes/models/ajaxHandler.php',
                                 method: "POST",
                                 data: 
                                 {

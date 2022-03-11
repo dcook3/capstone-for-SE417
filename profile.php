@@ -1,8 +1,7 @@
 <?php
     include("includes/front/top.php");
     include("includes/front/header_static.php");
-    include("models/lucas.php");
-    include("include/login.php");
+    include("includes/models/lucas.php");
     isset($_SESSION['USER']) ? $user = $_SESSION['USER'] : redirect("login.php");
 ?>
 <link rel ="stylesheet" href = "main_lucas.css">
@@ -46,7 +45,7 @@
     <button class = "btn btn-secondary" id="saveBtn">Save Changes</button>
 </div>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-<script src = "models/lucas.js"></script>
+<script src = "includes/models/lucas.js"></script>
 <script>
     var backBtn = document.querySelector("#backBtn");
     var saveBtn = document.querySelector("#saveBtn");

@@ -18,7 +18,7 @@
     }
     include '../include/header.php';
 ?>
-<script  src="../models/lucas.js"></script>
+<script  src="../includes/models/lucas.js"></script>
 <link rel="stylesheet" href="assets/css/lucas.css">
 <table class = "hidden">
     <tbody>

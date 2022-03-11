@@ -1,9 +1,8 @@
 <?php 
     $levels = 0;
-    include 'header.php';
-    include 'models/dylan.php';
-    include 'models/lucas.php';
-    include 'models/Session.php';
+    include 'includes/header.php';
+    include 'includes/models/dylan.php';
+    include 'includes/models/lucas.php';;
 
     $currentOrder = new Order();
     
@@ -43,7 +42,7 @@
 <script>
 
     $.ajax({
-        url: 'models/ajaxHandler.php',
+        url: 'includes/models/ajaxHandler.php',
         method: "POST",
         data: 
         {
@@ -59,7 +58,7 @@
     );
 
     $.ajax({
-        url: 'models/ajaxHandler.php',
+        url: 'includes/models/ajaxHandler.php',
         method: "POST",
         data: 
         {

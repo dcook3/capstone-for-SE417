@@ -1,17 +1,11 @@
 <?php
 include("includes/front/top.php");
 include("includes/front/header_static.php");
-include("models/lucas.php");
-include("include/login.php");
+include("includes/models/lucas.php");
 
 $sections = Section::getSections();
 ?>
 <script src="https://kit.fontawesome.com/4933cad413.js" crossorigin="anonymous"></script>
-<?php
-    if (isset($_GET['action']) && $_GET['action'] == 'logout') {
-        Session::destroy();
-    }
-?>
 
 <link rel ="stylesheet" href = "main_lucas.css">
 
@@ -148,7 +142,7 @@ $sections = Section::getSections();
     </div>
 <script src="https://kit.fontawesome.com/4933cad413.js" crossorigin="anonymous"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-<script src = "models/lucas.js"></script>
+<script src = "includes/models/lucas.js"></script>
 <script>
     var sectionCards = document.querySelector("#sectionCards");
     var itemCards = document.querySelector("#itemCards");

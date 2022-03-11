@@ -1,6 +1,7 @@
 <?php require_once 'includes/config.php'; ?>
 <?php isset($_SERVER['HTTP_REFERER']) && !isset($_SESSION['REFERER']) ? $_SESSION['REFERER'] = $_SERVER['HTTP_REFERER'] : 0;
 isset($_SESSION['USER']) ? redirect("index") : 0; ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -14,14 +15,13 @@ isset($_SESSION['USER']) ? redirect("index") : 0; ?>
 	<link rel="stylesheet" type="text/css" href="lib/font-awesome/css/font-awesome.min.css">
 	<link rel="stylesheet" type="text/css" href="lib/login/css/util.css">
 	<link rel="stylesheet" type="text/css" href="lib/login/css/main.css">
+	<link rel="stylesheet" type="text/css" href="lib/css/index.css">
 	<link rel="stylesheet" type="text/css" href="lib/css/style.css">
 	<link rel="stylesheet" type="text/css" href="lib/login/css/login.css">
 	<title>Document</title>
 </head>
 <body>
-	<div class="limiter">
-		<div class="container-login100">
-			<div class="wrap-login100">
+
 				<?php
 				if (isset($_GET['forgotPassword'])) {
 					include('forgotPassword.php');
@@ -49,14 +49,6 @@ isset($_SESSION['USER']) ? redirect("index") : 0; ?>
 						}, false);
 					})();
 				</script>
-
-				<div class="login100-more">
-					<div id="header">
-						<div id="logo" class="pull-left">
-							<h1><a href="index" class="scrollto">Wesbite</a></h1>
-							<a href="index"><img src="" alt="" title="" /></a>
-						</div>
-					</div>
 					<footer id="footer">
 						<div class="container">
 							<div class="row">
@@ -65,11 +57,8 @@ isset($_SESSION['USER']) ? redirect("index") : 0; ?>
 							</div>
 						</div>
 					</footer>
-				</div>
 
 			</div>
-		</div>
-	</div>
 	<div id="preloader"></div>
 
 	<script src="lib/jquery/jquery.min.js"></script>
