@@ -42,7 +42,7 @@
 <script>
 
     $.ajax({
-        url: 'models/ajaxHandler.php',
+        url: 'includes/models/ajaxHandler.php',
         method: "POST",
         data: 
         {
@@ -58,7 +58,7 @@
     );
 
     $.ajax({
-        url: 'models/ajaxHandler.php',
+        url: 'includes/models/ajaxHandler.php',
         method: "POST",
         data: 
         {

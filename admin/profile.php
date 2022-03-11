@@ -44,7 +44,7 @@ include '..\include/header.php';
     <button class = "btn btn-secondary" id="saveBtn">Save Changes</button>
 </div>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-<script src = "models/lucas.js"></script>
+<script src = "includes/models/lucas.js"></script>
 <script>
     var backBtn = document.querySelector("#backBtn");
     var saveBtn = document.querySelector("#saveBtn");

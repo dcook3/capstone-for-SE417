@@ -6,7 +6,7 @@
 <?php
     $levels = 1;
     $showDetails = false;
-    include '../inlcudes/models/sql_functions.php';
+    include '../includes/models/sql_functions.php';
     date_default_timezone_set("America/New_York");
 
     if($_SERVER['REQUEST_METHOD'] == "GET")
@@ -179,7 +179,7 @@
                     {
                         $.ajax(
                             {
-                                url: '../models/ajaxHandler.php',
+                                url: '../includes/models/ajaxHandler.php',
                                 method: "POST",
                                 data: 
                                 {

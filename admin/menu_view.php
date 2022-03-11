@@ -15,7 +15,7 @@ include '../include/header.php';
 
 
 <link rel="stylesheet" href="assets/css/lucas.css">
-<script  src="../models/lucas.js"></script>
+<script  src="../includes/models/lucas.js"></script>
 <div id="menuViewBodyWrapper">
     <h1 class = "centeredHeader">Menu Items</h1>
     <table class = "table table-hover table-striped text-center menuItemTable">
