@@ -226,7 +226,7 @@ class Ingredient {
     static deleteIngredient(ingredient_id, menu_item_id){
         
         $.ajax({
-            url : rootPath+"/models/ajaxHandler.php",
+            url : rootPath+"/includes/models/ajaxHandler.php",
             method : "POST",
             data:{
                 'action' : 'deleteIngredient',
