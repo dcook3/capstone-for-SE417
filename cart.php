@@ -4,9 +4,8 @@
     include 'header.php';
     //include 'includes/front/top.php';
     //include 'includes/front/header_static.php';
-    include 'models/dylan.php';
-    include 'include/models/lucas.php';
-    include 'models/Session.php';
+    include 'includes/models/dylan.php';
+    include 'includes/models/lucas.php';
 
     if($_SERVER['REQUEST_METHOD'] == "POST")
     {

@@ -1,9 +1,8 @@
 <?php 
     $levels = 0;
-    include 'header.php';
-    include 'models/dylan.php';
-    include 'includes/models/lucas.php';
-    include 'models/Session.php';
+    include 'includes/header.php';
+    include 'includes/models/dylan.php';
+    include 'includes/models/lucas.php';;
 
     $currentOrder = new Order();
     
