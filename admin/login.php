@@ -1,58 +1,56 @@
-<?php
-$levels = 1;
-include '../include/header.php';
-Session::CheckLogin();
+<?php include('includes/front/top.php'); ?>
+<?php if (isset($_SESSION['ADMIN']['ADMINID'])) {
+	redirect("index");
+}
+
 ?>
+<style>
+	.bd-placeholder-img {
+		font-size: 1.125rem;
+		text-anchor: middle;
+		-webkit-user-select: none;
+		-moz-user-select: none;
+		-ms-user-select: none;
+		user-select: none;
+	}
 
+	@media (min-width: 768px) {
+		.bd-placeholder-img-lg {
+			font-size: 3.5rem;
+		}
+	}
+</style>
+<link href="css/signin.css" rel="stylesheet">
+</head>
 
-<?php
+<body>
+	<form class="form-signin needs-validation" method="POST" action="login" novalidate>
+		<div class="text-center">
+			<h1 class="h3 mb-3 font-weight-normal">Sign in - Admin</h1>
+			<?php $admin->login(); ?>
+		</div>
+		<div class="form-row">
+			<div class="col-md-12 mb-3">
+				<!-- <label for="validationCustom01">Email Address</label> -->
+				<input type="email" name="email" data-toggle="tooltip" data-placement="top" title="" data-original-title="Email Address" pattern="^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$" class="form-control" id="validationCustom01" placeholder="Email Address" required>
+				<div class="valid-feedback">
+				</div>
+				<div class="invalid-feedback">
+					Please provide a valid email!
+				</div>
+			</div>
+			<div class="col-md-12 mb-3">
+				<!-- <label for="validationCustom02">Password</label> -->
+				<input type="password" name="pass" data-toggle="tooltip" data-placement="top" title="" data-original-title="Password" pattern=".{6,}" class="form-control" id="validationCustom02" placeholder="Password" required>
+				<div class="valid-feedback">
+				</div>
+				<div class="invalid-feedback">
+					Please enter a valid password!
+				</div>
+			</div>
+		</div>
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['login'])) {
-   $userLog = $users->userLoginAuthotication($_POST);
-}
-if (isset($userLog)) {
-  echo $userLog;
-}
+		<button class="btn btn-lg btn-primary btn-block" type="submit" name="login_submit">Sign in</button>
+	</form>
 
-$logout = Session::get('logout');
-if (isset($logout)) {
-  echo $logout;
-}
-
-
-
- ?>
-
-<div class="card ">
-  <div class="card-header">
-          <h3 class='text-center'><i class="fas fa-sign-in-alt mr-2"></i>User login</h3>
-        </div>
-        <div class="card-body">
-
-
-            <div style="width:450px; margin:0px auto">
-            <form action="" method="post">
-                <div class="form-group">
-                  <label for="email">Email</label>
-                  <input type="email" name="email"  class="form-control">
-                </div>
-                <div class="form-group">
-                  <label for="password">Password</label>
-                  <input type="password" name="password"  class="form-control">
-                </div>
-                <div class="form-group">
-                  <button type="submit" name="login" class="btn btn-success">Login</button>
-                </div>
-            </form>
-          </div>
-
-
-        </div>
-      </div>
-
-
-
-  <?php
-  include '../include/footer.php';
-
-  ?>
+	<?php include('includes/front/footer.php'); ?>

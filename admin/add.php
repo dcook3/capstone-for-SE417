@@ -1,8 +1,8 @@
 <?php
 $levels = 1;
 include '../include/header.php';
-Session::CheckSession();
-$sId =  Session::get('roleid');
+//Session::CheckSession();
+//$sId =  Session::get('roleid');
 if ($sId === '1') { ?>
 
 <?php

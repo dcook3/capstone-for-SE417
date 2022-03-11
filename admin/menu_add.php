@@ -1,3 +1,9 @@
+<?php include('includes/front/top.php'); ?>
+<?php if (!isset($_SESSION['ADMIN']['ADMINID'])) {
+	redirect("index");
+}
+?>
+
 <?php
     $levels = 1;
     include("..\models\lucas.php");
@@ -11,7 +17,6 @@
         }
     }
     include '../include/header.php';
-    Session::CheckSession();
 ?>
 <script  src="../models/lucas.js"></script>
 <link rel="stylesheet" href="assets/css/lucas.css">

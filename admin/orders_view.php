@@ -1,3 +1,8 @@
+<?php include('includes/front/top.php'); ?>
+<?php if (isset($_SESSION['ADMIN']['ADMINID'])) {
+	redirect("index");
+}
+?>
 <?php
     $levels = 1;
     $showDetails = false;

@@ -1,13 +1,4 @@
 <?php
-$filepath = realpath(dirname(__FILE__));
-include_once $filepath."/../models/Session.php";
-Session::init();
-spl_autoload_register(function($models){
-
-  include '../models/'.$models.".php";
-
-});
-
 function buildPath($l, $f)
 {
     $path = "as_capstone/";
@@ -18,8 +9,6 @@ function buildPath($l, $f)
     echo $path .= $f;
 }
 
-
-$users = new Users();
 ?>
 
 <!DOCTYPE html>
@@ -40,82 +29,33 @@ $users = new Users();
     
 </head>
 <body>
-    <?php
-        if (isset($_GET['action']) && $_GET['action'] == 'logout') {
-        Session::destroy();
-    }?> 
     <div class="container-fluid">
     <nav class="navbar navbar-expand-md text-white navbar-primary bg-primary card-header">
-        <a class="navbar-brand text-white" href="index.php"><i class="fas fa-home mr-2"></i></a>
+        <a class="navbar-brand text-white" href="index"><i class="fas fa-home mr-2"></i></a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
-
         <div class="collapse navbar-collapse" id="navbarsExampleDefault">
           <ul class="navbar-nav ml-auto">
-
-
-
-          <?php if (Session::get('id') == TRUE) { ?>
-            <?php if (Session::get('roleid') == '1') { ?>
               <li class="nav-item">
-
-                  <a class="nav-link text-white" href="users.php"><i class="fas fa-users mr-2"></i>Users</span></a>
+                  <a class="nav-link text-white" href=""><i class="fas fa-users mr-2"></i>Users</span></a>
               </li>
-              <li class="nav-item
+            <li class="nav-item">
 
-              <?php
-
-                          $path = $_SERVER['SCRIPT_FILENAME'];
-                          $current = basename($path, '.php');
-                          if ($current == 'add') {
-                            echo " active ";
-                          }
-
-                         ?>">
-
-                <a class="nav-link text-white" href="add.php"><i class="fas fa-user-plus mr-2"></i>Add</span></a>
-              </li>
-            <?php  } ?>
-            <li class="nav-item
-            <?php
-
-      				$path = $_SERVER['SCRIPT_FILENAME'];
-      				$current = basename($path, '.php');
-      				if ($current == 'profile') {
-      					echo "active ";
-      				}
-
-      			 ?>
-
-            ">
-
-              <a class="nav-link text-white" href="profile.php?id=<?php echo Session::get("id"); ?>"><i class="fab fa-500px mr-2"></i>Profile <span class="sr-only">(current)</span></a>
+              <a class="nav-link text-white" href="profile.php"><i class="fab fa-500px mr-2"></i>Profile <span class="sr-only">(current)</span></a>
             </li>
             <li class="nav-item">
-              <a class="nav-link text-white" href="orders_view.php">Orders</a>
+              <a class="nav-link text-white" href="index">Orders</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link text-white" href="menu_view.php">Menu</a>
+              <a class="nav-link text-white" href="menu_view">Menu</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link text-white" href="?action=logout"><i class="fas fa-sign-out-alt mr-2"></i>Logout</a>
+              <a class="nav-link text-white" href="logout" data-toggle="modal" data-target="#logoutModal">
+              <i class="fas fa-sign-out-alt mr-2"></i>
+					Logout
+				</a>
             </li>
-          <?php }else{ ?>
-              <li class="nav-item
-                <?php
-
-                    				$path = $_SERVER['SCRIPT_FILENAME'];
-                    				$current = basename($path, '.php');
-                    				if ($current == 'login') {
-                    					echo " active ";
-                    				}
-
-                    			 ?>">
-                <a class="nav-link text-white" href="login.php"><i class="fas fa-sign-in-alt mr-2"></i>Login</a>
-              </li>
-
-          <?php } ?>
 
 
           </ul>
