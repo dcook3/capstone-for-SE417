@@ -26,8 +26,7 @@ function redirect($location)	//Simplifying the HEADER(location: $loc) function
 	return header("Location: $location");
 }
 
-class user
-{
+class user {
 	private $con, $sql, $send_query, $get, $row, $datetime;
 	public $temp, $flag;
 	public $email, $fname, $lname, $phone, $student_id, $user_id;

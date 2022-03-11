@@ -5,7 +5,7 @@
     //include 'includes/front/top.php';
     //include 'includes/front/header_static.php';
     include 'models/dylan.php';
-    include 'models/lucas.php';
+    include 'include/models/lucas.php';
     include 'models/Session.php';
 
     if($_SERVER['REQUEST_METHOD'] == "POST")

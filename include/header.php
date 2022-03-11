@@ -37,12 +37,8 @@ function buildPath($l, $f)
         </button>
         <div class="collapse navbar-collapse" id="navbarsExampleDefault">
           <ul class="navbar-nav ml-auto">
-              <li class="nav-item">
-                  <a class="nav-link text-white" href=""><i class="fas fa-users mr-2"></i>Users</span></a>
-              </li>
             <li class="nav-item">
-
-              <a class="nav-link text-white" href="profile.php"><i class="fab fa-500px mr-2"></i>Profile <span class="sr-only">(current)</span></a>
+              <a class="nav-link text-white" href="users"><i class="fas fa-users mr-2"></i>Users</span></a>
             </li>
             <li class="nav-item">
               <a class="nav-link text-white" href="index">Orders</a>
@@ -51,10 +47,10 @@ function buildPath($l, $f)
               <a class="nav-link text-white" href="menu_view">Menu</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link text-white" href="logout" data-toggle="modal" data-target="#logoutModal">
-              <i class="fas fa-sign-out-alt mr-2"></i>
-					Logout
-				</a>
+              <a class="nav-link text-white" href="profile.php"><i class="fab fa-500px mr-2"></i>Profile <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link text-white" href="logout"><i class="fas fa-sign-out-alt mr-2"></i>Logout</a>
             </li>
 
 

@@ -31,8 +31,8 @@ h6 {
 .back-to-top {
   position: fixed;
   display: none;
-  background: #18d26e;
-  color: #fff;
+  background: #F3C074;
+  color: #000;
   width: 44px;
   height: 44px;
   text-align: center;
@@ -48,7 +48,7 @@ h6 {
 
 .back-to-top i {
   padding-top: 12px;
-  color: #fff;
+  /*color: #fff;*/
 }
 
 /* Prelaoder */
@@ -70,7 +70,7 @@ h6 {
   top: calc(50% - 30px);
   left: calc(50% - 30px);
   border: 6px solid #f2f2f2;
-  border-top: 6px solid #18d26e;
+  border-top: 6px solid #F3C074;
   border-radius: 50%;
   width: 60px;
   height: 60px;
@@ -118,7 +118,7 @@ h6 {
 }
 
 #header.header-scrolled {
-  background: rgba(0, 0, 0, 0.9);
+  background: #153B65;
   padding: 20px 0;
   height: 72px;
   transition: all 0.5s;
@@ -370,7 +370,7 @@ h6 {
 
 .nav-menu li:hover > a,
 .nav-menu > .menu-active > a {
-  color: #18d26e;
+  color: #ecae4f;
 }
 
 .nav-menu > li {
@@ -434,7 +434,7 @@ h6 {
   padding-top: 18px;
   bottom: 0;
   z-index: 998;
-  background: rgba(0, 0, 0, 0.8);
+  background: #153B65;
   left: -260px;
   width: 260px;
   overflow-y: auto;

@@ -2,7 +2,7 @@
     $levels = 0;
     include 'header.php';
     include 'models/dylan.php';
-    include 'models/lucas.php';
+    include 'includes/models/lucas.php';
     include 'models/Session.php';
 
     $currentOrder = new Order();

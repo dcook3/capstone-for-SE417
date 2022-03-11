@@ -1,5 +1,6 @@
+
 <form class="login100-form validate-form needs-validation" method="POST" action="login" novalidate="">
-    <span class="login100-form-title p-b-43">Login to continue</span>
+    <span class="login100-form-title p-b-43">Sign in with your Tiger Eats account</span>
     <?php $user->login(); ?>
     <div class="wrap-input100 validate-input" data-validate="Valid email is required: ex@abc.xyz">
         <input class="input100" type="text" name="email">

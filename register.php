@@ -17,22 +17,23 @@
 	<title>Document</title>
 </head>
 <body>
+<?php include("includes/front/header_static.php"); ?>
 	<div class="limiter">
 		<div class="container-login100">
 			<div class="wrap-login100 form-row">
 				<form class="login100-form validate-form needs-validation was-validated" method="POST" action="register" novalidate="">
 					<span class="login100-form-title p-b-43">
-						Create account
+						Create your account
 					</span>
 					<?php
 					if (!isset($_GET['s'])) {
 						$user->register_account();
 					?>
-						<!--<div class="wrap-input100 validate-input" data-validate="Username is required">
+						<div class="wrap-input100 validate-input" data-validate="Username is required">
 							<input class="input100" type="text" name="username" pattern="" required="" data-toggle="tooltip" data-placement="top" data-original-title="9 characters">
 							<span class="focus-input100"></span>
 							<span class="label-input100">Student ID</span>
-						</div>-->
+						</div>
 						<div class="wrap-input100 validate-input" data-validate="Do not leave name field blank">
 							<input class="input100" type="text" name="fname" pattern="[A-Za-z]{1,30}" required="" data-toggle="tooltip" data-placement="top" data-original-title="Min 1 characters. Alphabets only.">
 							<span class="focus-input100"></span>
@@ -43,11 +44,11 @@
 							<span class="focus-input100"></span>
 							<span class="label-input100">Last Name</span>
 						</div>
-						<!--<div class="wrap-input100 validate-input" data-validate="Phone Number is required">
+						<div class="wrap-input100 validate-input" data-validate="Phone Number is required">
 							<input class="input100" type="text" name="phone" required="">
 							<span class="focus-input100"></span>
 							<span class="label-input100">Phone Number</span>
-						</div>-->
+						</div>
 						<div class="wrap-input100 validate-input" data-validate="Valid email is required: ex@abc.xyz">
 							<input class="input100" type="text" name="email" required="">
 							<span class="focus-input100"></span>

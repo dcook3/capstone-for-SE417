@@ -24,6 +24,7 @@ class admin
 {
 	private $con, $sql, $send_query, $get, $row;
 	public $temp, $flag, $email, $datetime;
+	public $admin_id;
 
 	public function __construct() {
 		$this->row = array();
@@ -37,8 +38,7 @@ class admin
 		$this->con->disconnect();
 	}
 
-	public function login()
-	{
+	public function login() {
 		if (isset($_POST['login_submit'])) {
 			if (isset($_SESSION['ADMIN'])) {
 				unset($_SESSION['ADMIN']);
@@ -52,7 +52,7 @@ class admin
 			$this->send_query = $this->con->prepare($this->sql);
 
 			mysqli_stmt_bind_param($this->send_query, "ss", $this->email, $pass);
-			mysqli_stmt_bind_result($this->send_query, $this->fname, $this->lname, $admin_id);
+			mysqli_stmt_bind_result($this->send_query, $this->fname, $this->lname, $this->admin_id);
 
 			if (isset($this->send_query) && mysqli_stmt_execute($this->send_query)) {
 				while (mysqli_stmt_fetch($this->send_query)) {
@@ -337,6 +337,68 @@ class admin
 			} else if ($this->get === 1 && $newPass != $newPassRepeat) {
 				setMessage("The entered new passwords don't match. Please try again. ");
 			}
+		}
+	}
+	public function DisplayAllUsers() {
+			$this->sql = "SELECT l.email, a.student_id, a.first_name, a.middle_name, a.last_name, a.phone, l.created_at, l.updated_at, a.user_id 
+			FROM login_info l, user a 
+			WHERE a.email = l.email";
+
+			$this->send_query = $this->con->prepare($this->sql);
+			if (isset($this->send_query)) {
+				mysqli_stmt_bind_result($this->send_query, $this->email, $student_id, $first_name, $middle_name, $last_name, $phone, $date_added, $date_modified, $admin_id);
+				if (mysqli_stmt_execute($this->send_query) && mysqli_stmt_store_result($this->send_query)) {
+					while (mysqli_stmt_fetch($this->send_query)) {
+						if (mysqli_stmt_num_rows($this->send_query) > 1) {
+							$delete_button = '
+			                <td data-toggle="tooltip"  data-placement="top" title="" data-original-title="Delete ' . $first_name . '">
+			                    <button class="btn btn-secondary" data-toggle="modal" data-target="#exampleModal' . $admin_id . '">
+			                        <i class="fas fa-trash"></i>
+			                    </button>
+			                </td>
+							';
+						} else {
+							$delete_button = '
+			                <td data-toggle="tooltip"  data-placement="top" title="" data-original-title="This admin cannot be removed. There has to be atleast 1 existing admin. ">
+			                    <button class="btn btn-danger btn-circle btn-sm delete-btn-circle">
+			                        <i class="fas fa-trash"></i>
+			                    </button>
+			                </td>
+							';
+						}
+						echo '
+		           		<tr>
+                           <td>' . $admin_id . '</td>
+						   <td>' . $student_id . '</td>
+						   <td>' . $first_name . '</td>
+						   <td>' . $middle_name . '</td>
+						   <td>' . $last_name . '</td>
+	                        <!--<td><a>' . $first_name . " " .  $last_name . '</a></td>-->
+							<td>' . $phone . '</td>
+                            <td><a>' . $this->email . '</a></td>
+	                        <td>' . $date_added . '</td>
+	                        <td>' . $date_modified . '</td>
+	                        ' . $delete_button . '  
+							<td></td>                       
+	                    </tr>';
+					}
+				}
+				mysqli_stmt_free_result($this->send_query);
+				mysqli_stmt_close($this->send_query);
+			}
+	}
+
+	public function updateUser(){
+		$stmt = $this->con->prepare("UPDATE user SET student_id = ?, first_name = ?, last_name = ?, email = ?, phone = ? WHERE user_id = ?");
+		
+		mysqli_stmt_bind_param($stmt, "ssssss", $this->student_id, $this->fname, $this->lname, $this->email, $this->phone, $this->user_id);
+		if(mysqli_stmt_execute($stmt)){
+			
+			return true;
+			
+		}
+		else{
+			var_dump($stmt);
 		}
 	}
 }
