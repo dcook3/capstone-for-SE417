@@ -125,25 +125,23 @@ $sections = Section::getSections();
         </button>
     </div>
     
-    <button type="button" class="btn btn-secondary btn-circle" id = "cartBtn" onclick="window.location.replace('cart.php')">
+    <button type="button" class="btn btn-secondary btn-circle" id = "cartBtn" onclick=" (user_id == '-1') ? window.location.replace('login.php') : window.location.replace('cart.php')">
     <img src = "cart-shopping-solid.svg">
     </button>
     <div class="modal fade" id="croppingModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Upload Image</h5>
+                <h5 class="modal-title">Order already placed</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <div class="cropper-container">
-                    <img id = "croppedImage">
-                </div>
+                <p>You already have an order placed. Go to the cart page to see the status of your order.</p>
                 
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="cancelCrop()">Cancel</button>
-                <button type="button" class="btn btn-primary" onclick="cropImage()">Done</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="modal.hide()">Later</button>
+                <button type="button" class="btn btn-primary" onclick="window.location.replace('cart.php')">Go Now?</button>
             </div>
             </div>
         </div>
@@ -174,8 +172,9 @@ $sections = Section::getSections();
     var plsBtn = document.querySelector("#button-addon2")
     var mnsBtn = document.querySelector("#button-addon1")
     var ingredientsUL = document.querySelector("#ingredients");
+    var modal;
     window.addEventListener('load', (event) => {
-        var modal = new bootstrap.Modal(document.querySelector("#croppingModal"));
+        modal = new bootstrap.Modal(document.querySelector("#croppingModal"));
     });
     class States{
         static Section = new States("section");

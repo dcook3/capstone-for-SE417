@@ -40,9 +40,10 @@
 
 
     </form>
-    <div>
-        <button class = "btn btn-secondary" id="saveBtn">Save Changes</button>
-    </div>
+    
+</div>
+<div id = "saveBtnWrapper">
+    <button class = "btn btn-secondary" id="saveBtn">Save Changes</button>
 </div>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script src = "models/lucas.js"></script>
