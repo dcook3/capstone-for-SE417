@@ -258,7 +258,7 @@ class Order
         $results = [];
 
         //SQL tables got changed around double check names
-        $SQL = $db->prepare("SELECT * FROM orders INNER JOIN user ON user.user_id = orders.user_id WHERE order_datetime >= STR_TO_DATE(:datestart, '%Y-%m-%d %H:%i:%s') AND order_datetime <= STR_TO_DATE(:dateend, '%Y-%m-%d %H:%i:%s') ORDER BY order_status ASC, order_datetime ASC;");
+        $SQL = $db->prepare("SELECT * FROM orders INNER JOIN user ON user.user_id = orders.user_id WHERE order_datetime >= STR_TO_DATE(:datestart, '%Y-%m-%d %H:%i:%s') AND order_datetime < STR_TO_DATE(:dateend, '%Y-%m-%d %H:%i:%s') ORDER BY order_status ASC, order_datetime ASC;");
 
         $SQLdateStart = new DateTime(date( 'Y-m-d H:i:s', $selectedTS));
         $SQLdateEnd = $SQLdateStart;

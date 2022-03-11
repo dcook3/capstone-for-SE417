@@ -1,13 +1,13 @@
 <?php 
     $levels = 0;
     $subtotal = 0;
-    include 'header.php';
-    //include 'includes/front/top.php';
-    //include 'includes/front/header_static.php';
+    echo '<div class="bg-primary" style="height:85px; width:100%;"><a href="index.php"><i class="fa fa-2x fas fa-arrow-left"></i></a></div>';
+    include 'includes/front/top.php';
+    include 'includes/front/header_static.php';
     include 'models/dylan.php';
     include 'models/lucas.php';
     include 'models/Session.php';
-
+    
     if($_SERVER['REQUEST_METHOD'] == "POST")
     {
         if(isset($_POST['action']))
@@ -55,14 +55,18 @@
     }
     else
     {
-        if(Session::CheckLoginByUser())
+        if($_SESSION['USER'] != null)
         {
-            $currentOrder = Order::getIncompleteOrderByUserID(Session::get('id'));
+            $currentOrder = Order::getIncompleteOrderByUserID($_SESSION["USER"]->user_id);
+
+            if($currentOrder->order_status == 1)
+            {
+                header("Location: tracker.php");
+            }
         }
         else
         {
-            $currentOrder = Order::getIncompleteOrderByUserID(6);
-            //header("Location: register.php"); //Pass param to let user know they need an account?
+            header("Location: login.php"); 
         }
         $itemsExist = ($currentOrder == false) ? false : true;
     }
@@ -77,13 +81,15 @@
         $menuItems = [];
         $orderItems = [];
     }
+
+    
 ?>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <link rel="stylesheet" href="dylan_styles.css">
 <link rel="stylesheet" href="main_lucas.css">
-<a href="index.php"><i class="fa fas fa-arrow-left"></i></a>
-<h2>Cart</h2>
+<h2 class="ms-2">Cart</h2>
 <div class="d-flex flex-column align-items-center">
+    
     <?php if($itemsExist && $currentOrder != null): ?>
         <?php for($i = 0; $i < count($menuItems); $i++): ?>
             <div class="m-1 col-10 rounded d-flex flex-row align-items-center bg-light border p-1">
@@ -93,9 +99,10 @@
                     <input type="number" class="form-control col-2" min="0" class="quantity" data-oid="<?= $currentOrder->getOrderID() ?>" data-oiid="<?= $orderItems[$i]->getOrderItemID(); ?>" data-action="updateQuantity" value="<?= $orderItems[$i]->getQuantity(); ?>">
                     <input type="button" class="btn btn-secondary" id="button-addon2" value="+">
                 </div>
-                <span class="me-1 price" data-price="<?= $orderItems[$i]->getPrice()?>" data-quantity="<?= $orderItems[$i]->getQuantity()?>" ><?= $orderItems[$i]->getPrice() * $orderItems[$i]->getQuantity(); ?></span>
+                <span class="me-1"  >$<span data-price="<?= $orderItems[$i]->getPrice()?>" data-quantity="<?= $orderItems[$i]->getQuantity()?>" class="price"><?= $orderItems[$i]->getPrice() * $orderItems[$i]->getQuantity(); ?></span></span>
                 <a class="btn btn-secondary text-decoration-none delItemBtn" data-oid="<?= $currentOrder->getOrderID() ?>" data-oiid="<?= $orderItems[$i]->getOrderItemID(); ?>" data-action="deleteItem"><i class="fas fa-trash-alt"></i></a>
             </div>
+            <?php $subtotal += $orderItems[$i]->getPrice(); ?>
         <?php endfor; ?>
     <?php else: ?>
         <div>
@@ -105,13 +112,14 @@
 </div>
 
 
-<div>
+<div class="ms-4 mt-2">
     <?php if($itemsExist && $currentOrder != null): ?>
-        <p>Subtotal: <b id="subtotal"></b></p>
-        <p>Tax: <b id="tax"></b></p>
-        <div class="d-flex justify-content-center mt-5"><button id="addToCartBtn" class ='btn btn-secondary' data-oid="<?= $currentOrder->getOrderID() ?>">Finalize Order <b id="total"></b></button></div>
+        <p>Subtotal: $<span id="subtotal"><?= $subtotal; ?></span></p>
+        <?php $tax = round($subtotal * 0.07, 2); ?>
+        <p>Tax: $<span id="tax"><?= $tax ?></span></p>
     <?php endif; ?>
 </div>
+<div class="d-flex justify-content-center mt-5"><button id="addToCartBtn" class ='btn btn-secondary' data-oid="<?= $currentOrder->getOrderID() ?>">Finalize Order <span id="total"><?= $subtotal + $tax ?></span></button></div>
 <script>
     var qtySelectors = document.querySelectorAll(".quantitySelector");
     var spans = document.querySelectorAll(".price");
@@ -130,15 +138,19 @@
             })
         });
         qtySelectors[i].firstElementChild.addEventListener('click', e => {
-            qtySelectors[i].children[1].value--;
+            if(qtySelectors[i].children[1].value >= 1)
+            {
+                qtySelectors[i].children[1].value--;
+            }
 
             for(let i=0; i<spans.length; i++)
             {
-                var temp = qtySelectors[i].children[1].value * Number(spans[i].dataset.price);
-                spans[i].innerHTML = `$${temp}`
-                subtotal += temp;
+                var temp = Math.round(qtySelectors[i].children[1].value * Number(spans[i].dataset.price), 2);
+                temp = temp.toFixed(2)
+                spans[i].innerHTML = `${temp}`
+                subtotal -= Number(temp);
             }
-            $("$subtotal").innerHTML = temp;
+            document.querySelector("#subtotal").innerHTML = subtotal;
 
             $.post('cart.php', {
                 orderID: e.target.parentElement.children[1].dataset.oid,
@@ -153,10 +165,11 @@
             for(let i=0; i < spans.length; i++)
             {
                 var temp = qtySelectors[i].children[1].value * Number(spans[i].dataset.price);
-                spans[i].innerHTML = `$${temp}`
-                subtotal += temp;
+                temp = temp.toFixed(2)
+                spans[i].innerHTML = `${temp}`
+                subtotal += Number(temp);
             }
-            $("$subtotal").innerHTML = temp;
+            document.querySelector("#subtotal").innerHTML = subtotal;
             
             
             $.post('cart.php', {
