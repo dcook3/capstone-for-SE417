@@ -1,12 +1,13 @@
 <?php 
     $levels = 0;
     $subtotal = 0;
-    echo '<div class="bg-primary" style="height:85px; width:100%;"><a href="index.php"><i class="fa fa-2x fas fa-arrow-left"></i></a></div>';
+    
     include 'includes/front/top.php';
     include 'includes/front/header_static.php';
     include 'includes/models/dylan.php';
     include 'includes/models/lucas.php';
-    
+    echo '<div class="bg-primary" style="height:85px; width:100%;"></div>';
+
     if($_SERVER['REQUEST_METHOD'] == "POST")
     {
         if(isset($_POST['action']))
@@ -28,14 +29,14 @@
                     }
                     else
                     {
-                        //display failed update error
+                        setMessage("An error occured when updating quantity. Please contact administrator or try again later.");
                     }
                     
                     break;
                 case "deleteItem":
                     if(Order_Item::deleteItem($oid, $oiid) == false)
                     {
-                        //display failed delete error
+                        setMessage("An error occured whilst deleting an item. Please contact administrator or try again later.");
                     }
                     break;
                 case "updateStatus":
@@ -49,7 +50,7 @@
         }
         else
         {
-            //display no action error
+            setMessage("An error occured when determining action. Please contact administrator or try again later.");
         }
     }
     else
@@ -70,7 +71,7 @@
         $itemsExist = ($currentOrder == false) ? false : true;
     }
 
-    if($currentOrder != null)
+    if($currentOrder != null && $itemsExist)
     {
         $menuItems = $currentOrder->getMenuItems();
         $orderItems = $currentOrder->getOrderItems();
@@ -87,7 +88,6 @@
 <link rel="stylesheet" href="main_lucas.css">
 <h2 class="ms-2">Cart</h2>
 <div class="d-flex flex-column align-items-center">
-    
     <?php if($itemsExist && $currentOrder != null): ?>
         <?php for($i = 0; $i < count($menuItems); $i++): ?>
             <div class="m-1 col-10 rounded d-flex flex-row align-items-center bg-light border p-1">
@@ -117,8 +117,13 @@
         <?php endif; ?>
     </div>
     <div class="d-flex justify-content-center">
-        <button id="finalizeBtn" class ='btn btn-secondary' data-oid="<?= $currentOrder->getOrderID() ?>">
-            Finalize Order <span>Total: $<span id="total"></span></span>
+        <button id="finalizeBtn" class ='btn btn-secondary col-10' data-oid="<?= $currentOrder->getOrderID() ?>">
+            <div class="d-flex justify-content-between">
+                <span class="d-inline-block">Finalize Order</span>
+                <span class="d-inline-block">
+                    Total: $<span id="total"></span>
+                </span>
+            </div>
         </button>
     </div>
 </div>
@@ -130,6 +135,7 @@
     var pageTotal = document.querySelector("#total");
     var subtotal = 0;
     
+    //Initial calulation using DB vals
     for(let i=0; i < spans.length; i++)
     {
         subtotal += Number(qtySelectors[i].children[1].value) * Number(spans[i].dataset.price);
@@ -197,10 +203,12 @@
         });
     }
 
+    //Delete buttons functionality
     var delBtns = document.querySelectorAll('.delItemBtn')
 
     for(let i = 0; i < delBtns.length; i++)
     {
+        //Post to tell php to delete
         delBtns[i].addEventListener('click', e => {
             $.post('cart.php', {
                 orderID: e.target.dataset.oid,
@@ -211,6 +219,7 @@
         });
     }
 
+    //Functionality for finalizing order
     document.querySelector("#finalizeBtn").addEventListener('click', e =>{
         $.post('cart.php', {
             orderID: e.target.dataset.oid,
