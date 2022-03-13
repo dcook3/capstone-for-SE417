@@ -14,15 +14,16 @@
     }
     else
     {
-        $currentOrder = Order::getIncompleteOrderByUserID(6);
-        //header("Location: login.php");
+        header("Location: login.php");
     }
+
     if($currentOrder == false)
     {
-        $currentOrder = Order::getOrderByUserID(6);
+        setMessage("An error occured when fetching your order. Please contact administrator or try again later.");
     }
+
     $oid = $currentOrder->getOrderID();
-    $uid = 6;
+    $uid = $_SESSION['USER']->user_id;
 ?>
 <?= "<span id='oid' class='d-none'>$oid</span><span id='uid' class='d-none'>$uid</span>" ?>
 <h2 class="text-center">Order Tracker</h2>
