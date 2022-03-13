@@ -165,7 +165,7 @@ class Order{
     }
     addOrderItem(order_item, callback){
         $.ajax({
-            url : rootPath+"inlcudes/models/ajaxHandler.php",
+            url : rootPath+"includes/models/ajaxHandler.php",
             method : "POST",
             data:{
                 'action' : 'addOrderItem',

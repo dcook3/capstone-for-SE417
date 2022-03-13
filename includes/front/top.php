@@ -22,4 +22,4 @@
 	<!-- Main Stylesheet File -->
 	<link href="lib/css/style.css" rel="stylesheet">
     
-    <title>Document</title>
+    <title>Tiger Eats</title>

@@ -3,6 +3,7 @@
     include("includes/front/header_static.php");
     include("includes/models/lucas.php");
     isset($_SESSION['USER']) ? $user = $_SESSION['USER'] : redirect("login.php");
+
 ?>
 <link rel ="stylesheet" href = "main_lucas.css">
 <script src="https://kit.fontawesome.com/4933cad413.js" crossorigin="anonymous"></script>
@@ -29,7 +30,7 @@
         </div>
         <div class="form-group">
             <label>Phone Number:</label>
-            <input type="tel" id="phone" name="phone" title="Phone Number" pattern="/[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}/" value = "<?= $user->phone?>">
+            <input type="tel" id="phone" name="phone" title="Phone Number" value = "<?= $user->phone?>">
         </div>
         <div class="form-group">
             <label>Email:</label>
@@ -55,6 +56,11 @@
     var studentID = document.querySelector("#studentID");
     var phone = document.querySelector("#phone");
     var email = document.querySelector("#email");
+
+    var phoneR = new RegExp(/^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/im);
+    var emailR = new RegExp(  /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i)
+
+
     phone.setCustomValidity("Please enter propper phone number Ex. 4015555555");
     email.setCustomValidity("Please enter propper email Ex. email@email.com");
     backBtn.classList.remove("btn-hidden")
@@ -64,7 +70,13 @@
     })
 
     saveBtn.addEventListener("click", function(e){
-        if(phone.reportValidity() && email.reportValidity()){
+        if(!phoneR.test(phone.value)){
+            phone.reportValidity();
+        }
+        else if(!emailR.test(email.value)){
+            email.reportValidity();
+        }
+        else{
             user = new User(profileForm.dataset["id"], email.value, firstName.value, lastName.value, phone.value, studentID.value)
             user.updateUser();
         }
