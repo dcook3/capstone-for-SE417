@@ -180,7 +180,7 @@ class Order{
     }
     static createOrderIfNoneExists(user_id, callback){
         $.ajax({
-            url : rootPath+"includesmodels/ajaxHandler.php",
+            url : rootPath+"includes/models/ajaxHandler.php",
             method : "POST",
             data:{
                 'action' : 'createOrderIfNoneExists',

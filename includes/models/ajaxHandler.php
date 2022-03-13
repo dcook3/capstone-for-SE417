@@ -1,8 +1,8 @@
 <?php 
     include('lucas.php');
     include('dylan.php');
-    include('../includes/functions.php');
-    include('../includes/connectDB.php');
+    include('../functions.php');
+    include('../connectDB.php');
     if($_SERVER['REQUEST_METHOD']==='POST'){
         switch($_POST['action'])
         {

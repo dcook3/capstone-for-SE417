@@ -1,8 +1,9 @@
 <?php include('includes/front/top.php'); ?>
 <?php
-if (!isset($_SESSION['ADMIN']['ADMINID'])) {
-    redirect("login");
-}
+var_dump($_SESSION['ADMIN']);
+// if (!isset($_SESSION['ADMIN']['ADMINID'])) {
+//     redirect("login");
+// }
     $levels = 1;
     $showDetails = false;
     include '../includes/models/sql_functions.php';

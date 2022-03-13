@@ -12,7 +12,7 @@ $sections = Section::getSections();
 <div class="hidden" id = "user_id" data-id = "<?= isset($_SESSION['USER']) ? $_SESSION['USER']->user_id : "-1"?>"></div>
 <!-- TEMPLATE ELEMENTS -->
 <div id = "templateCard" class = "card bg-primary text-white itemCard hidden">
-    <img src = "">
+    <img class = "cardImage" src = "">
     <div class="card-body">
         <div class = "cardTop">
             <h1 class = "card-title"></h1>
@@ -33,6 +33,12 @@ $sections = Section::getSections();
 
 
 <div id="banner">
+    <div id = "listViewDiv">
+        <div  class="form-switch">
+            <input type="checkbox" class="form-check-input " data-onstyle = "secondary" id="listView">
+            <label class="form-check-label" for="listView">List View</label>
+        </div>
+    </div>
     
     <p id = "specialTag">Special</p>
     <div id="slideshow">
@@ -66,7 +72,7 @@ $sections = Section::getSections();
         foreach($sections as $section){
     ?>
         <div class="card text-white bg-primary sectionCard" onclick = "sectionClick('<?= $section->getSectionId()?>')">
-        <img src = "<?= $section->getSectionImg(); ?>">
+        <img class = "cardImage" src = "<?= $section->getSectionImg(); ?>">
         <div class="card-body">
                 <h1 class = "card-title"><?= $section->getSectionName()?></h1>
             </div>    
@@ -89,14 +95,14 @@ $sections = Section::getSections();
         </div>
         <div class="form-group">
             <ul id = "ingredients">
-                <li>
+                <li id = "ingredientHeader">
                     <h2>Ingredients</h2>
                 </li>
             </ul>
         </div>
         <div class="form-group">
             <div>
-                <p>Quantity</p>
+                <label>Quantity</p>
                 <div class="quantitySelector  d-flex flex-row justify-content-around align-items-center input-group">
                     <input type="button" class="btn btn-secondary" id="button-addon1" value="-">
                     <input id = "qtyInput" type="number" class="form-control" min="1" class="quantity" data-action="updateQuantity" value="1">
@@ -106,7 +112,7 @@ $sections = Section::getSections();
         </div>
         <div class="form-group">
             <div>
-                <p>Extra Notes:</p>
+                <label>Extra Notes:</label>
                 <textarea id = "notesInput" class = "form-control"></textarea>
             </div>
         </div>
@@ -140,6 +146,7 @@ $sections = Section::getSections();
             </div>
         </div>
     </div>
+</div>
 <script src="https://kit.fontawesome.com/4933cad413.js" crossorigin="anonymous"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script src = "includes/models/lucas.js"></script>
@@ -166,10 +173,26 @@ $sections = Section::getSections();
     var plsBtn = document.querySelector("#button-addon2")
     var mnsBtn = document.querySelector("#button-addon1")
     var ingredientsUL = document.querySelector("#ingredients");
+    var listView = document.querySelector("#listView");
     var modal;
     window.addEventListener('load', (event) => {
         modal = new bootstrap.Modal(document.querySelector("#croppingModal"));
     });
+    listView.addEventListener("click", function(e){
+        console.log(e.target);
+        var imgs = document.querySelectorAll(".cardImage")
+
+        if(e.target.checked){
+            for(let i = 0; i < imgs.length; i++){
+                imgs[i].classList.add("hidden");
+            }
+        }
+        else{
+            for(let i = 0; i < imgs.length; i++){
+                imgs[i].classList.remove("hidden");
+            }
+        }
+    })
     class States{
         static Section = new States("section");
         static Items = new States("items");
@@ -193,7 +216,6 @@ $sections = Section::getSections();
         else{
             qtyInput.value = 1;
         }
-        
         calcPrice();
     })
 
@@ -217,7 +239,7 @@ $sections = Section::getSections();
         else
         {
             item = _item
-            addItemMenu.children[1].children[0].innerHTML = "";
+            
             addItemMenu.children[0].children[0].innerHTML = item.item_name;
             addToCartBtn.children[1].innerHTML = "$" + item.item_price;
             for(let y = 0; y < item.ingredients.length; y++){
@@ -257,6 +279,9 @@ $sections = Section::getSections();
                 let card = itemCards.children[i].children[1];
                 card.parentElement.classList.remove("hidden");
                 card.parentElement.children[0].src = menuItems[i].item_img;
+                if(listView.checked){
+                    card.parentElement.children[0].classList.add("hidden");                    
+                }
                 card.children[0].children[0].innerHTML = menuItems[i].item_name;
                 card.children[0].children[1].innerHTML = "$" + menuItems[i].item_price;
                 card.children[1].innerHTML = menuItems[i].item_description;

@@ -17,6 +17,22 @@ body, html{
     margin-bottom: .5vh;
     position: relative;
 }
+#listViewDiv{
+    position:absolute;
+    z-index:100;
+    right:0;
+    color: white;
+    bottom:0;
+    padding: 1vw 2vw;
+    background-color: rgb(0,0,0,.4);
+}
+.form-check-label{
+    white-space: nowrap;
+}
+.form-check-input:checked{
+    background-color:#ecae4f;
+    color: white;
+}
 #banner p{
     position: absolute;
     z-index: 100;
@@ -93,7 +109,22 @@ background: radial-gradient(circle, rgba(255,255,255,1) 0%, rgba(0,0,0,1) 87%);
     justify-content: space-between;
     width: 90%;
 }
+#ingredients{
+    margin: 0 !important;
+    padding: 0 !important;
+}
+#ingredientHeader{
+    padding: 0 !important;
+}
+#form-group div p, #form-group ul li h2{
+    margin-top: 10px;
+    margin-bottom: 10px;
 
+}
+#ingredients li{
+
+    padding-left: 2rem;
+}
 #cartBtn{
     position: fixed;
     bottom: 2vw;
@@ -154,7 +185,10 @@ background: radial-gradient(circle, rgba(255,255,255,1) 0%, rgba(0,0,0,1) 87%);
     align-items: center;
     justify-content: space-between;
 }
-
+.back-to-top{
+    width: 44px !important;
+    color: #112f51 !important
+}
 #saveBtnWrapper{
     width: 100%;
     display: flex;

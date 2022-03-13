@@ -29,11 +29,11 @@
         </div>
         <div class="form-group">
             <label>Phone Number:</label>
-            <input type = "text" name = "phone" id = "phone" value = "<?= $user->phone?>">
+            <input type="tel" id="phone" name="phone" title="Phone Number" pattern="/[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}/" value = "<?= $user->phone?>">
         </div>
         <div class="form-group">
             <label>Email:</label>
-            <input type = "text" name = "email" id = "email" value = "<?= $user->email?>" >
+            <input type = "email" name = "email" id = "email" value = "<?= $user->email?>" >
         </div>
         
 
@@ -55,6 +55,8 @@
     var studentID = document.querySelector("#studentID");
     var phone = document.querySelector("#phone");
     var email = document.querySelector("#email");
+    phone.setCustomValidity("Please enter propper phone number Ex. 4015555555");
+    email.setCustomValidity("Please enter propper email Ex. email@email.com");
     backBtn.classList.remove("btn-hidden")
 
     backBtn.addEventListener("click", function(e){
@@ -62,7 +64,10 @@
     })
 
     saveBtn.addEventListener("click", function(e){
-        user = new User(profileForm.dataset["id"], email.value, firstName.value, lastName.value, phone.value, studentID.value)
-        user.updateUser();
+        if(phone.reportValidity() && email.reportValidity()){
+            user = new User(profileForm.dataset["id"], email.value, firstName.value, lastName.value, phone.value, studentID.value)
+            user.updateUser();
+        }
+        
     })
 </script>
