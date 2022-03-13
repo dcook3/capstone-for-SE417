@@ -4,9 +4,8 @@
     echo '<div class="bg-primary" style="height:85px; width:100%;"><a href="index.php"><i class="fa fa-2x fas fa-arrow-left"></i></a></div>';
     include 'includes/front/top.php';
     include 'includes/front/header_static.php';
-    include 'models/dylan.php';
-    include 'models/lucas.php';
-    include 'models/Session.php';
+    include 'includes/models/dylan.php';
+    include 'includes/models/lucas.php';
     
     if($_SERVER['REQUEST_METHOD'] == "POST")
     {
@@ -40,7 +39,7 @@
                     }
                     break;
                 case "updateStatus":
-                    Order::updateOrderStatus($oid, 2);
+                    Order::updateOrderStatus($oid, 1);
                     header("Location: tracker.php");
                     break;
                 
@@ -85,7 +84,6 @@
     
 ?>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-<link rel="stylesheet" href="dylan_styles.css">
 <link rel="stylesheet" href="main_lucas.css">
 <h2 class="ms-2">Cart</h2>
 <div class="d-flex flex-column align-items-center">
@@ -111,23 +109,41 @@
     <?php endif; ?>
 </div>
 
-
-<div class="ms-4 mt-2">
-    <?php if($itemsExist && $currentOrder != null): ?>
-        <p>Subtotal: $<span id="subtotal"><?= $subtotal; ?></span></p>
-        <?php $tax = round($subtotal * 0.07, 2); ?>
-        <p>Tax: $<span id="tax"><?= $tax ?></span></p>
-    <?php endif; ?>
+<div class="mt-5">
+    <div class="ms-4">
+        <?php if($itemsExist && $currentOrder != null): ?>
+            <div class="mb-2">Subtotal: $<span id="subtotal"></span></div>
+            <div class="mb-2">Tax: $<span id="tax"></span></div>
+        <?php endif; ?>
+    </div>
+    <div class="d-flex justify-content-center">
+        <button id="finalizeBtn" class ='btn btn-secondary' data-oid="<?= $currentOrder->getOrderID() ?>">
+            Finalize Order <span>Total: $<span id="total"></span></span>
+        </button>
+    </div>
 </div>
-<div class="d-flex justify-content-center mt-5"><button id="addToCartBtn" class ='btn btn-secondary' data-oid="<?= $currentOrder->getOrderID() ?>">Finalize Order <span id="total"><?= $subtotal + $tax ?></span></button></div>
 <script>
     var qtySelectors = document.querySelectorAll(".quantitySelector");
     var spans = document.querySelectorAll(".price");
+    var pageSubtotal = document.querySelector("#subtotal");
+    var pageTax = document.querySelector("#tax");
+    var pageTotal = document.querySelector("#total");
     var subtotal = 0;
+    
+    for(let i=0; i < spans.length; i++)
+    {
+        subtotal += Number(qtySelectors[i].children[1].value) * Number(spans[i].dataset.price);
+    }
+    pageSubtotal.innerHTML = subtotal;
+    let firstTax = (subtotal * 0.07).toFixed(2);
+    pageTax.innerHTML = firstTax;
+    pageTotal.innerHTML = (Number(subtotal) + Number(firstTax)).toFixed(2);
 
+    
     
     for(let i = 0; i < qtySelectors.length; i++)
     {
+        //Post Quantity on Quantity Selector Change Event
         qtySelectors[i].children[1].addEventListener('change', e => {
             $.post( 'cart.php',
             {
@@ -137,47 +153,47 @@
                 action: e.target.dataset.action
             })
         });
+
+        //Subtract Quantity Event
         qtySelectors[i].firstElementChild.addEventListener('click', e => {
-            if(qtySelectors[i].children[1].value >= 1)
+            if(Number(qtySelectors[i].children[1].value) > 1)
             {
                 qtySelectors[i].children[1].value--;
-            }
+                
 
-            for(let i=0; i<spans.length; i++)
-            {
-                var temp = Math.round(qtySelectors[i].children[1].value * Number(spans[i].dataset.price), 2);
-                temp = temp.toFixed(2)
-                spans[i].innerHTML = `${temp}`
-                subtotal -= Number(temp);
-            }
-            document.querySelector("#subtotal").innerHTML = subtotal;
+                //Calculate total item price and display
+                let temp = Number(qtySelectors[i].children[1].value) * Number(spans[i].dataset.price);
+                spans[i].innerHTML = `${Number(temp.toFixed(2))}`
 
-            $.post('cart.php', {
-                orderID: e.target.parentElement.children[1].dataset.oid,
-                orderItemID: e.target.parentElement.children[1].dataset.oiid,
-                quantity: e.target.parentElement.children[1].value,
-                action: e.target.parentElement.children[1].dataset.action
-            });
+                //Calculate subtotal
+                subtotal -= Number(spans[i].dataset.price);
+                let tax = (subtotal * 0.07).toFixed(2);
+
+                //Update subtotal and tax onto page
+                pageSubtotal.innerHTML = subtotal.toFixed(2);
+                pageTax.innerHTML = Number(subtotal * 0.07).toFixed(2);
+                pageTotal.innerHTML = (Number(subtotal) + Number(tax)).toFixed(2);
+            }
         });
-        qtySelectors[i].lastElementChild.addEventListener('click', e => {
-            qtySelectors[i].children[1].value++;
 
-            for(let i=0; i < spans.length; i++)
+        //Add Quantity Event
+        qtySelectors[i].lastElementChild.addEventListener('click', e => {
+            if(Number(qtySelectors[i].children[1].value) < 10)
             {
-                var temp = qtySelectors[i].children[1].value * Number(spans[i].dataset.price);
-                temp = temp.toFixed(2)
-                spans[i].innerHTML = `${temp}`
-                subtotal += Number(temp);
+                //Calculate total item price and display
+                qtySelectors[i].children[1].value++;
+                let temp = Number(qtySelectors[i].children[1].value) * Number(spans[i].dataset.price);
+                spans[i].innerHTML = `${Number(temp.toFixed(2))}`
+
+                //Calculate subtotal
+                subtotal += Number(spans[i].dataset.price);
+                let tax = (subtotal * 0.07).toFixed(2);
+
+                //Update subtotal and tax onto page
+                pageSubtotal.innerHTML = subtotal.toFixed(2);
+                pageTax.innerHTML = Number(subtotal * 0.07).toFixed(2);
+                pageTotal.innerHTML = (Number(subtotal) + Number(tax)).toFixed(2);
             }
-            document.querySelector("#subtotal").innerHTML = subtotal;
-            
-            
-            $.post('cart.php', {
-                orderID: e.target.parentElement.children[1].dataset.oid,
-                orderItemID: e.target.parentElement.children[1].dataset.oiid,
-                quantity: e.target.parentElement.children[1].value,
-                action: e.target.parentElement.children[1].dataset.action
-            });
         });
     }
 
@@ -195,12 +211,11 @@
         });
     }
 
-    document.querySelector("#addToCartBtn").addEventListener('click', e =>{
+    document.querySelector("#finalizeBtn").addEventListener('click', e =>{
         $.post('cart.php', {
             orderID: e.target.dataset.oid,
             action: "updateStatus"
         });
-        
     })
 </script>
 <script src="https://kit.fontawesome.com/4933cad413.js" crossorigin="anonymous"></script>
