@@ -2,7 +2,6 @@
 include("includes/front/top.php");
 include("includes/front/header_static.php");
 include("includes/models/lucas.php");
-
 $sections = Section::getSections();
 ?>
 <script src="https://kit.fontawesome.com/4933cad413.js" crossorigin="anonymous"></script>
@@ -10,7 +9,6 @@ $sections = Section::getSections();
 <link rel ="stylesheet" href = "main_lucas.css">
 
 <div class="hidden" id = "user_id" data-id = "<?= isset($_SESSION['USER']) ? $_SESSION['USER']->user_id : "-1"?>"></div>
-<!-- TEMPLATE ELEMENTS -->
 <div id = "templateCard" class = "card bg-primary text-white itemCard hidden">
     <img class = "cardImage" src = "">
     <div class="card-body">

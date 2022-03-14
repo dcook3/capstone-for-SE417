@@ -20,11 +20,12 @@ include 'includes/front/header.php';
             <th>Email</th>
             <th>Created</th>
             <th>Last Update</th>
-            <th>Delete</th>
             <th>Edit</th>
+            <th>Delete</th>
         </thead>
         <tbody>
             <tr>     
+                <?php $admin->display_customers(); ?>
             </tr>
         </tbody>
     </table>
