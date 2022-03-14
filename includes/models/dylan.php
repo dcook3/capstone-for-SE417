@@ -308,6 +308,29 @@ class Order
             return false;
         }
     }
+
+    public static function getPaidOrderByUserID($user_id)
+    {
+        global $db;
+        $results = [];
+
+        $SQL = $db->prepare("SELECT order_id FROM orders WHERE user_id = :uid AND order_status = 1");
+
+        $SQL->bindValue(":uid", $user_id);
+
+        if($SQL->execute() && $SQL->rowCount() == 1)
+        {
+            $results = $SQL->fetchAll(PDO::FETCH_ASSOC)[0];
+            $order = new Order();
+            $order->populateOrderByID($results["order_id"]);
+            return($order);
+        }
+        else
+        {
+            return false;
+        }
+    }
+    
     public static function getCompleteOrdersByUserID($user_id)
     {
         global $db;
@@ -427,6 +450,27 @@ class Order
         $binds = array(
             ":oid" => $oid,
             ":status" => $status
+        );
+
+        if($SQL->execute($binds) && $SQL->rowCount() > 0)
+        {
+            return "Successfully updated order status.";
+        }
+        else
+        {
+            return "A SQL error occured while attempting to update order status.";
+        }
+    }
+
+    public static function updateOrderPrice($uid, $price)
+    {
+        global $db;
+
+        $SQL = $db->prepare("UPDATE orders SET order_price = :price WHERE user_id = :uid");
+
+        $binds = array(
+            ":uid" => $uid,
+            ":price" => $price
         );
 
         if($SQL->execute($binds) && $SQL->rowCount() > 0)

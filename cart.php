@@ -17,6 +17,11 @@
             {
                 $oiid = $_POST['orderItemID'];
             }
+
+            if(isset($_POST['orderTotal']))
+            {
+                $price = $_POST['orderTotal'];
+            }
             
             switch ($_POST['action']) {
                 case "updateQuantity":
@@ -33,14 +38,17 @@
                     }
                     
                     break;
+
                 case "deleteItem":
                     if(Order_Item::deleteItem($oid, $oiid) == false)
                     {
                         setMessage("An error occured whilst deleting an item. Please contact administrator or try again later.");
                     }
                     break;
+
                 case "updateStatus":
                     Order::updateOrderStatus($oid, 1);
+                    Order::updateOrderPrice($oid, $price);
                     header("Location: tracker.php");
                     break;
                 
@@ -223,6 +231,7 @@
     document.querySelector("#finalizeBtn").addEventListener('click', e =>{
         $.post('cart.php', {
             orderID: e.target.dataset.oid,
+            orderTotal: total,
             action: "updateStatus"
         });
     })

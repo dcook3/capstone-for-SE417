@@ -1,16 +1,19 @@
 <?php 
     $levels = 0;
+
+    include 'includes/front/top.php';
+    include 'includes/front/header_static.php';
     include 'includes/header.php';
     include 'includes/models/dylan.php';
     include 'includes/models/lucas.php';;
 
     $currentOrder = new Order();
     
-    if(Session::CheckLoginByUser())
+    if($_SESSION['USER'] != null)
     {
-        $currentOrder = Order::getIncompleteOrderByUserID(Session::get('id'));
-
-        
+        $currentOrder = Order::getPaidOrderByUserID($_SESSION['USER']->user_id);
+        $oid = $currentOrder->getOrderID();
+        $uid = $currentOrder->user_id;
     }
     else
     {
@@ -22,10 +25,14 @@
         setMessage("An error occured when fetching your order. Please contact administrator or try again later.");
     }
 
-    $oid = $currentOrder->getOrderID();
-    $uid = $_SESSION['USER']->user_id;
+    
 ?>
-<?= "<span id='oid' class='d-none'>$oid</span><span id='uid' class='d-none'>$uid</span>" ?>
+<?php
+    if($currentOrder != false)
+    {
+        echo "<span id='oid' class='d-none'>$oid</span><span id='uid' class='d-none'>$uid</span>";
+    }
+?>
 <h2 class="text-center">Order Tracker</h2>
 <div class="mt-2 d-flex flex-column justify-content-center align-items-center">
     <div id="trackerMessage" class="bg-light border rounded d-flex flex-column align-items-center p-2">
