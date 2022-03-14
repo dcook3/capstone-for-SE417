@@ -209,7 +209,7 @@ class Order_Item
 
 class Order 
 {
-    public $orderID, $user_id, $first_name, $last_name, $total_price, $order_status, $order_notes;
+    public $orderID, $user_id, $first_name, $last_name, $total_price, $order_status, $order_notes, $order_price, $order_datetime;
     public $order_items = [];
     public $menu_items = [];
 
@@ -308,6 +308,36 @@ class Order
             return false;
         }
     }
+    public static function getCompleteOrdersByUserID($user_id)
+    {
+        global $db;
+        $results = [];
+
+        $SQL = $db->prepare("SELECT * FROM orders WHERE user_id = :uid AND order_status = 2");
+
+        $SQL->bindValue(":uid", $user_id);
+
+        if($SQL->execute() && $SQL->rowCount() > 0)
+        {
+            $results = $SQL->fetchAll(PDO::FETCH_ASSOC);
+            $orders = array();
+            foreach($results as $result){
+
+                $order = new Order();
+                $order->orderID = $result["order_id"];
+                $order->user_id = $result["user_id"];
+                $order->order_status = $result["order_status"];
+                $order->order_price = $result["order_price"];
+                $order->order_datetime = $result["order_datetime"];
+                array_push($orders, $order);
+            }
+            return($orders);
+        }
+        else
+        {
+            return false;
+        }
+    }
 
     public static function getOrderByUserID($user_id)
     {
@@ -349,6 +379,7 @@ class Order
             $this->last_name = $results["last_name"];
             $this->user_id = $results["user_id"];
             $this->order_status = $results["order_status"];
+            $this->order_price = $results["order_price"];
             $oitems = Order_Item::getOrderItemsByOID($results["order_id"]);
             if(gettype($oitems) != 'string')
             {
@@ -387,7 +418,7 @@ class Order
         }
     }
 
-    public static function updateOrderStatus($oid, bool $status)
+    public static function updateOrderStatus($oid, $status)
     {
         global $db;
 

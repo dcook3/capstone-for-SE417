@@ -59,7 +59,7 @@
         {
             $currentOrder = Order::getIncompleteOrderByUserID($_SESSION["USER"]->user_id);
 
-            if($currentOrder->order_status == 1)
+            if($currentOrder == false)
             {
                 header("Location: tracker.php");
             }

@@ -1,7 +1,8 @@
 <?php include('includes/front/top.php'); ?>
-<?php if (!isset($_SESSION['ADMIN']['ADMINID'])) {
-	redirect("index");
-}
+<?php 
+    if (!isset($_SESSION['ADMIN']['ADMINID'])) {
+        redirect("index");
+    }
 ?>
 
 <?php

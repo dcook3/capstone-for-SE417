@@ -49,14 +49,14 @@ isset($_SESSION['USER']) ? redirect("index") : 0; ?>
 						}, false);
 					})();
 				</script>
-					<footer id="footer">
+					<!-- <footer id="footer">
 						<div class="container">
 							<div class="row">
-								<?php isset($_SERVER['HTTP_REFERER']) ? $goback = $_SERVER['HTTP_REFERER'] : $goback = "index" ?>
-								<a href="<?php echo $goback; ?>"><button class="login100-form-btn">Go back</button></a>
+								<?php //isset($_SERVER['HTTP_REFERER']) ? $goback = $_SERVER['HTTP_REFERER'] : $goback = "index" ?>
+								<a href="<?php //echo $goback; ?>"><button class="login100-form-btn">Go back</button></a>
 							</div>
 						</div>
-					</footer>
+					</footer> -->
 
 			</div>
 	<div id="preloader"></div>

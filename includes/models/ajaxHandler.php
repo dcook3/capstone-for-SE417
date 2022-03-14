@@ -135,10 +135,12 @@
         $order_item->item_id = $postItem["menu_item_id"];
         $order_item->qty = $postItem["qty"];
         $order_item->price = $postItem["item_price"];
-        foreach($postItem["ingredients"] as $ingredient){
-            array_push($order_item->ingredients, postToIngredient($ingredient));
+        if(isset($postItem["ingredients"])){
+            foreach($postItem["ingredients"] as $ingredient){
+                array_push($order_item->ingredients, postToIngredient($ingredient));
+            }
         }
-        return($order_item);
+            return($order_item);
     }
     /**
      * Converts a javascript Menu Item object sent through post to a php object

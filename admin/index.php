@@ -1,6 +1,5 @@
 <?php include('includes/front/top.php'); ?>
 <?php
-var_dump($_SESSION['ADMIN']);
 // if (!isset($_SESSION['ADMIN']['ADMINID'])) {
 //     redirect("login");
 // }
