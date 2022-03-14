@@ -22,7 +22,6 @@
               } else {
                   echo '<li><a href="profile.php">Profile</a></li>';
                   echo '<li><a href="" data-toggle="modal" data-target="#exampleModalOrderHistory">Order History</a></li>';
-                  echo '<li><a href="" data-toggle="modal" data-target="#exampleModalScrollable">My Orders</a></li>';
                   echo '<li><a href="logout">Logout</a></li>'; 
               }
               ?>

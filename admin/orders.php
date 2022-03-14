@@ -37,12 +37,8 @@
             if(isset($_POST['orderStatus']))
             {
                 $updateOID = $_POST['updOrderID'];
-                $feedback = Order::updateOrderStatus($updateOID, true);
-            }
-            else 
-            {
-                $updateOID = $_POST['updOrderID'];
-                $feedback = Order::updateOrderStatus($updateOID, false);
+                $feedback = Order::updateOrderStatus($updateOID, $_POST['orderStatus']);
+                
             }
         }
         else if(isset($_POST['showDetails']))
@@ -83,7 +79,10 @@
         </thead>
         <tbody>
             <?php if(gettype($results) != "string"): ?>
-                <?php foreach($results as $row): ?>
+                <?php foreach($results as $row): 
+                        if($row['order_status'] == 1 || $row['order_status'] == 2){
+                    ?>
+
                     <tr>
                         <td><?= "{$row['first_name']} {$row['last_name']}" ?></td>
                         <td><?= $row['student_id']; ?></td>
@@ -100,18 +99,20 @@
                         <td>
                             <?php
                                 $id = $row['order_id'];
-                                if($row['order_status'] == "0" || $row['order_status'] == "2")
+                                if($row['order_status'] == 1)
                                 {
                                     echo "<form action='orders_view.php' method='post' class='isCompleted'>
-                                            <input type='checkbox' name='orderStatus' value='checked'/><label for='orderStatus'>Completed</label>
+                                            <input type='checkbox' name = 'statusCheck'/><label for='statusCheck'>Completed</label>
+                                            <input type='hidden' name='orderStatus' value = '2'/> 
                                             <input type='hidden' name='updOrderID' value='$id' /> 
                                             <input type='hidden' name='selectedDate' value='$dateString'>
                                         </form>";
                                 }
-                                else if($row['order_status'] == "1")
+                                else if($row['order_status'] == 2)
                                 {
                                     echo "<form action='orders_view.php' method='post' class='isCompleted'>
-                                            <input checked type='checkbox' name='orderStatus' /><label for='orderStatus'>Completed</label>
+                                            <input checked type='checkbox' name = 'statusCheck'/><label for='statusCheck'>Completed</label>
+                                            <input type='hidden' name='orderStatus' value = '1'/> 
                                             <input type='hidden' name='updOrderID' value='$id' /> 
                                             <input type='hidden' name='selectedDate' value='$dateString'>
                                         </form>";
@@ -119,7 +120,9 @@
                             ?>
                         </td>
                     </tr>
-                <?php endforeach; 
+                <?php
+                        } 
+                endforeach; 
             else:?>
                 <tr><td><?= $results ?><td></tr>
             <?php endif; ?>

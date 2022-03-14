@@ -62,7 +62,7 @@ class admin
 				if (!$isLogin) {
 					setMessage("The email and password combination didn't match. Please try again. ");
 				} else {
-					$_SESSION['ADMIN'] = array('NAME' => $this->fname . " " . $this->lname, 'EMAIL' => $this->email, 'ADMINID' => $admin_id);
+					$_SESSION['ADMIN'] = array('NAME' => $this->fname . " " . $this->lname, 'EMAIL' => $this->email, 'ADMINID' => $this->admin_id);
 					redirect("index");
 				}
 			}

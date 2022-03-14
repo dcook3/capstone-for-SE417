@@ -173,26 +173,9 @@ $sections = Section::getSections();
     var plsBtn = document.querySelector("#button-addon2")
     var mnsBtn = document.querySelector("#button-addon1")
     var ingredientsUL = document.querySelector("#ingredients");
+    var templateIngredientsUL = ingredientsUL.cloneNode(true);
     var listView = document.querySelector("#listView");
     var modal;
-    window.addEventListener('load', (event) => {
-        modal = new bootstrap.Modal(document.querySelector("#croppingModal"));
-    });
-    listView.addEventListener("click", function(e){
-        console.log(e.target);
-        var imgs = document.querySelectorAll(".cardImage")
-
-        if(e.target.checked){
-            for(let i = 0; i < imgs.length; i++){
-                imgs[i].classList.add("hidden");
-            }
-        }
-        else{
-            for(let i = 0; i < imgs.length; i++){
-                imgs[i].classList.remove("hidden");
-            }
-        }
-    })
     class States{
         static Section = new States("section");
         static Items = new States("items");
@@ -203,22 +186,7 @@ $sections = Section::getSections();
             this.name = name;
         }
     }
-
-    plsBtn.addEventListener("click", function(e){
-        qtyInput.value = parseInt(qtyInput.value) + 1;
-        calcPrice();
-    })
-    mnsBtn.addEventListener("click", function(e){
-        if(parseInt(qtyInput.value) > 1)
-        {
-            qtyInput.value = parseInt(qtyInput.value) - 1;
-        }
-        else{
-            qtyInput.value = 1;
-        }
-        calcPrice();
-    })
-
+    var state = States.Section;
 
     function calcPrice(){
         price = item.item_price;
@@ -231,7 +199,7 @@ $sections = Section::getSections();
         price = price * parseInt(qtyInput.value);
         addToCartBtn.children[1].innerHTML = "$" + price.toFixed(2);
     }
-    var state = States.Section;
+    
     function gotoAddItemMenu(_item){
         if(user_id == "-1"){
             window.location.replace("login.php");
@@ -239,7 +207,7 @@ $sections = Section::getSections();
         else
         {
             item = _item
-            
+            ingredientsUL.innerHTML = templateIngredientsUL.innerHTML;
             addItemMenu.children[0].children[0].innerHTML = item.item_name;
             addToCartBtn.children[1].innerHTML = "$" + item.item_price;
             for(let y = 0; y < item.ingredients.length; y++){
@@ -255,6 +223,7 @@ $sections = Section::getSections();
                 })
             }
             addItemImg.children[0].src = item.item_img;
+            listView.parentElement.parentElement.classList.add("hidden");
             cartBtn.classList.add("hidden");
             addToCartBtn.classList.remove("hidden");
             specialTag.classList.add("hidden");
@@ -268,6 +237,7 @@ $sections = Section::getSections();
             addItemMenu.classList.remove("hidden");
         }
     }
+    
     function sectionClick(id){
         Menu_Item.getMenuItemsBySectionId(id, true, function(_menuItems){
             state = States.Items;
@@ -298,6 +268,51 @@ $sections = Section::getSections();
         })
         
     }
+    
+    async function showSlides(){
+        slides[slideIndex].classList.add("hidden");
+        if(slideIndex < slides.length-1){
+            slideIndex+= 1;
+        }
+        else{
+            slideIndex = 0;
+        }
+        slides[slideIndex].classList.remove("hidden");
+        setTimeout(showSlides, 7000)
+    }
+
+    window.addEventListener('load', (event) => {
+        modal = new bootstrap.Modal(document.querySelector("#croppingModal"));
+    });
+    listView.addEventListener("click", function(e){
+        console.log(e.target);
+        var imgs = document.querySelectorAll(".cardImage")
+
+        if(e.target.checked){
+            for(let i = 0; i < imgs.length; i++){
+                imgs[i].classList.add("hidden");
+            }
+        }
+        else{
+            for(let i = 0; i < imgs.length; i++){
+                imgs[i].classList.remove("hidden");
+            }
+        }
+    })
+    plsBtn.addEventListener("click", function(e){
+        qtyInput.value = parseInt(qtyInput.value) + 1;
+        calcPrice();
+    })
+    mnsBtn.addEventListener("click", function(e){
+        if(parseInt(qtyInput.value) > 1)
+        {
+            qtyInput.value = parseInt(qtyInput.value) - 1;
+        }
+        else{
+            qtyInput.value = 1;
+        }
+        calcPrice();
+    })
     addToCartBtn.addEventListener("click", function(e){
         Order.createOrderIfNoneExists(user_id, function(order){
             if(order.order_status != 1){
@@ -313,7 +328,8 @@ $sections = Section::getSections();
                                                 "-1",
                                                 qtyInput.value,
                                                 notesInput.value)
-                for(let i = 1; i < addItemMenu.children.length; i++){
+                for(let i = 1; i < addItemMenu.children[1].children[0].children.length; i++){
+                    console.log(i);
                     let checkbox = addItemMenu.children[1].children[0].children[i].children[0]
                     if(checkbox.checked){
                         order_item.addIngredient(new Ingredient(checkbox.dataset["id"], "0",checkbox.parentElement.dataset["ingredientPrice"], false))
@@ -327,9 +343,7 @@ $sections = Section::getSections();
             }
         });
     })
-    function selectItem(){
-        console.log(i);
-    }
+
     backBtn.addEventListener("click", function(e){
         switch(state){
             case States.Items:
@@ -339,6 +353,7 @@ $sections = Section::getSections();
                 state = States.Section;
                 break
             case States.Add:
+                listView.parentElement.parentElement.classList.remove("hidden");
                 cartBtn.classList.remove("hidden");
                 addToCartBtn.classList.add("hidden")
                 addItemImg.classList.add("hidden");
@@ -349,6 +364,7 @@ $sections = Section::getSections();
                 state = States.Items;
                 break
             case States.AddSpecial:
+                listView.parentElement.parentElement.classList.remove("hidden");
                 cartBtn.classList.remove("hidden");
                 addToCartBtn.classList.add("hidden")
                 addItemImg.classList.add("hidden");
@@ -371,18 +387,8 @@ $sections = Section::getSections();
             })
         })
     }
-    showSlides();
-    async function showSlides(){
-        slides[slideIndex].classList.add("hidden");
-        if(slideIndex < slides.length-1){
-            slideIndex+= 1;
-        }
-        else{
-            slideIndex = 0;
-        }
-        slides[slideIndex].classList.remove("hidden");
-        setTimeout(showSlides, 7000)
-    }
+
     
+    showSlides();
 </script>
 <?php include("includes/front/footer.php"); ?>

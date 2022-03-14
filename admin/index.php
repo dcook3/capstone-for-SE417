@@ -1,7 +1,14 @@
 <?php include('includes/front/top.php'); ?>
+<<<<<<< HEAD
 <?php if (!isset($_SESSION['ADMIN']['ADMINID'])) {
     redirect("login");
 }
+=======
+<?php
+// if (!isset($_SESSION['ADMIN']['ADMINID'])) {
+//     redirect("login");
+// }
+>>>>>>> 8d364bcff8896affbae2c622ff21de46e5111071
     $levels = 1;
     $showDetails = false;
     include '../includes/models/sql_functions.php';
