@@ -6,8 +6,7 @@
 
 <?php
     $levels = 1;
-    include("..\models\lucas.php");
-    
+    include("..\includes\models\lucas.php");    
     $post = false;
     if($_SERVER['REQUEST_METHOD']==='POST'){
         if(isset($_POST["id"])){
@@ -16,7 +15,7 @@
             $item->populateImage();
         }
     }
-    include '../include/header.php';
+    include 'includes/front/header.php';
 ?>
 <script  src="../includes/models/lucas.js"></script>
 <link rel="stylesheet" href="assets/css/lucas.css">
@@ -67,11 +66,11 @@
                 <input name = "priceInput" class = "form-control" id = "priceInput" type="number" min="0.00" max="10000.00" step="0.01" <?= ($post) ? "value = '{$item->getItemPrice()}'" : ""?> />
             </div>
             <div class = "form-group special-group">
-                <label for = "descriptionInput" class = "form-label">Special Item:</label> 
-                <input name = "specialInput" class = "form-check-input" id = "specialInput" type="checkbox" <?= ($post && $item->getIsSpecial()) ? "checked" : "" ?>/>
+                <label for = "specialInput" class = "form-label">Special Item:</label> 
+                <input name = "specialInput" class = "" id = "specialInput" type="checkbox" <?= ($post && $item->getIsSpecial()) ? "checked" : "" ?>/>
             </div>
             <div class = "form-group">
-                <label for = "descriptionInput" class = "form-label">Item Image:</label>
+                <label for = "fileUpload" class = "form-label">Item Image:</label>
                 <input name = "fileUpload" class = "form-control" id = "fileUpload" type="file" accept="image/*"/>
             </div>
             <div class="form-group <?= (!$post || $item->getItemImg() == null || $item->getItemImg() == "") ? "hidden": ""?>">
