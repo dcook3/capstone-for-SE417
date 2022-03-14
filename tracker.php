@@ -9,7 +9,6 @@
     echo '<div class="bg-primary" style="height:85px; width:100%;"></div>';
 
     $currentOrder = new Order();
-    
     if($_SESSION['USER'] != null)
     {
         $currentOrder = Order::getPaidOrderByUserID($_SESSION['USER']->user_id);
