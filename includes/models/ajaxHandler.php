@@ -120,6 +120,20 @@
 
                 }
                 break;
+            
+            case "deleteItem":
+                if(Order_Item::deleteItem($_POST['orderID'], $_POST['orderItemID']) == false)
+                {
+                    setMessage("An error occured whilst deleting an item. Please contact administrator or try again later.");
+                }
+                break;
+
+            case "updateStatus":
+                Order::updateOrderStatus($_POST['orderID'], 1);
+                Order::updateOrderPrice($_POST['orderID'], $_POST['orderTotal']);
+                echo 'tracker.php';
+                break;
+            
             default:
                 echo 'action not set';
                 break;
