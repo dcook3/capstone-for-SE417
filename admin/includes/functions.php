@@ -70,7 +70,7 @@ class admin
 	}
 
     public function display_customers()	{
-        if (isset($_GET['logins']) && isset($_GET['admin'])) {
+        /*if (isset($_GET['logins']) && isset($_GET['admin'])) {
 			$this->sql = "SELECT l.email, a.first_name, a.last_name, l.created_at, l.updated_at, a.admin_id FROM login_info l, admin a WHERE a.email = l.email";
 			$this->send_query = $this->con->prepare($this->sql);
 			if (isset($this->send_query)) {
@@ -140,8 +140,8 @@ class admin
 				mysqli_stmt_free_result($this->send_query);
 				mysqli_stmt_close($this->send_query);
 			}
-		}
-		if (isset($_GET['logins']) && isset($_GET['staff'])) {
+		}*/
+		/*if (isset($_GET['logins']) && isset($_GET['staff'])) {
 			$this->sql = "SELECT l.email, s.first_name, s.last_name, l.date_added, l.date_modified, s.staff_id FROM login_info l, staff s WHERE s.email = l.email";
 			$this->send_query = $this->con->prepare($this->sql);
 			if (isset($this->send_query)) {
@@ -197,16 +197,16 @@ class admin
 				}
 				mysqli_stmt_close($this->send_query);
 			}
-		}
-        if (isset($_GET['logins']) && isset($_GET['cust'])) {
-			$this->sql = "SELECT l.email, c.student_id, c.first_name, c.last_name, c.phone, l.created_at, l.updated_at, c.login_access, c.user_id 
+		}*/
+       // if (isset($_GET['logins']) && isset($_GET['cust'])) {
+			$this->sql = "SELECT l.email, c.student_id, c.first_name, c.middle_name, c.last_name, c.phone, l.created_at, l.updated_at, c.login_access, c.user_id 
             FROM login_info l, user c 
             WHERE c.email = l.email";
 
 			$this->send_query = $this->con->prepare($this->sql);
 			if (isset($this->send_query)) {
 				// mysqli_stmt_bind_param($this->send_query);
-				mysqli_stmt_bind_result($this->send_query, $this->email, $student_id, $first_name, $last_name, $phone, $date_added, $date_modified, $login_access, $customer_id);
+				mysqli_stmt_bind_result($this->send_query, $this->email, $student_id, $first_name, $middle_name, $last_name, $phone, $date_added, $date_modified, $login_access, $customer_id);
 				if (mysqli_stmt_execute($this->send_query) && mysqli_stmt_fetch($this->send_query)) {
 					do {
 						if ($this->email != "public") {
@@ -214,55 +214,30 @@ class admin
 			           		<tr>
                                <td><a>' . $customer_id . '</a></td>
                                <td><a>' . $student_id . '</a></td>
-                               <td><a>' . $first_name . " " .  $last_name . '</a></td>
+                               <td><a>' . $first_name . '</a></td>
+							   <td><a>' . $middle_name . '</a></td>
+							   <td><a>' . $last_name . '</a></td>
                                <td><a>' . $phone . '</a></td>
 		                        <td><a>' . $this->email . '</a></td>
 		                        <td>' . $date_added . '</td>
 		                        <td>' . $date_modified . '</td>
+								<td data-toggle="tooltip"  data-placement="top" title="" data-original-title="Delete ' . $first_name . '">
+				                    <button class="btn btn-danger btn-circle btn-sm delete-btn-circle" data-toggle="modal" data-target="#exampleModal' . $customer_id . '">
+				                        <i class="fas fa-trash"></i>
+				                    </button>
+				                </td>
 				                <td data-toggle="tooltip"  data-placement="top" title="" data-original-title="Delete ' . $first_name . '">
 				                    <button class="btn btn-danger btn-circle btn-sm delete-btn-circle" data-toggle="modal" data-target="#exampleModal' . $customer_id . '">
 				                        <i class="fas fa-trash"></i>
 				                    </button>
 				                </td>                        
 		                    </tr>';
-
-							//delete modal
-							echo '
-							<div class="modal fade" id="exampleModal' . $customer_id . '" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel' . $customer_id . '" style="display: none;" aria-hidden="true">
-							    <div class="modal-dialog" role="document">
-							        <div class="modal-content">
-							            <div class="modal-header">
-							                <h5 class="modal-title" id="exampleModalLabel' . $customer_id . '">Are you sure? This action is irreversible!</h5>
-							                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-							                    <span aria-hidden="true">×</span>
-							                </button>
-							            </div>
-							            <div class="modal-body">
-							                <p class="mb-0">Do you want to permanently delete ' . $first_name . " " . $last_name . '?</p>	
-							            </div>
-							            <div class="modal-footer">
-											<a href="index?logins&cust&del=' . base64_encode($customer_id) . '" class="btn btn-danger btn-icon-split delete-btn btn-padding">
-											    <span class="icon text-white-50">
-											    <i class="fas fa-trash"></i>
-											    </span>
-											    <span class="text">Delete</span>
-											</a>
-											<button class="btn btn-secondary btn-icon-split btn-padding gray-btn" data-dismiss="modal">
-											    <span class="icon text-white-50">
-											    <i class="fas fa-times"></i>
-											    </span>
-											    <span class="text">Close</span>
-											</button>
-							            </div>
-							        </div>
-							    </div>
-							</div>';
 						}
 					} while (mysqli_stmt_fetch($this->send_query));
 				}
 				mysqli_stmt_close($this->send_query);
 			}
-		}
+		//}
 	}
     public function delete_logins() {
 		if (isset($_GET['logins']) && isset($_GET['del'])) {

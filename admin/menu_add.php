@@ -6,7 +6,7 @@
 
 <?php
     $levels = 1;
-    include("..\models\lucas.php");
+    include("..\includes\models\lucas.php");
     
     $post = false;
     if($_SERVER['REQUEST_METHOD']==='POST'){
@@ -16,7 +16,7 @@
             $item->populateImage();
         }
     }
-    include '../include/header.php';
+    include 'includes/front/header.php';
 ?>
 <script  src="../includes/models/lucas.js"></script>
 <link rel="stylesheet" href="assets/css/lucas.css">

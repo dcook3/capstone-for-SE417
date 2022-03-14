@@ -60,7 +60,7 @@ redirect("login");
     <div class="d-flex flex-column align-items-center">
         <button class="btn btn-secondary mb-3" type="button" data-bs-toggle="collapse" data-bs-target="#dateFilterDiv">Toggle Date Filter</button>
         <div class="col-3 collapse" id="dateFilterDiv">
-            <form method="get" action="orders_view.php" id="dateFilter" class="p-2 col-6 border d-flex flex-column">
+            <form method="get" action="index.php" id="dateFilter" class="p-2 col-6 border d-flex flex-column">
                 <label for="selectedDate" class="form-label">Pick day to show orders from:</label>
                 <?php if(!isset($_GET['selectedDate'])): ?>
                     <input type="date" name="selectedDate" class="form-control">
@@ -100,7 +100,7 @@ redirect("login");
                                 $id = $row['order_id'];
                                 if($row['order_status'] == "0" || $row['order_status'] == "2")
                                 {
-                                    echo "<form action='orders_view.php' method='post' class='isCompleted'>
+                                    echo "<form action='index.php' method='post' class='isCompleted'>
                                             <input type='checkbox' name='orderStatus' value='checked'/><label for='orderStatus'>Completed</label>
                                             <input type='hidden' name='updOrderID' value='$id' /> 
                                             <input type='hidden' name='selectedDate' value='$dateString'>
@@ -108,7 +108,7 @@ redirect("login");
                                 }
                                 else if($row['order_status'] == "1")
                                 {
-                                    echo "<form action='orders_view.php' method='post' class='isCompleted'>
+                                    echo "<form action='index.php' method='post' class='isCompleted'>
                                             <input checked type='checkbox' name='orderStatus' /><label for='orderStatus'>Completed</label>
                                             <input type='hidden' name='updOrderID' value='$id' /> 
                                             <input type='hidden' name='selectedDate' value='$dateString'>
@@ -134,7 +134,7 @@ redirect("login");
                 <div class="modal-body">
                     Are you sure you wish to delete this order? Once an order is deleted, you cannot go back.
                 </div>
-                <form class="modal-footer" action="orders_view.php" method="post">
+                <form class="modal-footer" action="index.php" method="post">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
                     <button type="submit" class="btn btn-primary">Yes</button>
                     <input type="hidden" id="oidInput" name="delOrderID">
