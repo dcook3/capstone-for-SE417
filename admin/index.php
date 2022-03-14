@@ -1,8 +1,14 @@
 <?php include('includes/front/top.php'); ?>
+<<<<<<< HEAD
+<?php if (!isset($_SESSION['ADMIN']['ADMINID'])) {
+    redirect("login");
+}
+=======
 <?php
 // if (!isset($_SESSION['ADMIN']['ADMINID'])) {
 //     redirect("login");
 // }
+>>>>>>> 8d364bcff8896affbae2c622ff21de46e5111071
     $levels = 1;
     $showDetails = false;
     include '../includes/models/sql_functions.php';
@@ -54,7 +60,7 @@
         $selectedDate = new DateTime($dateString);
         $results = Order::getOrdersByDT($selectedDate->getTimestamp());
     }
-    include '../include/header.php';
+    include 'includes/front/header.php';
 ?>
     <h2 class="fw-bold text-center">Orders</h2>
     <div class="d-flex flex-column align-items-center">
