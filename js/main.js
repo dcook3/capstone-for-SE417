@@ -19,7 +19,7 @@
     }
   });
   $('.back-to-top').click(function(){
-    $('html, body').animate({scrollTop : 0},15, 'easeInOutExpo');
+    $('html, body').animate({scrollTop : 0},1, 'easeInOutExpo');
     return false;
   });
 
