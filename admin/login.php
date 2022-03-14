@@ -2,36 +2,19 @@
 <?php if (isset($_SESSION['ADMIN']['ADMINID'])) {
 	redirect("index");
 }
-
 ?>
-<style>
-	.bd-placeholder-img {
-		font-size: 1.125rem;
-		text-anchor: middle;
-		-webkit-user-select: none;
-		-moz-user-select: none;
-		-ms-user-select: none;
-		user-select: none;
-	}
-
-	@media (min-width: 768px) {
-		.bd-placeholder-img-lg {
-			font-size: 3.5rem;
-		}
-	}
-</style>
 <link href="css/signin.css" rel="stylesheet">
 </head>
 
 <body>
-	<form class="form-signin needs-validation" method="POST" action="login" novalidate>
+	<form class="form-signin needs-validation" action="login" method="POST" novalidate>
 		<div class="text-center">
 			<h1 class="h3 mb-3 font-weight-normal">Sign in - Admin</h1>
 			<?php $admin->login(); ?>
 		</div>
 		<div class="form-row">
 			<div class="col-md-12 mb-3">
-				<!-- <label for="validationCustom01">Email Address</label> -->
+				<label for="validationCustom01">Email Address</label>
 				<input type="email" name="email" data-toggle="tooltip" data-placement="top" title="" data-original-title="Email Address" pattern="^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$" class="form-control" id="validationCustom01" placeholder="Email Address" required>
 				<div class="valid-feedback">
 				</div>
@@ -40,7 +23,7 @@
 				</div>
 			</div>
 			<div class="col-md-12 mb-3">
-				<!-- <label for="validationCustom02">Password</label> -->
+				<label for="validationCustom02">Password</label>
 				<input type="password" name="pass" data-toggle="tooltip" data-placement="top" title="" data-original-title="Password" pattern=".{6,}" class="form-control" id="validationCustom02" placeholder="Password" required>
 				<div class="valid-feedback">
 				</div>

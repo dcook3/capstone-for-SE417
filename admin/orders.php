@@ -1,6 +1,6 @@
 <?php include('includes/front/top.php'); ?>
-<?php if (isset($_SESSION['ADMIN']['ADMINID'])) {
-	redirect("index");
+<?php  if (!isset($_SESSION['ADMIN']['ADMINID'])) {
+    redirect("login");
 }
 ?>
 <?php
@@ -55,7 +55,8 @@
         $selectedDate = new DateTime($dateString);
         $results = Order::getOrdersByDT($selectedDate->getTimestamp());
     }
-    include '../include/header.php';
+    //include '../include/header.php';
+    include 'includes/front/header.php';
 ?>
     <h2 class="fw-bold text-center">Orders</h2>
     <div class="d-flex flex-column align-items-center">

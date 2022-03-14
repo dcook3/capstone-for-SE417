@@ -1,11 +1,11 @@
 <?php include('includes/front/top.php'); ?>
-<?php
+<?php 
 if (!isset($_SESSION['ADMIN']['ADMINID'])) {
     redirect("login");
 }
     $levels = 1;
     
-include '../include/header.php'; 
+include 'includes/front/header.php'; 
 ?>
 <h2 class="fw-bold text-center">Users</h2>
 <table class = "table table-hover table-striped text-center">
@@ -25,7 +25,6 @@ include '../include/header.php';
         </thead>
         <tbody>
             <tr>     
-            <?php $admin->DisplayAllUsers(); ?>
             </tr>
         </tbody>
     </table>
