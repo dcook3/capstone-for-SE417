@@ -3,12 +3,12 @@
 
     include 'includes/front/top.php';
     include 'includes/front/header_static.php';
-    include 'includes/header.php';
     include 'includes/models/dylan.php';
     include 'includes/models/lucas.php';;
 
+    echo '<div class="bg-primary" style="height:85px; width:100%;"></div>';
+
     $currentOrder = new Order();
-    
     if($_SESSION['USER'] != null)
     {
         $currentOrder = Order::getPaidOrderByUserID($_SESSION['USER']->user_id);
@@ -33,15 +33,16 @@
         echo "<span id='oid' class='d-none'>$oid</span><span id='uid' class='d-none'>$uid</span>";
     }
 ?>
+<script src="https://kit.fontawesome.com/4933cad413.js" crossorigin="anonymous"></script>
 <h2 class="text-center">Order Tracker</h2>
 <div class="mt-2 d-flex flex-column justify-content-center align-items-center">
     <div id="trackerMessage" class="bg-light border rounded d-flex flex-column align-items-center p-2">
         <p>Your order is currently:</p>
+        <div id="trackerIcon"><i class="fa-solid fa-2x fa-clock"></i><div>
         <span id="orderStatusSpan">In Progress</span>
-        <div id="trackerIcon"><i class="fa-regular fa-2x fa-clock"></i><div>
-    </div>
-    <div id="orderDetails">
-    </div>
+    </div> 
+</div>
+<div id="orderDetails">
 </div>
 <script
   src="https://code.jquery.com/jquery-3.6.0.min.js"
@@ -60,7 +61,6 @@
         }).fail(function(e) {console.log(e)})
         .done(function(data)
         {
-            data = data.replace("action not set", "")
             document.querySelector('#orderDetails').innerHTML = data;
         }
     );

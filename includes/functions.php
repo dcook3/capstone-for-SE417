@@ -50,10 +50,10 @@ class user {
 			$pass = md5($this->con->escape($_POST['pass']));
 			$pass_confirm = md5($this->con->escape($_POST['pass_confirm']));
 			if ($pass === $pass_confirm) {
-				//$this->student_id = $this->con->escape(clear_input($_POST['username']));
+				$this->student_id = $this->con->escape(clear_input($_POST['username']));
 				$this->fname = $this->con->escape(clear_input($_POST['fname']));
 				$this->lname = $this->con->escape(clear_input($_POST['lname']));
-				//$this->phone = $this->con->escape(clear_input($_POST['phone']));
+				$this->phone = $this->con->escape(clear_input($_POST['phone']));
 				$this->email = $this->con->escape(clear_input($_POST['email']));
 				$str_result = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';		//generate verify key
 				$verify_key = substr(str_shuffle($str_result), 0, 20); 		//generate verify key
@@ -62,11 +62,11 @@ class user {
 				$this->send_query = $this->con->prepare($this->sql);
 				mysqli_stmt_bind_param($this->send_query, "sss", $this->email, $pass, $this->datetime);
 
-				$sql2 = "INSERT INTO `user` (`first_name`, `last_name`, `email`, `login_access`, `verify_key`, `isVerified`) VALUES (?, ?, ?, ?, ?, ?)";
+				$sql2 = "INSERT INTO `user` (`student_id`, `first_name`, `last_name`, `phone`, `email`, `login_access`, `verify_key`, `isVerified`) VALUES (?, ?, ?, ?, ?, ?)";
 
 				$this->temp = 0;	//LOGIN ACCESS
 				$send_query2 = $this->con->prepare($sql2);
-				mysqli_stmt_bind_param($send_query2, "sssisi", $this->fname, $this->lname, $this->email, $this->temp, $verify_key, $this->temp);
+				mysqli_stmt_bind_param($send_query2, "sssisi", $this->student_id, $this->fname, $this->lname, $this->phone, $this->email, $this->temp, $verify_key, $this->temp);
 
 				if (isset($this->send_query) && isset($send_query2)) {
 					if (mysqli_stmt_execute($this->send_query) && mysqli_stmt_execute($send_query2)) {

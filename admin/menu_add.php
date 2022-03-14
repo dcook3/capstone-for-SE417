@@ -6,7 +6,12 @@
 
 <?php
     $levels = 1;
+<<<<<<< HEAD
     include("..\includes\models\lucas.php");    
+=======
+    include("..\includes\models\lucas.php");
+    
+>>>>>>> d71bd15e2780f97e7e49e50550da9d6f2359198f
     $post = false;
     if($_SERVER['REQUEST_METHOD']==='POST'){
         if(isset($_POST["id"])){

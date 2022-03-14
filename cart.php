@@ -7,54 +7,25 @@
     include 'includes/models/dylan.php';
     include 'includes/models/lucas.php';
     echo '<div class="bg-primary" style="height:85px; width:100%;"></div>';
-
     if($_SERVER['REQUEST_METHOD'] == "POST")
     {
         if(isset($_POST['action']))
         {
             $oid = $_POST['orderID'];
-            if(isset($_POST['orderItemID']))
+            $oiid = $_POST['orderItemID'];
+            $qty = $_POST['quantity'];
+            if(Order_Item::updateQuantity($qty, $oiid))
             {
-                $oiid = $_POST['orderItemID'];
-            }
-
-            if(isset($_POST['orderTotal']))
-            {
-                $price = $_POST['orderTotal'];
-            }
-            
-            switch ($_POST['action']) {
-                case "updateQuantity":
-                    $qty = $_POST['quantity'];
-                    if(Order_Item::updateQuantity($qty, $oiid))
-                    {
-                        $currentOrder = new Order();
-                        $currentOrder = $currentOrder->populateOrderByID($oid);
-                        $itemsExist = ($currentOrder == false) ? true : false;
-                    }
-                    else
-                    {
-                        setMessage("An error occured when updating quantity. Please contact administrator or try again later.");
-                    }
-                    
-                    break;
-
-                case "deleteItem":
-                    if(Order_Item::deleteItem($oid, $oiid) == false)
-                    {
-                        setMessage("An error occured whilst deleting an item. Please contact administrator or try again later.");
-                    }
-                    break;
-
-                case "updateStatus":
-                    Order::updateOrderStatus($oid, 1);
-                    Order::updateOrderPrice($oid, $price);
-                    header("Location: tracker.php");
-                    break;
-                
                 $currentOrder = new Order();
                 $currentOrder = $currentOrder->populateOrderByID($oid);
+                $itemsExist = ($currentOrder == false) ? true : false;
             }
+            else
+            {
+                setMessage("An error occured when updating quantity. Please contact administrator or try again later.");
+            }
+            $currentOrder = new Order();
+            $currentOrder = $currentOrder->populateOrderByID($oid);   
         }
         else
         {
@@ -67,9 +38,12 @@
         {
             $currentOrder = Order::getIncompleteOrderByUserID($_SESSION["USER"]->user_id);
 
-            if($currentOrder->order_status == 1)
+            if($currentOrder != false)
             {
-                header("Location: tracker.php");
+                if($currentOrder->order_status == 1)
+                {
+                    header("Location: tracker.php");
+                }
             }
         }
         else
@@ -106,13 +80,13 @@
                     <input type="button" class="btn btn-secondary" id="button-addon2" value="+">
                 </div>
                 <span class="me-1"  >$<span data-price="<?= $orderItems[$i]->getPrice()?>" data-quantity="<?= $orderItems[$i]->getQuantity()?>" class="price"><?= $orderItems[$i]->getPrice() * $orderItems[$i]->getQuantity(); ?></span></span>
-                <a class="btn btn-secondary text-decoration-none delItemBtn" data-oid="<?= $currentOrder->getOrderID() ?>" data-oiid="<?= $orderItems[$i]->getOrderItemID(); ?>" data-action="deleteItem"><i class="fas fa-trash-alt"></i></a>
+                <a class="btn btn-secondary text-decoration-none delItemBtn" data-oid="<?= $currentOrder->getOrderID() ?>" data-oiid="<?= $orderItems[$i]->getOrderItemID(); ?>" href="#"><i class="fas fa-trash-alt" data-oid="<?= $currentOrder->getOrderID() ?>" data-oiid="<?= $orderItems[$i]->getOrderItemID(); ?>"></i></a>
             </div>
             <?php $subtotal += $orderItems[$i]->getPrice(); ?>
         <?php endfor; ?>
     <?php else: ?>
         <div>
-            <p><a href="main_menu.php">See menu to add items</a></p>
+            <p><a href="index.php">See menu to add items</a></p>
         </div>
     <?php endif; ?>
 </div>
@@ -124,15 +98,15 @@
             <div class="mb-2">Tax: $<span id="tax"></span></div>
         <?php endif; ?>
     </div>
-    <div class="d-flex justify-content-center">
-        <button id="finalizeBtn" class ='btn btn-secondary col-10' data-oid="<?= $currentOrder->getOrderID() ?>">
-            <div class="d-flex justify-content-between">
-                <span class="d-inline-block">Finalize Order</span>
-                <span class="d-inline-block">
-                    Total: $<span id="total"></span>
+    <div class="d-flex justify-content-center" data-oid="<?= $currentOrder->getOrderID() ?>">
+        <a id="finalizeBtn" href="#" class ='btn btn-secondary col-10' data-oid="<?= $currentOrder->getOrderID() ?>">
+            <div class="d-flex justify-content-between" data-oid="<?= $currentOrder->getOrderID() ?>">
+                <span class="d-inline-block" data-oid="<?= $currentOrder->getOrderID() ?>">Finalize Order</span>
+                <span class="d-inline-block" data-oid="<?= $currentOrder->getOrderID() ?>">
+                    Total: $<span id="total" data-oid="<?= $currentOrder->getOrderID() ?>"></span>
                 </span>
             </div>
-        </button>
+        </a>
     </div>
 </div>
 <script>
@@ -218,22 +192,35 @@
     {
         //Post to tell php to delete
         delBtns[i].addEventListener('click', e => {
-            $.post('cart.php', {
-                orderID: e.target.dataset.oid,
-                orderItemID: e.target.dataset.oiid,
-                quantity: e.target.value,
-                action: e.target.dataset.action
-            });
+            $.ajax({
+                url: 'includes/models/ajaxHandler.php', 
+                method: 'POST',
+                data: 
+                {
+                    orderID: e.target.dataset.oid,
+                    orderItemID: e.target.dataset.oiid,
+                    quantity: e.target.value,
+                    action: e.target.dataset.action
+                }
+            }).fail(function(e) {console.log(e)});
         });
     }
 
     //Functionality for finalizing order
-    document.querySelector("#finalizeBtn").addEventListener('click', e =>{
-        $.post('cart.php', {
-            orderID: e.target.dataset.oid,
-            orderTotal: total,
-            action: "updateStatus"
+    document.querySelector("#finalizeBtn").addEventListener('click', e => {
+        $.ajax({
+            url: 'includes/models/ajaxHandler.php',
+            method: 'POST', 
+            data: {
+                orderID: e.target.dataset.oid,
+                orderTotal: subtotal,
+                action: "updateStatus"
+            }
+            
+        }).fail(function(e) {console.log(e)})
+        .done(function(data) {
+            window.location.replace(data);
         });
-    })
+    });
 </script>
 <script src="https://kit.fontawesome.com/4933cad413.js" crossorigin="anonymous"></script>
