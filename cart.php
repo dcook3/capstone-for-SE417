@@ -92,24 +92,29 @@
 </div>
 
 <div class="mt-5">
-    <div class="ms-4">
-        <?php if($itemsExist && $currentOrder != null): ?>
-            <div class="mb-2">Subtotal: $<span id="subtotal"></span></div>
-            <div class="mb-2">Tax: $<span id="tax"></span></div>
-        <?php endif; ?>
-    </div>
-    <div class="d-flex justify-content-center" data-oid="<?= $currentOrder->getOrderID() ?>">
-        <a id="finalizeBtn" href="#" class ='btn btn-secondary col-10' data-oid="<?= $currentOrder->getOrderID() ?>">
-            <div class="d-flex justify-content-between" data-oid="<?= $currentOrder->getOrderID() ?>">
-                <span class="d-inline-block" data-oid="<?= $currentOrder->getOrderID() ?>">Finalize Order</span>
-                <span class="d-inline-block" data-oid="<?= $currentOrder->getOrderID() ?>">
-                    Total: $<span id="total" data-oid="<?= $currentOrder->getOrderID() ?>"></span>
-                </span>
-            </div>
-        </a>
-    </div>
+    <?php if($itemsExist && $currentOrder != null): ?>
+        <div class="ms-4">
+            
+                <div class="mb-2">Subtotal: $<span id="subtotal"></span></div>
+                <div class="mb-2">Tax: $<span id="tax"></span></div>
+            
+        </div>
+        <div class="d-flex justify-content-center" data-oid="<?= $currentOrder->getOrderID() ?>">
+            <a id="finalizeBtn" href="#" class ='btn btn-secondary col-10' data-oid="<?= $currentOrder->getOrderID() ?>">
+                <div class="d-flex justify-content-between" data-oid="<?= $currentOrder->getOrderID() ?>">
+                    <span class="d-inline-block" data-oid="<?= $currentOrder->getOrderID() ?>">Finalize Order</span>
+                    <span class="d-inline-block" data-oid="<?= $currentOrder->getOrderID() ?>">
+                        Total: $<span id="total" data-oid="<?= $currentOrder->getOrderID() ?>"></span>
+                    </span>
+                </div>
+            </a>
+        </div>
+    <?php endif; ?>
 </div>
 <script>
+    var backBtn = document.querySelector("#backBtn")
+    backBtn.classList.remove("btn-hidden")
+
     var qtySelectors = document.querySelectorAll(".quantitySelector");
     var spans = document.querySelectorAll(".price");
     var pageSubtotal = document.querySelector("#subtotal");
@@ -202,7 +207,10 @@
                     quantity: e.target.value,
                     action: e.target.dataset.action
                 }
-            }).fail(function(e) {console.log(e)});
+            }).fail(function(e) {console.log(e)})
+            .done(function() {
+                window.location.replace('cart.php');
+            });
         });
     }
 
@@ -218,9 +226,12 @@
             }
             
         }).fail(function(e) {console.log(e)})
-        .done(function(data) {
-            window.location.replace(data);
+        .done(function() {
+            window.location.replace('cart.php');
         });
     });
+    
+
+    
 </script>
 <script src="https://kit.fontawesome.com/4933cad413.js" crossorigin="anonymous"></script>
