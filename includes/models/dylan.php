@@ -25,7 +25,7 @@ class Order_Item
                 ":order_price" => $this->calcPrice(),
                 ":order_id" => $this->order_id
             );
-            var_dump($binds2);
+            //var_dump($binds2);
             if($stmt->execute($binds)){
                 $this->order_item_id = $db->lastInsertId();
                 if($stmt2->execute($binds2)){

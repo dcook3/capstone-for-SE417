@@ -328,7 +328,7 @@ class admin extends connectDB {
 	                        <td>' . $date_added . '</td>
 	                        <td>' . $date_modified . '</td>
 							<td><a href="profile.php">Edit</a></td>
-							<td><a href="">Edit</a></td>                         
+							<td><a href="">Delete</a></td>                         
 	                    </tr>';
 					}
 				}

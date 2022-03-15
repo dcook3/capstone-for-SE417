@@ -187,7 +187,7 @@
                 return(Array());
             }
             else{
-                var_dump($stmt->errorInfo());
+                //var_dump($stmt->errorInfo());
             }
         }
         /**
@@ -234,16 +234,16 @@
                     ":is_special" => $this->getIsSpecial(),
                     ":menu_item_id" => $this->getMenuItemId(),
                 );
-                var_dump($this);
+                //var_dump($this);
                 if($stmt->execute($binds)){
                     
                     foreach($this->getIngredients() as $ingredient){
-                        var_dump($ingredient);
+                        //var_dump($ingredient);
                         $ingredient->updateIngredient($this->getMenuItemId());
                     }
                 }
                 else{
-                    var_dump($stmt->errorInfo());
+                    //var_dump($stmt->errorInfo());
                 }
                 
             }

@@ -101,7 +101,7 @@ class user {
 			
 		}
 		else{
-			var_dump($stmt);
+			//var_dump($stmt);
 		}
 	}
 	public function verify_email_register(&$email, &$fname, &$lname, &$verify_key) {		//CALLED IN THE PREVIOUS FUNCTION

@@ -3,7 +3,7 @@ include("../includes/models/lucas.php");
 if (!isset($_SESSION['ADMIN']['ADMINID'])) {
     redirect("login");
 }
-var_dump($_POST);
+
 ?>
 <?php $levels = 1;
 include 'includes/front/header.php'; 
