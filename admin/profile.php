@@ -2,32 +2,34 @@
 include("../includes/models/lucas.php");
 if (!isset($_SESSION['ADMIN']['ADMINID'])) {
     redirect("login");
-}?>
+}
+var_dump($_POST);
+?>
 <?php $levels = 1;
 include 'includes/front/header.php'; 
 ?>
 <script src="https://kit.fontawesome.com/4933cad413.js" crossorigin="anonymous"></script>
 <link rel ="stylesheet" href = "main_lucas.css">
-<form id = "profileForm" data-id = "<?=$user->user_id;?>">
+<form id = "profileForm" data-id = "<?=(isset($user)) ? $user->user_id : "";?>">
         <div class="form-group">
             <label>First name:</label>
-            <input type = "text" name = "firstName" id = "firstName" value = "<?= $user->fname?>">
+            <input type = "text" name = "firstName" id = "firstName" value = "<?= (isset($user)) ? $user->fname : ""?>">
         </div>
         <div class="form-group">
             <label>Last Name:</label>
-            <input type = "text" name = "lastName" id = "lastName" value = "<?= $user->lname?>">
+            <input type = "text" name = "lastName" id = "lastName" value = "<?= (isset($user)) ? $user->lname : ""?>">
         </div>
         <div class="form-group">
             <label>Student ID:</label>
-            <input type = "text" name = "studentID" id = "studentID" value = "<?= $user->student_id?>">
+            <input type = "text" name = "studentID" id = "studentID" value = "<?= (isset($user)) ? $user->student_id : ""?>">
         </div>
         <div class="form-group">
             <label>Phone Number:</label>
-            <input type="tel" id="phone" name="phone" title="Phone Number" value = "<?= $user->phone?>">
+            <input type="tel" id="phone" name="phone" title="Phone Number" value = "<?= (isset($user)) ? $user->phone : ""?>">
         </div>
         <div class="form-group">
             <label>Email:</label>
-            <input type = "email" name = "email" id = "email" value = "<?= $user->email?>" >
+            <input type = "email" name = "email" id = "email" value = "<?= (isset($user)) ? $user->email : ""?>" >
         </div>
         
 
