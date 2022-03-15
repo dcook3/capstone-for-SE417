@@ -1,4 +1,6 @@
-<?php include('includes/front/top.php'); ?>
+<?php include('includes/front/top.php'); 
+    include('inclu')
+?>
 <?php  if (!isset($_SESSION['ADMIN']['ADMINID'])) {
     redirect("login");
 }
@@ -38,7 +40,7 @@
             {
                 $updateOID = $_POST['updOrderID'];
                 $feedback = Order::updateOrderStatus($updateOID, $_POST['orderStatus']);
-                
+                send_mail($_SESSION['USER']->email, $_SESSION['USER']->fname, "Your order is complete, and ready for pickup! Thank you for dining with us.", "Tiger Eats Order Update");
             }
         }
         else if(isset($_POST['showDetails']))
