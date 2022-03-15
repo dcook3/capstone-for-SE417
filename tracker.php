@@ -12,8 +12,11 @@
     if($_SESSION['USER'] != null)
     {
         $currentOrder = Order::getPaidOrderByUserID($_SESSION['USER']->user_id);
-        $oid = $currentOrder->getOrderID();
-        $uid = $currentOrder->user_id;
+        if($currentOrder != false)
+        {
+            $oid = $currentOrder->getOrderID();
+            $uid = $currentOrder->user_id;
+        }
     }
     else
     {
@@ -49,13 +52,13 @@
   integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
   crossorigin="anonymous"></script>
 <script>
-
+    document.querySelector("#backBtn").classList.remove("btn-hidden")
     $.ajax({
         url: 'includes/models/ajaxHandler.php',
         method: "POST",
         data: 
         {
-            detOrderID: document.querySelector('#oid').innerText,
+            detOrderID: document.querySelector('#oid').innerHTML,
             action: "detailsUpdate"
         }
         }).fail(function(e) {console.log(e)})
@@ -70,7 +73,7 @@
         method: "POST",
         data: 
         {
-            userID: document.querySelector('#uid').innerText,
+            userID: document.querySelector('#uid').innerHTML,
             action: "trackerStatus"
         }
     }).fail(function(e) {console.log(e)})
@@ -79,5 +82,5 @@
         document.querySelector('#orderStatusSpan').innerHTML = "Complete"
         document.querySelector('#trackerIcon').innerHTML = "<i class='fa-regular fa-2x fa-circle-check'></i>"
     });
-
+    
 </script>
