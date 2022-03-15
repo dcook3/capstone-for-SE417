@@ -1,7 +1,5 @@
 <?php 
-
-class connectDB
-{
+class connectDB {
 	private $connection;
 	public function connect()
 	{
@@ -57,4 +55,5 @@ class connectDB
 		return mysqli_affected_rows($this->connection);
 	}
 }
+$con = new connectDB();
 ?>

@@ -25,6 +25,7 @@ function buildPath($l, $f)
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
     <link href="https://use.fontawesome.com/releases/v5.0.4/css/all.css" rel="stylesheet">
     <link rel="stylesheet" href="assets/css/dataTables.bootstrap4.min.css">
+    <script src="assets/js/jquery.dataTables.min.js"></script>
     <link rel="stylesheet" href="assets/css/style.css">
     
 </head>

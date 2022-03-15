@@ -1,7 +1,6 @@
 <?php
-
-function setMessage($error)
-{
+require 'connectDB.php';
+function setMessage($error) {
 	echo '<div class="alert alert-danger alert-dismissible fade show" role="alert">
 		  ' . $error . '
 		  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -9,19 +8,16 @@ function setMessage($error)
 		  </button>
 		</div>';
 }
-function clear_input($input) 	//htmlspclchars, removes empty spaces
-{
+function clear_input($input) {
 	$input = stripslashes($input);
 	$input = htmlspecialchars($input);
 	return $input;
 }
-function redirect($location)	//Simplifying the HEADER(location: $loc) function
-{
+function redirect($location) {
 	return header("Location: $location");
 }
 
-class admin
-{
+class admin extends connectDB {
 	private $con, $sql, $send_query, $get, $row;
 	public $temp, $flag, $email, $datetime;
 	public $admin_id;
@@ -48,6 +44,7 @@ class admin
 			$this->email = $this->con->escape($_POST['email']);
 			$pass = md5($this->con->escape($_POST['pass']));
 
+			//$this->sql = "SELECT a.first_name, a.last_name, a.admin_id FROM admin a, login_info l WHERE a.email = l.email AND l.email = ? AND l.password = ?";
 			$this->sql = "SELECT a.first_name, a.last_name, a.admin_id FROM admin a, login_info l WHERE a.email = l.email AND l.email = ? AND l.password = ?";
 			$this->send_query = $this->con->prepare($this->sql);
 
@@ -275,8 +272,7 @@ class admin
 			}
 		}
 	}
-    public function changePassword()
-	{
+    public function changePassword() {
 		if (isset($_GET['changePassword']) && isset($_POST['change_pass'])) {
 			$this->get = 0;
 			preg_match("/(admin\/index.php)$/", $_SERVER['PHP_SELF']) ? $this->email = $_SESSION['ADMIN']['EMAIL'] : $this->email = $_SESSION['STAFF']['EMAIL'];
@@ -311,65 +307,33 @@ class admin
 		}
 	}
 	public function DisplayAllUsers() {
-			$this->sql = "SELECT l.email, a.student_id, a.first_name, a.middle_name, a.last_name, a.phone, l.created_at, l.updated_at, a.user_id 
+			$this->sql = "SELECT l.email, a.username, a.first_name, a.middle_name, a.last_name, a.phone, l.created_at, l.updated_at, a.user_id 
 			FROM login_info l, user a 
 			WHERE a.email = l.email";
 
 			$this->send_query = $this->con->prepare($this->sql);
 			if (isset($this->send_query)) {
-				mysqli_stmt_bind_result($this->send_query, $this->email, $student_id, $first_name, $middle_name, $last_name, $phone, $date_added, $date_modified, $admin_id);
+				mysqli_stmt_bind_result($this->send_query, $this->email, $username, $first_name, $middle_name, $last_name, $phone, $date_added, $date_modified, $user_id);
 				if (mysqli_stmt_execute($this->send_query) && mysqli_stmt_store_result($this->send_query)) {
 					while (mysqli_stmt_fetch($this->send_query)) {
-						if (mysqli_stmt_num_rows($this->send_query) > 1) {
-							$delete_button = '
-			                <td data-toggle="tooltip"  data-placement="top" title="" data-original-title="Delete ' . $first_name . '">
-			                    <button class="btn btn-secondary" data-toggle="modal" data-target="#exampleModal' . $admin_id . '">
-			                        <i class="fas fa-trash"></i>
-			                    </button>
-			                </td>
-							';
-						} else {
-							$delete_button = '
-			                <td data-toggle="tooltip"  data-placement="top" title="" data-original-title="This admin cannot be removed. There has to be atleast 1 existing admin. ">
-			                    <button class="btn btn-danger btn-circle btn-sm delete-btn-circle">
-			                        <i class="fas fa-trash"></i>
-			                    </button>
-			                </td>
-							';
-						}
 						echo '
 		           		<tr>
-                           <td>' . $admin_id . '</td>
-						   <td>' . $student_id . '</td>
+                           <td>' . $user_id . '</td>
+						   <td>' . $username . '</td>
 						   <td>' . $first_name . '</td>
 						   <td>' . $middle_name . '</td>
 						   <td>' . $last_name . '</td>
-	                        <!--<td><a>' . $first_name . " " .  $last_name . '</a></td>-->
 							<td>' . $phone . '</td>
                             <td><a>' . $this->email . '</a></td>
 	                        <td>' . $date_added . '</td>
 	                        <td>' . $date_modified . '</td>
-	                        ' . $delete_button . '  
-							<td></td>                       
+							<td><a href="profile.php">Edit</a></td>
+							<td><a href="">Edit</a></td>                         
 	                    </tr>';
 					}
 				}
 				mysqli_stmt_free_result($this->send_query);
 				mysqli_stmt_close($this->send_query);
 			}
-	}
-
-	public function updateUser(){
-		$stmt = $this->con->prepare("UPDATE user SET student_id = ?, first_name = ?, last_name = ?, email = ?, phone = ? WHERE user_id = ?");
-		
-		mysqli_stmt_bind_param($stmt, "ssssss", $this->student_id, $this->fname, $this->lname, $this->email, $this->phone, $this->user_id);
-		if(mysqli_stmt_execute($stmt)){
-			
-			return true;
-			
-		}
-		else{
-			var_dump($stmt);
-		}
 	}
 }

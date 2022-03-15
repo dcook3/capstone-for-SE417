@@ -1,15 +1,15 @@
-<?php include('includes/front/top.php'); ?>
-<?php 
-if (!isset($_SESSION['ADMIN']['ADMINID'])) {
+<?php include('includes/front/top.php'); 
+?>
+
+<?php /*if (!isset($_SESSION['ADMIN']['ADMINID'])) {
     redirect("login");
-}
+}*/
     $levels = 1;
     
 include 'includes/front/header.php'; 
 ?>
 <h2 class="fw-bold text-center">Users</h2>
 <table class = "table table-hover table-striped text-center">
-
         <thead>
             <th>ID</th>
             <th>Student ID</th>
@@ -25,7 +25,7 @@ include 'includes/front/header.php';
         </thead>
         <tbody>
             <tr>     
-                <?php $admin->display_customers(); ?>
+                <?php $admin->DisplayAllUsers(); ?>
             </tr>
         </tbody>
     </table>
