@@ -8,7 +8,7 @@
     $levels = 1;
     //include("..\includes\models\lucas.php");
     
-    $menuItems = Menu_Item::getMenuItems();
+    //$menuItems = Menu_Item::getMenuItems();
     include 'includes/front/header.php';
 ?>
 
