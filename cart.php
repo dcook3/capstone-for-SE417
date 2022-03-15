@@ -100,20 +100,41 @@
             
         </div>
         <div class="d-flex justify-content-center" data-oid="<?= $currentOrder->getOrderID() ?>">
-            <a id="finalizeBtn" href="#" class ='btn btn-secondary col-10' data-oid="<?= $currentOrder->getOrderID() ?>">
-                <div class="d-flex justify-content-between" data-oid="<?= $currentOrder->getOrderID() ?>">
-                    <span class="d-inline-block" data-oid="<?= $currentOrder->getOrderID() ?>">Finalize Order</span>
-                    <span class="d-inline-block" data-oid="<?= $currentOrder->getOrderID() ?>">
-                        Total: $<span id="total" data-oid="<?= $currentOrder->getOrderID() ?>"></span>
+            <button id="finalizeBtn" data-toggle="modal" data-target="#emailConfirmModal" class ='btn btn-secondary col-10' data-oid="<?= $currentOrder->getOrderID() ?>">
+                <div class="d-flex justify-content-between" data-oid="<?= $currentOrder->getOrderID() ?>" data-toggle="modal" data-target="#emailConfirmModal">
+                    <span class="d-inline-block" data-oid="<?= $currentOrder->getOrderID() ?>" data-toggle="modal" data-target="#emailConfirmModal">Finalize Order</span>
+                    <span class="d-inline-block" data-oid="<?= $currentOrder->getOrderID() ?>" data-toggle="modal" data-target="#emailConfirmModal">
+                        Total: $<span id="total" data-oid="<?= $currentOrder->getOrderID() ?>" data-toggle="modal" data-target="#emailConfirmModal"></span>
                     </span>
                 </div>
-            </a>
+        </button>
         </div>
     <?php endif; ?>
 </div>
+
+<div class="modal fade" id="emailConfirmModal" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Email Confirmation Sent</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>You account has been charged and a confirmation email has been sent to you regarding order status. Check back to your inbox to know when your order is ready.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="modalDismiss">Okay</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
 <script>
     var backBtn = document.querySelector("#backBtn")
     backBtn.classList.remove("btn-hidden")
+    backBtn.addEventListener('click', e => {
+        window.location.replace('index.php')
+    })
 
     var qtySelectors = document.querySelectorAll(".quantitySelector");
     var spans = document.querySelectorAll(".price");
@@ -121,7 +142,8 @@
     var pageTax = document.querySelector("#tax");
     var pageTotal = document.querySelector("#total");
     var subtotal = 0;
-    
+    var emailConfirmModal = new bootstrap.Modal(document.getElementById('emailConfirmModal'), {backdrop: true, keyboard: false, focus: true});
+
     //Initial calulation using DB vals
     for(let i=0; i < spans.length; i++)
     {
@@ -226,11 +248,14 @@
             }
         }).fail(function(e) {console.log(e)})
         .done(function() {
-            window.location.replace('cart.php');
+            console.log("Confirmed order and email sent.");
+            emailConfirmModal.show();
         });
     });
     
-
+    document.querySelector('#modalDismiss').addEventListener('click', e => {
+        window.location.href = 'index.php';
+    })
     
 </script>
 <script src="https://kit.fontawesome.com/4933cad413.js" crossorigin="anonymous"></script>
