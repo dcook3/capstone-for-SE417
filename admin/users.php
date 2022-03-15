@@ -9,6 +9,7 @@
 include 'includes/front/header.php'; 
 ?>
 <h2 class="fw-bold text-center">Users</h2>
+<a href="profile"> Add</a>
 <table class = "table table-hover table-striped text-center">
         <thead>
             <th>ID</th>
