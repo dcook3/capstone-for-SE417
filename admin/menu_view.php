@@ -10,8 +10,7 @@
     include("..\includes\models\lucas.php");
     
     $menuItems = Menu_Item::getMenuItems();
-    
-include 'includes/front/header.php'; 
+    include 'includes/front/header.php';
 ?>
 
 

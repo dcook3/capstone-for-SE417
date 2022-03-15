@@ -17,7 +17,7 @@
 	<title>Document</title>
 </head>
 <body>
-<?php include("includes/front/header_static.php"); ?>
+<?php //include("includes/front/header_static.php"); ?>
 	<div class="limiter">
 		<div class="container-login100">
 			<div class="wrap-login100 form-row">
@@ -74,11 +74,11 @@
 						</div>
 						<div class="container-login100-form-btn">
 							<button type="submit" class="login100-form-btn" name="register_submit">
-								Create Account
+								Create your account
 							</button>
 						</div>
 						<div class="text-center p-t-46 p-b-20">
-							<span class="no-account">
+							<span class="no-account"> Have a account?
 								<span class="no-account-a"><a href="login">Sign in</a></span>
 							</span>
 						</div>
@@ -124,12 +124,6 @@
 				</script>
 
 				<div class="login100-more" >
-					<div id="header">
-						<div id="logo" class="pull-left">
-							<h1><a href="index" class="scrollto">Website</a></h1>
-							<a href="index"><img src="" alt="" title="" /></a>
-						</div>
-					</div>
 					<footer id="footer">
 						<div class="container">
 							<div class="row">

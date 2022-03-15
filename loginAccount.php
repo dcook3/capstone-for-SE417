@@ -37,7 +37,7 @@
 
     <div class="text-center p-t-46 p-b-20">
         <span class="no-account">
-            <span class="no-account-a"><a href="register">Create account</a></span>
+            <span class="no-account-a"><a href="register">Create your account</a></span>
         </span>
     </div>
     <div>
