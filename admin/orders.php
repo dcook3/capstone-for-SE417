@@ -1,7 +1,9 @@
-<?php include('includes/front/top.php'); 
-    include('inclu')
+<?php 
+include('includes/front/top.php'); 
+//include 'includes/functions.php'
 ?>
-<?php  if (!isset($_SESSION['ADMIN']['ADMINID'])) {
+<?php  
+if (!isset($_SESSION['ADMIN']['ADMINID'])) {
     redirect("login");
 }
 ?>
@@ -40,7 +42,10 @@
             {
                 $updateOID = $_POST['updOrderID'];
                 $feedback = Order::updateOrderStatus($updateOID, $_POST['orderStatus']);
-                send_mail($_SESSION['USER']->email, $_SESSION['USER']->fname, "Your order is complete, and ready for pickup! Thank you for dining with us.", "Tiger Eats Order Update");
+                if($_POST['orderStatus'] == 2)
+                {
+                    //send_mail($_SESSION['USER']->email, $_SESSION['USER']->fname, "Your order is complete, and ready for pickup! Thank you for dining with us.", "Tiger Eats Order Update");
+                }
             }
         }
         else if(isset($_POST['showDetails']))
@@ -53,7 +58,6 @@
         $selectedDate = new DateTime($dateString);
         $results = Order::getOrdersByDT($selectedDate->getTimestamp());
     }
-    //include '../include/header.php';
     include 'includes/front/header.php';
 ?>
     <h2 class="fw-bold text-center">Orders</h2>
