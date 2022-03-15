@@ -216,7 +216,6 @@
                 orderTotal: subtotal,
                 action: "updateStatus"
             }
-            
         }).fail(function(e) {console.log(e)})
         .done(function(data) {
             window.location.replace(data);

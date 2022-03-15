@@ -3,6 +3,7 @@
     include('dylan.php');
     include('../functions.php');
     include('../connectDB.php');
+
     if($_SERVER['REQUEST_METHOD']==='POST'){
         switch($_POST['action'])
         {
@@ -131,6 +132,7 @@
             case "updateStatus":
                 Order::updateOrderStatus($_POST['orderID'], 1);
                 Order::updateOrderPrice($_POST['orderID'], $_POST['orderTotal']);
+                send_mail($_SESSION['USER']->user_email, $_SESSION['USER']->first_name, "Your order is now in progress.", "Tiger Eats Order Update")
                 echo 'tracker.php';
                 break;
             
