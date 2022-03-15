@@ -1,16 +1,9 @@
-/*a
-{
-	color: #6675df;
-}*/
 .no-account, .no-account-a
 {
-	font-family: Montserrat-Regular;
 	line-height: 1.4;
-	color: #555555;
 }
 .no-account-a
 {
-	font-family: Montserrat-Regular;
 	line-height: 1.4;
 	font-weight: 400 !important;	
 }
@@ -26,16 +19,10 @@
 {
 	font-size: 34px;
 	line-height: 1;
-	font-family: "Montserrat", sans-serif;
 	font-weight: 700;
 	letter-spacing: 3px;
 }
-#header #logo h1 a, #header #logo h1 a:hover
-{
-	color: #000;
-	padding-left: 10px;
-	border-left: 4px solid #18d26e;
-}
+
 #footer
 {
 	position: fixed;
@@ -46,7 +33,7 @@
 }
 .login100-form-btn
 {
-	background-color: #000;
+	background-color: #ecae4f;
 }
 @media only screen and (min-width: 768px) 
 {

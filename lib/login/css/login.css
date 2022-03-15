@@ -1,15 +1,9 @@
-a
-{
-}
 .no-account, .no-account-a
 {
-	font-family: Montserrat-Regular;
 	line-height: 1.4;
-	color: #555555;
 }
 .no-account-a
 {
-	font-family: Montserrat-Regular;
 	line-height: 1.4;
 	font-weight: 400 !important;	
 }
@@ -25,7 +19,6 @@ a
 {
 	font-size: 34px;
 	line-height: 1;
-	font-family: "Montserrat", sans-serif;
 	font-weight: 700;
 	letter-spacing: 3px;
 }

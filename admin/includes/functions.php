@@ -221,11 +221,7 @@ class admin
 		                        <td><a>' . $this->email . '</a></td>
 		                        <td>' . $date_added . '</td>
 		                        <td>' . $date_modified . '</td>
-								<td data-toggle="tooltip"  data-placement="top" title="" data-original-title="Delete ' . $first_name . '">
-				                    <button class="btn btn-danger btn-circle btn-sm delete-btn-circle" data-toggle="modal" data-target="#exampleModal' . $customer_id . '">
-				                        <i class="fas fa-trash"></i>
-				                    </button>
-				                </td>
+								<td></td>
 				                <td data-toggle="tooltip"  data-placement="top" title="" data-original-title="Delete ' . $first_name . '">
 				                    <button class="btn btn-danger btn-circle btn-sm delete-btn-circle" data-toggle="modal" data-target="#exampleModal' . $customer_id . '">
 				                        <i class="fas fa-trash"></i>

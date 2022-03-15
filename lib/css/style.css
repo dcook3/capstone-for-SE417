@@ -5,7 +5,7 @@ a {
 a:hover,
 a:active,
 a:focus {
-  color: #18d36e;
+  color: #153B65;
   outline: none;
   text-decoration: none;
 }
@@ -32,11 +32,7 @@ h6 {
   position: fixed;
   display: none;
   background: #F3C074;
-<<<<<<< HEAD
   color: #000;
-=======
-  color: #fff;
->>>>>>> 5b824cfd325fff180e5cecfee81e27fe761c5f1f
   width: 44px;
   height: 44px;
   text-align: center;
@@ -374,11 +370,7 @@ h6 {
 
 .nav-menu li:hover > a,
 .nav-menu > .menu-active > a {
-<<<<<<< HEAD
   color: #ecae4f;
-=======
-  color: #F3C074;
->>>>>>> 5b824cfd325fff180e5cecfee81e27fe761c5f1f
 }
 
 .nav-menu > li {
