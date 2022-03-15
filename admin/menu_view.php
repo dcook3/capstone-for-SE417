@@ -6,7 +6,7 @@
 
 <?php
     $levels = 1;
-    include("..\includes\models\sql_functions.php");
+    include("..\includes\models\lucas.php");
     
     $menuItems = Menu_Item::getMenuItems();
     include 'includes/front/header.php';
