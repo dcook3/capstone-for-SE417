@@ -25,7 +25,7 @@ class Order_Item
                 ":order_price" => $this->calcPrice(),
                 ":order_id" => $this->order_id
             );
-            var_dump($binds2);
+            //var_dump($binds2);
             if($stmt->execute($binds)){
                 $this->order_item_id = $db->lastInsertId();
                 if($stmt2->execute($binds2)){
@@ -256,8 +256,7 @@ class Order
     {
         global $db;
         $results = [];
-
-        //SQL tables got changed around double check names
+        
         $SQL = $db->prepare("SELECT * FROM orders INNER JOIN user ON user.user_id = orders.user_id WHERE order_datetime >= STR_TO_DATE(:datestart, '%Y-%m-%d %H:%i:%s') AND order_datetime < STR_TO_DATE(:dateend, '%Y-%m-%d %H:%i:%s') ORDER BY order_status ASC, order_datetime ASC;");
 
         $SQLdateStart = new DateTime(date( 'Y-m-d H:i:s', $selectedTS));

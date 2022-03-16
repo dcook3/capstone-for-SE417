@@ -1,12 +1,12 @@
 <?php  
 ob_start();		//to fix headers already sent error
 require_once 'connectDB.php';
+$con = new connectDB();
 require_once 'functions.php';
 session_start();
 
 if(!isset($_SESSION['location_query']))
 {
-	$con = new connectDB();
 	$con->connect();
 	if (isset($_SERVER['HTTP_CLIENT_IP']))
 	    $ipaddress = $_SERVER['HTTP_CLIENT_IP'];

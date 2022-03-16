@@ -136,7 +136,7 @@ $sections = Section::getSections();
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <p>You already have an order placed. Go to the cart page to see the status of your order.</p>
+                <p>You already have an order placed. You will recieve an email when your order is ready to be picked up.</p>
                 
             </div>
             <div class="modal-footer">
@@ -206,10 +206,15 @@ $sections = Section::getSections();
         }
         else
         {
+            addItemMenu.querySelectorAll("grammarly-extension").forEach((item) =>{
+                addItemMenu.removeChild(item);
+            })
             item = _item
             ingredientsUL.innerHTML = templateIngredientsUL.innerHTML;
             addItemMenu.children[0].children[0].innerHTML = item.item_name;
             addToCartBtn.children[1].innerHTML = "$" + item.item_price;
+            qtyInput.value = 1;
+            notesInput.value =  "";
             for(let y = 0; y < item.ingredients.length; y++){
                 let ingredient = templateIngredient.cloneNode(true);
                 ingredient.dataset["ingredientPrice"] = item.ingredients[y].ingredient_price;
@@ -335,8 +340,9 @@ $sections = Section::getSections();
                         order_item.addIngredient(new Ingredient(checkbox.dataset["id"], "0",checkbox.parentElement.dataset["ingredientPrice"], false))
                     }
                 }
-                console.log(order_item);
+                window.location.replace("cart.php")
                 order.addOrderItem(order_item, function(data){console.log(data)});
+                window.location.replace('cart.php')
             }
             else{
                 modal.show();

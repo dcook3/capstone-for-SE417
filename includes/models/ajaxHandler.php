@@ -3,6 +3,85 @@
     include('dylan.php');
     include('../functions.php');
     include('../connectDB.php');
+    require '../../PHPMailer/PHPMailerAutoload.php';
+
+    function send_mail($receiver_email, $receiver_name, $message, $subject) {
+		$mail = new PHPMailer;
+		$mail->isSMTP();
+		//$mail->SMTPDebug = 2;
+		$config = parse_ini_file('../dbconfig.ini', true);
+		$mail->Host = 'smtp.gmail.com'; // Which SMTP server to use.
+		$mail->Port = 587; // Which port to use, 587 is the default port for TLS security.
+		$mail->SMTPSecure = 'tls'; // Which security method to use. TLS is most secure.
+		$mail->SMTPAuth = true; // Whether you need to login. This is almost always required.
+		$mail->Username = $config['user']; // Your Gmail address.
+		$mail->Password = $config['pass']; // Your Gmail login password or App Specific Password.
+		$mail->setFrom($mail->Username, 'NEIT Dinning Center'); // Set the sender of the message.
+		$mail->addAddress($receiver_email, $receiver_name); // Set the recipient of the message.
+		$mail->Subject = $subject; // The subject of the message.
+		$mail->Body = $message; // Set a plain text body.
+		if ($mail->send()) {
+			return 1;
+		} else {
+			return 0;
+		}
+	}
+
+    function GetUserByUID($uid){
+		global $db;
+
+		$SQL = $db->prepare("SELECT user_id, first_name, last_name, email, phone, username FROM user WHERE user_id = :uid");
+
+		$SQL->bindValue(":uid", $uid);
+
+		if($SQL->execute() && $SQL->rowCount() == 1)
+		{
+			return $SQL->fetchAll(PDO::FETCH_ASSOC)[0];
+		}
+		else
+		{
+			return 'A SQL error occured when grabbing a user.';
+		}
+	}
+
+    function UpdateUser($uid, $fName, $lName, $email, $studentID, $phone)
+    {
+        global $db;
+
+        $SQL = $db->prepare("UPDATE user SET first_name=:fName, last_name=:lName, email=:email, username=:studentID, phone=:phone WHERE user_id = :uid");
+
+        $binds = array(
+            ":fName" => $fName,
+            ":lName" => $lName,
+            ":email" => $email,
+            ":studentID" => $studentID,
+            ":phone" => $phone,
+            ":uid" => $uid
+        );
+
+        if($SQL->execute($binds))
+        {
+            return $SQL->fetchAll(PDO::FETCH_ASSOC);
+        }
+        else
+        {
+            return 'A SQL error occured while updating users.';
+        }
+    }
+
+    function DeleteUser($uid)
+    {
+        global $db;
+
+        $SQL = $db->prepare("DELETE FROM user WHERE user_id = :uid");
+
+        $SQL->bindValue(":uid", $uid);
+
+        if($SQL->execute())
+        {
+            return $SQL->fetchAll(PDO::FETCH_ASSOC);
+        }
+    }
 
     if($_SERVER['REQUEST_METHOD']==='POST'){
         switch($_POST['action'])
@@ -122,7 +201,7 @@
                 }
                 break;
             
-            case "deleteItem":
+            case "deleteOrderItem":
                 if(Order_Item::deleteItem($_POST['orderID'], $_POST['orderItemID']) == false)
                 {
                     setMessage("An error occured whilst deleting an item. Please contact administrator or try again later.");
@@ -134,6 +213,24 @@
                 Order::updateOrderPrice($_POST['orderID'], $_POST['orderTotal']);
                 send_mail($_SESSION['USER']->email, $_SESSION['USER']->fname, "Your order is now in progress.", "Tiger Eats Order Update");
                 echo 'tracker.php';
+                break;
+            
+            case 'updateUserBackend':
+                UpdateUser($_POST["uid"], $_POST["fName"], $_POST['lName'], $_POST['email'], $_POST['studentID'], $_POST['phone']);
+                break;
+
+            case 'deleteUser':
+                DeleteUser($_POST['uid']);
+                break;
+
+            case 'getUser':
+                $result = GetUserByUID($_POST['uid']);
+                
+                if(gettype($result) != 'string')
+                {
+                    echo json_encode($result);
+                }
+
                 break;
             
             default:

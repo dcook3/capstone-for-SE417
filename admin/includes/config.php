@@ -1,12 +1,10 @@
 <?php  
 ob_start();
-require 'connectDB.php';
-$con = new connectDB();
 require 'functions.php';
+$con = new connectDB();
 session_start();
 
-if(!isset($_SESSION['location_query']))
-{
+if(!isset($_SESSION['location_query'])) {
 	$con->connect();
 	if (isset($_SERVER['HTTP_CLIENT_IP']))
 	    $ipaddress = $_SERVER['HTTP_CLIENT_IP'];
@@ -38,4 +36,6 @@ if(!isset($_SESSION['location_query']))
 	$con->disconnect();
 }
 $admin = new admin();
+
+
 ?>
