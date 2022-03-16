@@ -211,8 +211,8 @@
             case "updateStatus":
                 Order::updateOrderStatus($_POST['orderID'], 1);
                 Order::updateOrderPrice($_POST['orderID'], $_POST['orderTotal']);
-                if ($this->send_mail($_SESSION['USER']->email, $_SESSION['USER']->fname, "Your order is now in progress.", "Tiger Eats Order Update")){
-                echo 'tracker.php';}
+                send_mail($_SESSION['USER']->email, $_SESSION['USER']->fname, "Your order is now in progress.", "Tiger Eats Order Update");
+                echo 'tracker.php';
                 break;
             
             case 'updateUserBackend':
