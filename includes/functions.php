@@ -323,9 +323,9 @@ class user {
 				$subject = "NEIT Dinning Center - Forgot Password";
 				$message = "Click on the link below to change your password. This link expires in 5 minutes. \n";
 				if (!$_SERVER['SERVER_PORT'] == 8080) {
-					$host = "http://ascapstone.herokuapp.com/";
+					$host = "http://ascapstone.herokuapp.com/login?";
 				} else {
-					$host = "https://ascapstone.herokuapp.com/";
+					$host = "https://ascapstone.herokuapp.com/login?";
 				}
 				$this->datetime = new DateTime();
 				$this->time = new DateTime();
