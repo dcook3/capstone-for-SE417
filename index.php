@@ -206,10 +206,15 @@ $sections = Section::getSections();
         }
         else
         {
+            addItemMenu.querySelectorAll("grammarly-extension").forEach((item) =>{
+                addItemMenu.removeChild(item);
+            })
             item = _item
             ingredientsUL.innerHTML = templateIngredientsUL.innerHTML;
             addItemMenu.children[0].children[0].innerHTML = item.item_name;
             addToCartBtn.children[1].innerHTML = "$" + item.item_price;
+            qtyInput.value = 1;
+            notesInput.value =  "";
             for(let y = 0; y < item.ingredients.length; y++){
                 let ingredient = templateIngredient.cloneNode(true);
                 ingredient.dataset["ingredientPrice"] = item.ingredients[y].ingredient_price;
@@ -335,7 +340,7 @@ $sections = Section::getSections();
                         order_item.addIngredient(new Ingredient(checkbox.dataset["id"], "0",checkbox.parentElement.dataset["ingredientPrice"], false))
                     }
                 }
-                console.log(order_item);
+                window.location.replace("cart.php")
                 order.addOrderItem(order_item, function(data){console.log(data)});
             }
             else{

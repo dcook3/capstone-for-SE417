@@ -11,11 +11,7 @@
 
 </div>
 <div id="profileWrapper">
-    <div class="topProfileBtns">
-        
-        
-    </div>
-    <form id = "profileForm" class="col-10 d-flex justify-content-center"  data-id = "<?=$user->user_id;?>">
+    <form id = "profileForm"   data-id = "<?=$user->user_id;?>">
         <div class="form-group">
             <label>First name:</label>
             <input type = "text" name = "firstName" id = "firstName" value = "<?= $user->fname?>">
