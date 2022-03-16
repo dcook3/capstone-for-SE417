@@ -136,7 +136,7 @@ $sections = Section::getSections();
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <p>You already have an order placed. Go to the cart page to see the status of your order.</p>
+                <p>You already have an order placed. You will recieve an email when your order is ready to be picked up.</p>
                 
             </div>
             <div class="modal-footer">
