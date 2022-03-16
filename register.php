@@ -26,11 +26,12 @@
 						Create your account
 					</span>
 					<?php
-					if (!isset($_GET['s'])) {
+					if (!isset($_GET['s']))
+					{
 						$user->register_account();
 					?>
 						<div class="wrap-input100 validate-input" data-validate="Username is required">
-							<input class="input100" type="text" name="username" pattern="" required="" data-toggle="tooltip" data-placement="top" data-original-title="9 characters">
+							<input class="input100" type="text" name="username" required="" data-toggle="tooltip" data-placement="top" data-original-title="9 characters">
 							<span class="focus-input100"></span>
 							<span class="label-input100">Student ID</span>
 						</div>
@@ -64,16 +65,8 @@
 							<span class="focus-input100"></span>
 							<span class="label-input100">Confirm Password</span>
 						</div>
-						<div class="flex-sb-m w-full p-t-3 p-b-32">
-							<div class="contact100-form-checkbox">
-								<input class="input-checkbox100" id="ckb1" type="checkbox" name="remember_me">
-								<label class="label-checkbox100" for="ckb1">
-									Keep me signed in
-								</label>
-							</div>
-						</div>
 						<div class="container-login100-form-btn">
-							<button type="submit" class="login100-form-btn" name="register_submit">
+							<button id="registerButton" class="login100-form-btn" name="register_submit">
 								Create your account
 							</button>
 						</div>
@@ -87,7 +80,7 @@
 							<a href="<?php echo $goback; ?>"><button type="button" class="go-back-phone login100-form-btn">Go back</button></a>
 						</div>
 					<?php
-					}
+						}
 					if (isset($_GET['s'])) {
 						if ($_GET['s'] == 1 && isset($_GET['cid'])) {
 							successMessage("A verification link has been sent to your Email ID. Please click on the link and verify your email ID. <a href='register?s=1&cid=" . $_GET['cid'] . "&resend'>Click here</a> to resend the verification link. ");
@@ -144,6 +137,8 @@
 	<script src="lib/bootstrap/js/bootstrap.min.js"></script>
 
 	<script type="text/javascript">
+		var form = document.querySelector('form');
+
 		$(function() {
 			$('[data-toggle="tooltip"]').tooltip()
 		})

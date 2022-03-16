@@ -38,8 +38,10 @@ include 'includes/front/header.php';
     <div id = "saveBtnWrapper">
     <button class = "btn btn-secondary" id="saveBtn">Save Changes</button>
 </div>
+
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script src = "../includes/models/lucas.js"></script>
+<?php include 'includes/front/footer.php'; ?>
 <script>
     var backBtn = document.querySelector("#backBtn");
     var saveBtn = document.querySelector("#saveBtn");
@@ -49,6 +51,8 @@ include 'includes/front/header.php';
     var studentID = document.querySelector("#studentID");
     var phone = document.querySelector("#phone");
     var email = document.querySelector("#email");
+    
+    
 
     var phoneR = new RegExp(/^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/im);
     var emailR = new RegExp(  /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i)
@@ -75,4 +79,6 @@ include 'includes/front/header.php';
         }
         
     })
+
+    
 </script>

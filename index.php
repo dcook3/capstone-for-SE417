@@ -342,6 +342,7 @@ $sections = Section::getSections();
                 }
                 window.location.replace("cart.php")
                 order.addOrderItem(order_item, function(data){console.log(data)});
+                window.location.replace('cart.php')
             }
             else{
                 modal.show();

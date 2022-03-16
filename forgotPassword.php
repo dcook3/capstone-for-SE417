@@ -32,7 +32,8 @@ if (!isset($_GET['key']) && !isset($_GET['ts']) && isset($_GET['forgotPassword']
 			</span>
 		</div>
 		<div>
-			<button class="go-back-phone login100-form-btn">Go back</button>
+			<?php isset($_SERVER['HTTP_REFERER']) ? $goback = $_SERVER['HTTP_REFERER'] : $goback = "index" ?>
+        <a href="<?php echo $goback; ?>"><button type="button" class="go-back-phone login100-form-btn">Go back</button></a>
 		</div>
 	</form>
 
