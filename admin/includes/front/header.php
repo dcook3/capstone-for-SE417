@@ -1,7 +1,7 @@
 <?php
 function buildPath($l, $f)
 {
-    $path = "as_capstone/";
+    $path = "/";
     for($i = 0; $i <= $l; $i++)
     {
         $path .= "../";
