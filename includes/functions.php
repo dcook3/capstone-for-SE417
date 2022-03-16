@@ -123,7 +123,7 @@ class user {
 
 		$name = $fname . " " . $lname;
 		// $cc = "email@gmail.com";
-		$_SERVER['SERVER_PORT'] == 80 ? $port = "http://" : $port = "https://";
+		$_SERVER['SERVER_PORT'] == 80 ? $port = "http://ascapstone.herokuapp.com/" : $port = "https://ascapstone.herokuapp.com/";
 
 		$message = $port . $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF'] . '?key=' . base64_encode($verify_key) . '&s=2&email=' . base64_encode($email);
 		$subject = 'NEIT Dinning Center - Email verification';
@@ -322,10 +322,10 @@ class user {
 				$name = $first_name . " " . $last_name;
 				$subject = "NEIT Dinning Center - Forgot Password";
 				$message = "Click on the link below to change your password. This link expires in 5 minutes. \n";
-				if ($_SERVER['SERVER_PORT'] == 8080) {
-					$host = "http://";
+				if (!$_SERVER['SERVER_PORT'] == 8080) {
+					$host = "http://ascapstone.herokuapp.com/";
 				} else {
-					$host = "https://";
+					$host = "https://ascapstone.herokuapp.com/";
 				}
 				$this->datetime = new DateTime();
 				$this->time = new DateTime();
