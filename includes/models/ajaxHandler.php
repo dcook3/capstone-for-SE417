@@ -3,6 +3,29 @@
     include('dylan.php');
     include('../functions.php');
     include('../connectDB.php');
+    require '../../PHPMailer/PHPMailerAutoload.php';
+
+    function send_mail($receiver_email, $receiver_name, $message, $subject) {
+		$mail = new PHPMailer;
+		$mail->isSMTP();
+		//$mail->SMTPDebug = 2;
+		$config = parse_ini_file('../dbconfig.ini', true);
+		$mail->Host = 'smtp.gmail.com'; // Which SMTP server to use.
+		$mail->Port = 587; // Which port to use, 587 is the default port for TLS security.
+		$mail->SMTPSecure = 'tls'; // Which security method to use. TLS is most secure.
+		$mail->SMTPAuth = true; // Whether you need to login. This is almost always required.
+		$mail->Username = $config['user']; // Your Gmail address.
+		$mail->Password = $config['pass']; // Your Gmail login password or App Specific Password.
+		$mail->setFrom($mail->Username, 'NEIT Dinning Center'); // Set the sender of the message.
+		$mail->addAddress($receiver_email, $receiver_name); // Set the recipient of the message.
+		$mail->Subject = $subject; // The subject of the message.
+		$mail->Body = $message; // Set a plain text body.
+		if ($mail->send()) {
+			return 1;
+		} else {
+			return 0;
+		}
+	}
 
     function GetUserByUID($uid){
 		global $db;
@@ -188,8 +211,8 @@
             case "updateStatus":
                 Order::updateOrderStatus($_POST['orderID'], 1);
                 Order::updateOrderPrice($_POST['orderID'], $_POST['orderTotal']);
-                //send_mail($_SESSION['USER']->email, $_SESSION['USER']->fname, "Your order is now in progress.", "Tiger Eats Order Update");
-                echo 'tracker.php';
+                if ($this->send_mail($_SESSION['USER']->email, $_SESSION['USER']->fname, "Your order is now in progress.", "Tiger Eats Order Update")){
+                echo 'tracker.php';}
                 break;
             
             case 'updateUserBackend':

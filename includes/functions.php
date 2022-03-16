@@ -302,6 +302,7 @@ class user {
 			return 0;
 		}
 	}
+	
 	public function forgotPassword() {
 		if (isset($_GET['forgotPassword']) && isset($_POST['forgot_submit']) && !isset($_GET['key']) && !isset($_GET['ts'])) {
 			$this->flag = 0;
