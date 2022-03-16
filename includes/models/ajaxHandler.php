@@ -4,6 +4,62 @@
     include('../functions.php');
     include('../connectDB.php');
 
+    function GetUserByUID($uid){
+		global $db;
+
+		$SQL = $db->prepare("SELECT user_id, first_name, last_name, email, phone, username FROM user WHERE user_id = :uid");
+
+		$SQL->bindValue(":uid", $uid);
+
+		if($SQL->execute() && $SQL->rowCount() == 1)
+		{
+			return $SQL->fetchAll(PDO::FETCH_ASSOC)[0];
+		}
+		else
+		{
+			return 'A SQL error occured when grabbing a user.';
+		}
+	}
+
+    function UpdateUser($uid, $fName, $lName, $email, $studentID, $phone)
+    {
+        global $db;
+
+        $SQL = $db->prepare("UPDATE user SET first_name=:fName, last_name=:lName, email=:email, username=:studentID, phone=:phone WHERE user_id = :uid");
+
+        $binds = array(
+            ":fName" => $fName,
+            ":lName" => $lName,
+            ":email" => $email,
+            ":studentID" => $studentID,
+            ":phone" => $phone,
+            ":uid" => $uid
+        );
+
+        if($SQL->execute($binds))
+        {
+            return $SQL->fetchAll(PDO::FETCH_ASSOC);
+        }
+        else
+        {
+            return 'A SQL error occured while updating users.';
+        }
+    }
+
+    function DeleteUser($uid)
+    {
+        global $db;
+
+        $SQL = $db->prepare("DELETE FROM user WHERE user_id = :uid");
+
+        $SQL->bindValue(":uid", $uid);
+
+        if($SQL->execute())
+        {
+            return $SQL->fetchAll(PDO::FETCH_ASSOC);
+        }
+    }
+
     if($_SERVER['REQUEST_METHOD']==='POST'){
         switch($_POST['action'])
         {
@@ -132,8 +188,26 @@
             case "updateStatus":
                 Order::updateOrderStatus($_POST['orderID'], 1);
                 Order::updateOrderPrice($_POST['orderID'], $_POST['orderTotal']);
-                send_mail($_SESSION['USER']->email, $_SESSION['USER']->fname, "Your order is now in progress.", "Tiger Eats Order Update");
+                //send_mail($_SESSION['USER']->email, $_SESSION['USER']->fname, "Your order is now in progress.", "Tiger Eats Order Update");
                 echo 'tracker.php';
+                break;
+            
+            case 'updateUserBackend':
+                UpdateUser($_POST["uid"], $_POST["fName"], $_POST['lName'], $_POST['email'], $_POST['studentID'], $_POST['phone']);
+                break;
+
+            case 'deleteUser':
+                DeleteUser($_POST['uid']);
+                break;
+
+            case 'getUser':
+                $result = GetUserByUID($_POST['uid']);
+                
+                if(gettype($result) != 'string')
+                {
+                    echo json_encode($result);
+                }
+
                 break;
             
             default:

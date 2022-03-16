@@ -25,7 +25,7 @@ function redirect($location)	//Simplifying the HEADER(location: $loc) function
 {
 	return header("Location: $location");
 }
-
+//var_dump($_SERVER["REQUEST_METHOD"]);
 class user {
 	private $con, $sql, $send_query, $get, $row, $datetime;
 	public $temp, $flag;
@@ -62,11 +62,11 @@ class user {
 				$this->send_query = $this->con->prepare($this->sql);
 				mysqli_stmt_bind_param($this->send_query, "sss", $this->email, $pass, $this->datetime);
 
-				$sql2 = "INSERT INTO `user` (`student_id`, `first_name`, `last_name`, `phone`, `email`, `login_access`, `verify_key`, `isVerified`) VALUES (?, ?, ?, ?, ?, ?)";
+				$sql2 = "INSERT INTO `user` (`username`, `first_name`, `last_name`, `phone`, `email`, `login_access`, `verify_key`, `isVerified`) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
-				$this->temp = 0;	//LOGIN ACCESS
+				$temp = 0;	//LOGIN ACCESS
 				$send_query2 = $this->con->prepare($sql2);
-				mysqli_stmt_bind_param($send_query2, "sssisi", $this->student_id, $this->fname, $this->lname, $this->phone, $this->email, $this->temp, $verify_key, $this->temp);
+				mysqli_stmt_bind_param($send_query2, "sssssisi", $this->student_id, $this->fname, $this->lname, $this->phone, $this->email, $temp, $verify_key, $temp);
 
 				if (isset($this->send_query) && isset($send_query2)) {
 					if (mysqli_stmt_execute($this->send_query) && mysqli_stmt_execute($send_query2)) {
@@ -82,7 +82,7 @@ class user {
 					} else {
 						mysqli_stmt_close($this->send_query);
 						mysqli_stmt_close($send_query2);
-						setMessage("This email ID is already regstered with us. Please use a different email ID. Or <a href='register?resend=" . base64_encode($this->email) . "&s=1'>Click here</a> to resend the verification email");
+						setMessage("This email is already regstered with us. Please use a different email . Or <a href='register?resend=" . base64_encode($this->email) . "&s=1'>Click here</a> to resend the verification email");
 					}
 				}
 			} 
@@ -104,6 +104,8 @@ class user {
 			//var_dump($stmt);
 		}
 	}
+
+
 	public function verify_email_register(&$email, &$fname, &$lname, &$verify_key) {		//CALLED IN THE PREVIOUS FUNCTION
 		$mail = new PHPMailer;
 		$mail->isSMTP();
@@ -121,12 +123,12 @@ class user {
 
 		$name = $fname . " " . $lname;
 		// $cc = "email@gmail.com";
-		$_SERVER['SERVER_PORT'] == 80 ? $port = "http://localhost/" : $port = "https://ascapstone.herokuapp.com/";
+		$_SERVER['SERVER_PORT'] == 80 ? $port = "http://" : $port = "https://ascapstone.herokuapp.com/";
 
 		$message = $port . $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF'] . '?key=' . base64_encode($verify_key) . '&s=2&email=' . base64_encode($email);
-		$subject = 'Website - Email verification';
+		$subject = 'NEIT Dinning Center - Email verification';
 		// $mail->AddReplyTo($reply_to, $fname);
-		$mail->setFrom($mail->Username, 'Website'); // Set the sender of the message.
+		$mail->setFrom($mail->Username, 'NEIT Dinning Center'); // Set the sender of the message.
 		$mail->addAddress($email, $name); // Set the recipient of the message.
 		// $mail->AddCC($cc, 'Name - Website Form');	//CC email
 		$mail->Subject = $subject; // The subject of the message.
@@ -190,7 +192,7 @@ class user {
 						if (!$emailsent) {
 							setMessage("Could not send verification email. Please check your internet connection. ");
 						} else {
-							successMessage("A verification link has been sent to your Email ID. Please click on the link and verify your email ID. <a href='register?s=1&cid=" . $_GET['cid'] . "&resend'>Click here</a> to resend the verification link. ");
+							successMessage("A verification link has been sent to your Email. Please click on the link and verify your email ID. <a href='register?s=1&cid=" . $_GET['cid'] . "&resend'>Click here</a> to resend the verification link. ");
 						}
 					}
 				} else {
@@ -282,7 +284,7 @@ class user {
 	public function send_mail($receiver_email, $receiver_name, $message, $subject) {
 		$mail = new PHPMailer;
 		$mail->isSMTP();
-		//$mail->SMTPDebug = 2;
+		$mail->SMTPDebug = 2;
 		$config = parse_ini_file('dbconfig.ini', true);
 		$mail->Host = 'smtp.gmail.com'; // Which SMTP server to use.
 		$mail->Port = 587; // Which port to use, 587 is the default port for TLS security.
@@ -290,7 +292,7 @@ class user {
 		$mail->SMTPAuth = true; // Whether you need to login. This is almost always required.
 		$mail->Username = $config['user']; // Your Gmail address.
 		$mail->Password = $config['pass']; // Your Gmail login password or App Specific Password.
-		$mail->setFrom($mail->Username, 'Website'); // Set the sender of the message.
+		$mail->setFrom($mail->Username, 'NEIT Dinning Center'); // Set the sender of the message.
 		$mail->addAddress($receiver_email, $receiver_name); // Set the recipient of the message.
 		$mail->Subject = $subject; // The subject of the message.
 		$mail->Body = $message; // Set a plain text body.
@@ -312,13 +314,13 @@ class user {
 				if (mysqli_stmt_execute($this->send_query) && mysqli_stmt_fetch($this->send_query)) {
 					$this->flag = 1;
 				} else {
-					setMessage("This email is not registered. Please register an account with this email ID. ");
+					setMessage("This email is not registered. Please register an account with this email");
 				}
 				mysqli_stmt_close($this->send_query);
 			}
 			if ($this->flag === 1) {
 				$name = $first_name . " " . $last_name;
-				$subject = "Website Restaurant - Forgot Password";
+				$subject = "NEIT Dinning Center - Forgot Password";
 				$message = "Click on the link below to change your password. This link expires in 5 minutes. \n";
 				if ($_SERVER['SERVER_PORT'] == 8080) {
 					$host = "http://";
