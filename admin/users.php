@@ -51,9 +51,9 @@ include 'includes/front/header.php';
                         <label class="form-label">Phone Number:</label>
                         <input class="form-control" type="tel" id="phone" name="phone" title="Phone Number" value = "<?= (isset($user)) ? $user->phone : ""?>">
                     </div>
-                    <div class="form-group">
+                    <div class="form-group" style = "display: none">
                         <label class="form-label">Email:</label>
-                        <input class="form-control" type = "email" name = "email" id = "email" value = "<?= (isset($user)) ? $user->email : ""?>" >
+                        <input class="form-control"name = "email" id = "email" value = "<?= (isset($user)) ? $user->email : ""?>" >
                     </div>
                 </form>
             </div>

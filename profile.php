@@ -28,7 +28,7 @@
             <label>Phone Number:</label>
             <input type="tel" id="phone" name="phone" title="Phone Number" value = "<?= $user->phone?>">
         </div>
-        <div class="form-group">
+        <div class="form-group hidden">
             <label>Email:</label>
             <input type = "email" name = "email" id = "email" value = "<?= $user->email?>" >
         </div>
@@ -51,7 +51,6 @@
     var email = document.querySelector("#email");
 
     var phoneR = new RegExp(/^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/im);
-    var emailR = new RegExp(  /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i)
 
 
     phone.setCustomValidity("Please enter propper phone number Ex. 4015555555");
@@ -65,9 +64,6 @@
     saveBtn.addEventListener("click", function(e){
         if(!phoneR.test(phone.value)){
             phone.reportValidity();
-        }
-        else if(!emailR.test(email.value)){
-            email.reportValidity();
         }
         else{
             user = new User(profileForm.dataset["id"], email.value, firstName.value, lastName.value, phone.value, studentID.value)

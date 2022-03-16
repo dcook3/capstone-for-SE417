@@ -6,7 +6,7 @@
 
 <?php
     $levels = 1;
-    include("..\includes\models\lucas.php");
+    include("../includes/models/lucas.php");
     
     $post = false;
     if($_SERVER['REQUEST_METHOD']==='POST'){

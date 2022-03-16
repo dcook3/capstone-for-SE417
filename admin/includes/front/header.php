@@ -48,9 +48,6 @@ function buildPath($l, $f)
               <a class="nav-link text-white" href="menu_view">Menu</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link text-white" href="profile"><i class="fab fa-500px mr-2"></i>Profile <span class="sr-only">(current)</span></a>
-            </li>
-            <li class="nav-item">
               <a class="nav-link text-white" href="logout"><i class="fas fa-sign-out-alt mr-2"></i>Logout</a>
             </li>
 
