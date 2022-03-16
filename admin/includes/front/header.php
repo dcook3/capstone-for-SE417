@@ -42,7 +42,7 @@ function buildPath($l, $f)
               <a class="nav-link text-white" href="users"><i class="fas fa-users mr-2"></i>Users</span></a>
             </li>
             <li class="nav-item">
-              <a class="nav-link text-white" href="orders">Orders</a>
+              <a class="nav-link text-white" href="index">Orders</a>
             </li>
             <li class="nav-item">
               <a class="nav-link text-white" href="menu_view">Menu</a>
