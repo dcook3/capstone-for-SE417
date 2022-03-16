@@ -201,7 +201,7 @@
                 }
                 break;
             
-            case "deleteItem":
+            case "deleteOrderItem":
                 if(Order_Item::deleteItem($_POST['orderID'], $_POST['orderItemID']) == false)
                 {
                     setMessage("An error occured whilst deleting an item. Please contact administrator or try again later.");

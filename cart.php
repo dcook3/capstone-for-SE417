@@ -1,7 +1,7 @@
 <?php 
     $levels = 0;
     $subtotal = 0;
-    
+
     include 'includes/front/top.php';
     include 'includes/front/header_static.php';
     include 'includes/models/dylan.php';
@@ -227,7 +227,7 @@
                     orderID: e.target.dataset.oid,
                     orderItemID: e.target.dataset.oiid,
                     quantity: e.target.value,
-                    action: e.target.dataset.action
+                    action: "deleteOrderItem"
                 }
             }).fail(function(e) {console.log(e)})
             .done(function() {
