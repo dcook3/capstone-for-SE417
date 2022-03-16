@@ -84,7 +84,7 @@ redirect("login");
                 <?php foreach($results as $row): ?>
                     <tr>
                         <td><?= "{$row['first_name']} {$row['last_name']}" ?></td>
-                        <td><?= $row['student_id']; ?></td>
+                        <td><?= $row['username']; ?></td>
                         <td><?= $row['order_price'] ?></td>
                         <td>
                             <a class="toggleDetails" data-oid="<?= $row['order_id'] ?>" data.dateString="<?= $dateString ?>" href="#">Show Details</a>
