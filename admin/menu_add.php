@@ -239,7 +239,7 @@
         }
         setTimeout(function(){
             window.location.replace("menu_view.php")
-        }, 10);
+        }, 50);
     })
 
     function addRow(){
