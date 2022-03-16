@@ -1,4 +1,23 @@
 <?php
+	function clear_input($input) {
+		$input = stripslashes($input);
+		$input = htmlspecialchars($input);
+		return $input;
+	}
+
+	function setMessage($error) 
+	{
+		echo '<div class="alert alert-danger alert-dismissible fade show" role="alert">
+			  ' . $error . '
+			  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+				<span aria-hidden="true">&times;</span>
+			  </button>
+			</div>';
+	}
+	function redirect($location)	//Simplifying the HEADER(location: $loc) function
+	{
+		return header("Location: $location");
+	}
 require 'connectDB.php';
 class admin {
 	private $con, $sql, $send_query, $get, $row;
@@ -17,23 +36,6 @@ class admin {
 		$this->con->disconnect();
 	}
 
-	
-
-	function clear_input($input) {
-		$input = stripslashes($input);
-		$input = htmlspecialchars($input);
-		return $input;
-	}
-
-	function setMessage($error) 
-	{
-		echo '<div class="alert alert-danger alert-dismissible fade show" role="alert">
-			  ' . $error . '
-			  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-				<span aria-hidden="true">&times;</span>
-			  </button>
-			</div>';
-	}
 	public function login() {
 		if (isset($_POST['login_submit'])) {
 			if (isset($_SESSION['ADMIN'])) {

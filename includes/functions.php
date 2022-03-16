@@ -123,7 +123,7 @@ class user {
 
 		$name = $fname . " " . $lname;
 		// $cc = "email@gmail.com";
-		$_SERVER['SERVER_PORT'] == 80 ? $port = "http://" : $port = "https://ascapstone.herokuapp.com/";
+		$_SERVER['SERVER_PORT'] == 80 ? $port = "http://ascapstone.herokuapp.com/" : $port = "https://ascapstone.herokuapp.com/";
 
 		$message = $port . $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF'] . '?key=' . base64_encode($verify_key) . '&s=2&email=' . base64_encode($email);
 		$subject = 'NEIT Dinning Center - Email verification';
@@ -284,7 +284,7 @@ class user {
 	public function send_mail($receiver_email, $receiver_name, $message, $subject) {
 		$mail = new PHPMailer;
 		$mail->isSMTP();
-		$mail->SMTPDebug = 2;
+		//$mail->SMTPDebug = 2;
 		$config = parse_ini_file('dbconfig.ini', true);
 		$mail->Host = 'smtp.gmail.com'; // Which SMTP server to use.
 		$mail->Port = 587; // Which port to use, 587 is the default port for TLS security.
@@ -322,10 +322,10 @@ class user {
 				$name = $first_name . " " . $last_name;
 				$subject = "NEIT Dinning Center - Forgot Password";
 				$message = "Click on the link below to change your password. This link expires in 5 minutes. \n";
-				if ($_SERVER['SERVER_PORT'] == 8080) {
-					$host = "http://";
+				if (!$_SERVER['SERVER_PORT'] == 8080) {
+					$host = "http://ascapstone.herokuapp.com/login?";
 				} else {
-					$host = "https://ascapstone.herokuapp.com";
+					$host = "https://ascapstone.herokuapp.com/login?";
 				}
 				$this->datetime = new DateTime();
 				$this->time = new DateTime();
