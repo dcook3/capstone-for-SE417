@@ -3,7 +3,7 @@ function count(str, find) {
 }
 var rootPath = "";
 if(count(window.location.pathname, "/") == 2){
-    $rootPath = "../../"
+    rootPath = "../../"
 }
 else{
     rootPath = "../"
