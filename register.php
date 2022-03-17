@@ -30,13 +30,10 @@
 					{
 						$user->register_account();
 					?>
-						<div class="wrap-input100 validate-input" data-validate="Username is required">
+						<div class="wrap-input100" data-validate="">
 							<input class="input100" type="text" name="username" data-toggle="tooltip" data-placement="top" data-original-title="">
 							<span class="focus-input100"></span>
 							<span class="label-input100">Student ID</span>
-							<div class="invalid-feedback">
-					Please provide a valid email!
-				</div>
 						</div>
 						<div class="wrap-input100 validate-input" data-validate="First name is required">
 							<input class="input100" type="text" name="fname" required="" data-toggle="tooltip" data-placement="top" data-original-title="">
