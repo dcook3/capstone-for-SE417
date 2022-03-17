@@ -170,10 +170,46 @@
         <img src="assets\users.png" class="card-img-top border border-dark" alt="users page picture">
     </div>
 </div>
-
+<h2>Proposal</h2>
+<div class='embed-responsive' style='padding-bottom:90%'>
+  <embed src="assets/proposal.pdf" type="application/pdf" width="100%"  height="1000px"/>
+</div>
+<h2>Technical Design</h2>
+<div class='embed-responsive' style='padding-bottom:90%'>
+  <embed src="assets/techDesign.pdf" type="application/pdf" width="100%"  height="1000px"/>
+</div>
+<h2>Prototype</h2>
+<div class="d-flex flex-wrap justify-content-center">
+    <div class="card" style="width: 50rem;">
+        <div class="card-title my-2">
+            <h5 class="card-text text-center">Main User</h5>
+        </div>
+        <img src="assets\userLayout.png" class="card-img-top border border-dark" alt="menu item view page picture">
+    </div>
+</div>
+<div class="d-flex flex-wrap justify-content-center">
+    <div class="card" style="width: 50rem;">
+        <div class="card-title my-2">
+            <h5 class="card-text text-center">Admin View</h5>
+        </div>
+        <img src="assets\adminLayout.png" class="card-img-top border border-dark" alt="menu item add page picture">
+    </div>
+</div>
+<h2>ERD</h2>
+<div class="d-flex flex-wrap justify-content-center">
+    <div class="card" style="width: 50rem;">
+        <div class="card-title my-2">
+            <h5 class="card-text text-center">ERD</h5>
+        </div>
+        <img src="assets\ERD.png" class="card-img-top border border-dark" alt="menu item view page picture">
+    </div>
+</div>
 <h2>Links</h2>
 <a href="">Source code download</a>
 <a href="https://github.com/JohnsonL104/as_capstone">Github Repository</a>
+
+
+<br><br><br><br><br>
 
 
 <?php include '../admin/includes/front/footer.php'; ?>

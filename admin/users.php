@@ -18,7 +18,7 @@ include 'includes/front/header.php';
             <th>Email</th>
             <th>Created</th>
             <th>Last Update</th>
-            <th><button>Add</button></th>
+            <th>Edit</th>
         </thead>
         <tbody>
             <tr>     

@@ -81,7 +81,9 @@ redirect("login");
         </thead>
         <tbody>
             <?php if(gettype($results) != "string"): ?>
-                <?php foreach($results as $row): ?>
+                <?php foreach($results as $row): 
+                    if($row['order_status'] == 2 || $row['order_status'] == 1){
+                    ?>
                     <tr>
                         <td><?= "{$row['first_name']} {$row['last_name']}" ?></td>
                         <td><?= $row['username']; ?></td>
@@ -101,7 +103,7 @@ redirect("login");
                                 if($row['order_status'] == "2")
                                 {
                                     echo "<form action='index.php' method='post' class='isCompleted'>
-                                            <input type='checkbox' name='orderStatus' value='checked'/><label for='orderStatus'>Completed</label>
+                                            <input checked type='checkbox' name='orderStatus' value='checked'/><label for='orderStatus'>Completed</label>
                                             <input type='hidden' name='updOrderID' value='$id' /> 
                                             <input type='hidden' name='selectedDate' value='$dateString'>
                                         </form>";
@@ -109,7 +111,7 @@ redirect("login");
                                 else if($row['order_status'] == "1")
                                 {
                                     echo "<form action='index.php' method='post' class='isCompleted'>
-                                            <input checked type='checkbox' name='orderStatus' /><label for='orderStatus'>Completed</label>
+                                            <input type='checkbox' name='orderStatus' /><label for='orderStatus'>Completed</label>
                                             <input type='hidden' name='updOrderID' value='$id' /> 
                                             <input type='hidden' name='selectedDate' value='$dateString'>
                                         </form>";
@@ -117,7 +119,9 @@ redirect("login");
                             ?>
                         </td>
                     </tr>
-                <?php endforeach; 
+                <?php 
+                }    
+            endforeach; 
             else:?>
                 <tr><td><?= $results ?><td></tr>
             <?php endif; ?>
