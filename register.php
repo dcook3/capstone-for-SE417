@@ -14,7 +14,7 @@
 	<link rel="stylesheet" type="text/css" href="lib/login/css/main.css">
 	<link rel="stylesheet" type="text/css" href="lib/css/style.css">
 	<link rel="stylesheet" type="text/css" href="lib/login/css/register.css">
-	<title>Document</title>
+	<title>Tiger Eats - Create Account</title>
 </head>
 <body>
 <?php //include("includes/front/header_static.php"); ?>
@@ -31,22 +31,25 @@
 						$user->register_account();
 					?>
 						<div class="wrap-input100 validate-input" data-validate="Username is required">
-							<input class="input100" type="text" name="username" required="" data-toggle="tooltip" data-placement="top" data-original-title="9 characters">
+							<input class="input100" type="text" name="username" data-toggle="tooltip" data-placement="top" data-original-title="">
 							<span class="focus-input100"></span>
 							<span class="label-input100">Student ID</span>
+							<div class="invalid-feedback">
+					Please provide a valid email!
+				</div>
 						</div>
-						<div class="wrap-input100 validate-input" data-validate="Do not leave name field blank">
-							<input class="input100" type="text" name="fname" pattern="[A-Za-z]{1,30}" required="" data-toggle="tooltip" data-placement="top" data-original-title="Min 1 characters. Alphabets only.">
+						<div class="wrap-input100 validate-input" data-validate="First name is required">
+							<input class="input100" type="text" name="fname" required="" data-toggle="tooltip" data-placement="top" data-original-title="">
 							<span class="focus-input100"></span>
 							<span class="label-input100">First Name</span>
 						</div>
-						<div class="wrap-input100 validate-input" data-validate="Do not leave name field blank">
-							<input class="input100" type="text" name="lname" pattern="[A-Za-z]{1,30}" required="" data-toggle="tooltip" data-placement="top" data-original-title="Min 1 characters. Alphabets only.">
+						<div class="wrap-input100 validate-input" data-validate="Last name is required">
+							<input class="input100" type="text" name="lname" required="" data-toggle="tooltip" data-placement="top" data-original-title="">
 							<span class="focus-input100"></span>
 							<span class="label-input100">Last Name</span>
 						</div>
-						<div class="wrap-input100 validate-input" data-validate="Phone Number is required">
-							<input class="input100" type="text" name="phone" required="">
+						<div class="wrap-input100 validate-input" data-validate="Phone number is required">
+							<input class="input100" type="tel" name="phone" required="">
 							<span class="focus-input100"></span>
 							<span class="label-input100">Phone Number</span>
 						</div>
@@ -56,12 +59,12 @@
 							<span class="label-input100">Email</span>
 						</div>
 						<div class="wrap-input100 validate-input" data-validate="Password is required">
-							<input class="input100" type="password" name="pass" pattern=".{6,}" data-toggle="tooltip" data-placement="top" data-original-title="Min 6 characters." required="">
+							<input class="input100" type="password" name="pass" pattern=".{6,}" data-toggle="tooltip" data-placement="top" data-original-title="" required="">
 							<span class="focus-input100"></span>
 							<span class="label-input100">Password</span>
 						</div>
-						<div class="wrap-input100 validate-input" data-validate="Password is required">
-							<input class="input100" type="password" name="pass_confirm" pattern=".{6,}" data-toggle="tooltip" data-placement="top" data-original-title="Min 6 characters." required="">
+						<div class="wrap-input100 validate-input" data-validate="Confirm password is required">
+							<input class="input100" type="password" name="pass_confirm" pattern=".{6,}" data-toggle="tooltip" data-placement="top" data-original-title="" required="">
 							<span class="focus-input100"></span>
 							<span class="label-input100">Confirm Password</span>
 						</div>
@@ -120,8 +123,8 @@
 					<footer id="footer">
 						<div class="container">
 							<div class="row">
-								<?php isset($_SERVER['HTTP_REFERER']) ? $goback = $_SERVER['HTTP_REFERER'] : $goback = "index" ?>
-								<a href="<?php echo $goback ?>"><button class="login100-form-btn">Go back</button></a>
+								<?php //isset($_SERVER['HTTP_REFERER']) ? $goback = $_SERVER['HTTP_REFERER'] : $goback = "index" ?>
+								<a href="index<?php //echo $goback ?>"><button class="login100-form-btn">Go back</button></a>
 							</div>
 						</div>
 					</footer>
