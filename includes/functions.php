@@ -123,7 +123,13 @@ class user {
 
 		$name = $fname . " " . $lname;
 		// $cc = "email@gmail.com";
-		$_SERVER['SERVER_PORT'] == 80 ? $port = "http://ascapstone.herokuapp.com/" : $port = "https://ascapstone.herokuapp.com/";
+		//$_SERVER['SERVER_PORT'] == 80 ? $port = "http://ascapstone.herokuapp.com/" : $port = "https://ascapstone.herokuapp.com/";
+
+		if ($_SERVER['SERVER_PORT'] == 8080) {
+			$port = "http://";
+		} else {
+			$port = "https://ascapstone.herokuapp.com/";
+		}
 
 		$message = $port . $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF'] . '?key=' . base64_encode($verify_key) . '&s=2&email=' . base64_encode($email);
 		$subject = 'NEIT Dinning Center - Email verification';
@@ -166,7 +172,7 @@ class user {
 						if (!$emailsent) {
 							setMessage("Could not send verification email. Please check your internet connection. ");
 						} else {
-							successMessage("A verification link has been sent to your Email ID. Please click on the link and verify your email ID. <a href='register?s=1&resend=" . $_GET['resend'] . "'>Click here</a> to resend the verification link. ");
+							successMessage("A verification link has been sent to your Email. Please click on the link and verify your email. <a href='register?s=1&resend=" . $_GET['resend'] . "'>Click here</a> to resend the verification link. ");
 						}
 					}
 				} else {
@@ -192,7 +198,7 @@ class user {
 						if (!$emailsent) {
 							setMessage("Could not send verification email. Please check your internet connection. ");
 						} else {
-							successMessage("A verification link has been sent to your Email. Please click on the link and verify your email ID. <a href='register?s=1&cid=" . $_GET['cid'] . "&resend'>Click here</a> to resend the verification link. ");
+							successMessage("A verification link has been sent to your Email. Please click on the link and verify your email. <a href='register?s=1&cid=" . $_GET['cid'] . "&resend'>Click here</a> to resend the verification link. ");
 						}
 					}
 				} else {
