@@ -131,7 +131,9 @@ class user {
 			$port = "https://ascapstone.herokuapp.com/";
 		}
 
-		$message = $port . $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF'] . '?key=' . base64_encode($verify_key) . '&s=2&email=' . base64_encode($email);
+		//$message = $port . $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF'] . '?key=' . base64_encode($verify_key) . '&s=2&email=' . base64_encode($email);
+		$message = $port . $_SERVER['PHP_SELF'] . '?key=' . base64_encode($verify_key) . '&s=2&email=' . base64_encode($email);
+
 		$subject = 'NEIT Dinning Center - Email verification';
 		// $mail->AddReplyTo($reply_to, $fname);
 		$mail->setFrom($mail->Username, 'NEIT Dinning Center'); // Set the sender of the message.
