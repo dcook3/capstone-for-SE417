@@ -182,10 +182,10 @@
 
                 //Calculate subtotal
                 subtotal -= Number(spans[i].dataset.price);
-                let tax = (subtotal * 0.07).toFixed(2);
+                let tax = Number(subtotal * 0.07).toFixed(2);
 
                 //Update subtotal and tax onto page
-                pageSubtotal.innerHTML = subtotal.toFixed(2);
+                pageSubtotal.innerHTML = Number(subtotal).toFixed(2);
                 pageTax.innerHTML = Number(subtotal * 0.07).toFixed(2);
                 pageTotal.innerHTML = (Number(subtotal) + Number(tax)).toFixed(2);
             }
@@ -202,10 +202,10 @@
 
                 //Calculate subtotal
                 subtotal += Number(spans[i].dataset.price);
-                let tax = (subtotal * 0.07).toFixed(2);
+                let tax = Number(subtotal * 0.07).toFixed(2);
 
                 //Update subtotal and tax onto page
-                pageSubtotal.innerHTML = subtotal.toFixed(2);
+                pageSubtotal.innerHTML = Number(subtotal).toFixed(2);
                 pageTax.innerHTML = Number(subtotal * 0.07).toFixed(2);
                 pageTotal.innerHTML = (Number(subtotal) + Number(tax)).toFixed(2);
             }
