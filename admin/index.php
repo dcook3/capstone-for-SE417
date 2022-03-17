@@ -98,7 +98,7 @@ redirect("login");
                         <td>
                             <?php
                                 $id = $row['order_id'];
-                                if($row['order_status'] == "0" || $row['order_status'] == "2")
+                                if($row['order_status'] == "2")
                                 {
                                     echo "<form action='index.php' method='post' class='isCompleted'>
                                             <input type='checkbox' name='orderStatus' value='checked'/><label for='orderStatus'>Completed</label>

@@ -3,7 +3,6 @@
     include("includes/front/header_static.php");
     include("includes/models/lucas.php");
     isset($_SESSION['USER']) ? $user = $_SESSION['USER'] : redirect("login.php");
-
 ?>
 <link rel ="stylesheet" href = "main_lucas.css">
 <script src="https://kit.fontawesome.com/4933cad413.js" crossorigin="anonymous"></script>

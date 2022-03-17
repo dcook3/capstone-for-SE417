@@ -258,11 +258,11 @@ class user {
 			$this->email = $this->con->escape($_POST['email']);
 			$pass = md5($this->con->escape($_POST['pass']));
 
-			$this->sql = "SELECT c.first_name, c.last_name, c.user_id, c.email, c.phone  FROM user c, login_info l WHERE c.email = l.email AND l.email = ? AND l.password = ? AND c.isVerified = ? AND c.login_access = ?";
+			$this->sql = "SELECT c.first_name, c.last_name, c.user_id, c.email, c.phone, c.username  FROM user c, login_info l WHERE c.email = l.email AND l.email = ? AND l.password = ? AND c.isVerified = ? AND c.login_access = ?";
 			$this->send_query = $this->con->prepare($this->sql);
 
 			mysqli_stmt_bind_param($this->send_query, "ssii", $this->email, $pass, $this->temp, $this->temp);
-			mysqli_stmt_bind_result($this->send_query, $this->fname, $this->lname, $this->user_id, $this->email, $this->phone);
+			mysqli_stmt_bind_result($this->send_query, $this->fname, $this->lname, $this->user_id, $this->email, $this->phone, $this->student_id);
 
 			if (isset($this->send_query) && mysqli_stmt_execute($this->send_query)) {
 				while (mysqli_stmt_fetch($this->send_query)) {
