@@ -135,7 +135,6 @@
                     $result = Order::createOrderIfNoneExists($_POST["user_id"]);
                     
                     echo json_encode($result);
-                    
                 }
                 else {
                     echo "user_id not set";
