@@ -141,7 +141,7 @@
     var pageSubtotal = document.querySelector("#subtotal");
     var pageTax = document.querySelector("#tax");
     var pageTotal = document.querySelector("#total");
-    var subtotal = 0;
+    var subtotal = 0.0;
     var emailConfirmModal = new bootstrap.Modal(document.getElementById('emailConfirmModal'), {backdrop: true, keyboard: false, focus: true});
 
     //Initial calulation using DB vals
@@ -149,7 +149,7 @@
     {
         subtotal += Number(qtySelectors[i].children[1].value) * Number(spans[i].dataset.price);
     }
-    pageSubtotal.innerHTML = subtotal;
+    pageSubtotal.innerHTML = subtotal.toFixed(2);
     let firstTax = (subtotal * 0.07).toFixed(2);
     pageTax.innerHTML = firstTax;
     pageTotal.innerHTML = (Number(subtotal) + Number(firstTax)).toFixed(2);
@@ -183,8 +183,10 @@
                 //Calculate subtotal
                 subtotal -= Number(spans[i].dataset.price);
                 let tax = Number(subtotal * 0.07).toFixed(2);
+                
 
                 //Update subtotal and tax onto page
+                console.log(subtotal);
                 pageSubtotal.innerHTML = Number(subtotal).toFixed(2);
                 pageTax.innerHTML = Number(subtotal * 0.07).toFixed(2);
                 pageTotal.innerHTML = (Number(subtotal) + Number(tax)).toFixed(2);
@@ -205,7 +207,7 @@
                 let tax = Number(subtotal * 0.07).toFixed(2);
 
                 //Update subtotal and tax onto page
-                pageSubtotal.innerHTML = Number(subtotal).toFixed(2);
+                pageSubtotal.innerHTML = subtotal.toFixed(2);
                 pageTax.innerHTML = Number(subtotal * 0.07).toFixed(2);
                 pageTotal.innerHTML = (Number(subtotal) + Number(tax)).toFixed(2);
             }
