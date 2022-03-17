@@ -123,9 +123,17 @@ class user {
 
 		$name = $fname . " " . $lname;
 		// $cc = "email@gmail.com";
-		$_SERVER['SERVER_PORT'] == 80 ? $port = "http://ascapstone.herokuapp.com/" : $port = "https://ascapstone.herokuapp.com/";
+		//$_SERVER['SERVER_PORT'] == 80 ? $port = "http://ascapstone.herokuapp.com/" : $port = "https://ascapstone.herokuapp.com/";
 
-		$message = $port . $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF'] . '?key=' . base64_encode($verify_key) . '&s=2&email=' . base64_encode($email);
+		if (!$_SERVER['SERVER_PORT'] == 8080) {
+			$port = "http://";
+		} else {
+			$port = "https://ascapstone.herokuapp.com/";
+		}
+
+		//$message = $port . $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF'] . '?key=' . base64_encode($verify_key) . '&s=2&email=' . base64_encode($email);
+		$message = $port . $_SERVER['PHP_SELF'] . '?key=' . base64_encode($verify_key) . '&s=2&email=' . base64_encode($email);
+
 		$subject = 'NEIT Dinning Center - Email verification';
 		// $mail->AddReplyTo($reply_to, $fname);
 		$mail->setFrom($mail->Username, 'NEIT Dinning Center'); // Set the sender of the message.
@@ -166,7 +174,7 @@ class user {
 						if (!$emailsent) {
 							setMessage("Could not send verification email. Please check your internet connection. ");
 						} else {
-							successMessage("A verification link has been sent to your Email ID. Please click on the link and verify your email ID. <a href='register?s=1&resend=" . $_GET['resend'] . "'>Click here</a> to resend the verification link. ");
+							successMessage("A verification link has been sent to your Email. Please click on the link and verify your email. <a href='register?s=1&resend=" . $_GET['resend'] . "'>Click here</a> to resend the verification link. ");
 						}
 					}
 				} else {
@@ -192,7 +200,7 @@ class user {
 						if (!$emailsent) {
 							setMessage("Could not send verification email. Please check your internet connection. ");
 						} else {
-							successMessage("A verification link has been sent to your Email. Please click on the link and verify your email ID. <a href='register?s=1&cid=" . $_GET['cid'] . "&resend'>Click here</a> to resend the verification link. ");
+							successMessage("A verification link has been sent to your Email. Please click on the link and verify your email. <a href='register?s=1&cid=" . $_GET['cid'] . "&resend'>Click here</a> to resend the verification link. ");
 						}
 					}
 				} else {
@@ -258,11 +266,11 @@ class user {
 			$this->email = $this->con->escape($_POST['email']);
 			$pass = md5($this->con->escape($_POST['pass']));
 
-			$this->sql = "SELECT c.first_name, c.last_name, c.user_id, c.email, c.phone  FROM user c, login_info l WHERE c.email = l.email AND l.email = ? AND l.password = ? AND c.isVerified = ? AND c.login_access = ?";
+			$this->sql = "SELECT c.first_name, c.last_name, c.user_id, c.email, c.phone, c.username  FROM user c, login_info l WHERE c.email = l.email AND l.email = ? AND l.password = ? AND c.isVerified = ? AND c.login_access = ?";
 			$this->send_query = $this->con->prepare($this->sql);
 
 			mysqli_stmt_bind_param($this->send_query, "ssii", $this->email, $pass, $this->temp, $this->temp);
-			mysqli_stmt_bind_result($this->send_query, $this->fname, $this->lname, $this->user_id, $this->email, $this->phone);
+			mysqli_stmt_bind_result($this->send_query, $this->fname, $this->lname, $this->user_id, $this->email, $this->phone, $this->student_id);
 
 			if (isset($this->send_query) && mysqli_stmt_execute($this->send_query)) {
 				while (mysqli_stmt_fetch($this->send_query)) {

@@ -35,7 +35,7 @@
         </span>
     </div>
     <div>
-        <?php isset($_SERVER['HTTP_REFERER']) ? $goback = $_SERVER['HTTP_REFERER'] : $goback = "index" ?>
-        <a href="<?php echo $goback; ?>"><button type="button" class="go-back-phone login100-form-btn">Go back</button></a>
+        <?php //isset($_SERVER['HTTP_REFERER']) ? $goback = $_SERVER['HTTP_REFERER'] : $goback = "index" ?>
+        <a href="index<?php //echo $goback; ?>"><button type="button" class="go-back-phone login100-form-btn">Go back</button></a>
     </div>
 </form>

@@ -103,13 +103,11 @@ class admin {
 		}
 	}
 	public function DisplayAllUsers() {
-		$this->sql = "SELECT l.email, a.username, a.first_name, a.middle_name, a.last_name, a.phone, l.created_at, l.updated_at, a.user_id 
-		FROM login_info l, user a 
-		WHERE a.email = l.email";
+		$this->sql = "SELECT l.email, a.username, a.first_name, a.last_name, a.phone, l.created_at, l.updated_at, a.user_id FROM login_info l, user a WHERE a.email = l.email";
 
 		$this->send_query = $this->con->prepare($this->sql);
 		if (isset($this->send_query)) {
-			mysqli_stmt_bind_result($this->send_query, $this->email, $username, $first_name, $middle_name, $last_name, $phone, $date_added, $date_modified, $user_id);
+			mysqli_stmt_bind_result($this->send_query, $this->email, $username, $first_name, $last_name, $phone, $date_added, $date_modified, $user_id);
 			if (mysqli_stmt_execute($this->send_query) && mysqli_stmt_store_result($this->send_query)) {
 				while (mysqli_stmt_fetch($this->send_query)) {
 					echo '

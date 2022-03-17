@@ -222,7 +222,7 @@ $sections = Section::getSections();
                 ingredient.classList.remove("hidden");
                 ingredient.children[1].innerHTML = item.ingredients[y].ingredient_name + ((item.ingredients[y].ingredient_price > 0) ? "(" + item.ingredients[y].ingredient_price + ")" : ""); 
                 addItemMenu.children[1].children[0].appendChild(ingredient);
-                ingredient.children[0].checked = ingredient.is_default;
+                ingredient.children[0].checked = item.ingredients[y].is_default;
                 ingredient.children[0].addEventListener("change", function(e){
                    calcPrice();
                 })

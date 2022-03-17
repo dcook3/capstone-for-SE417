@@ -18,14 +18,15 @@ isset($_SESSION['USER']) ? redirect("index") : 0; ?>
 	<link rel="stylesheet" type="text/css" href="lib/css/index.css">
 	<link rel="stylesheet" type="text/css" href="lib/css/style.css">
 	<link rel="stylesheet" type="text/css" href="lib/login/css/login.css">
-	<title>Document</title>
 </head>
 <body>
 
 				<?php
 				if (isset($_GET['forgotPassword'])) {
+					echo '<title>Tiger Eats - Forgot Password</title>';
 					include('forgotPassword.php');
 				} else {
+					echo '<title>Tiger Eats - Login</title>';
 					include('loginAccount.php');
 				}
 				?>
