@@ -125,8 +125,8 @@ class user {
 		// $cc = "email@gmail.com";
 		//$_SERVER['SERVER_PORT'] == 80 ? $port = "http://ascapstone.herokuapp.com/" : $port = "https://ascapstone.herokuapp.com/";
 
-		if ($_SERVER['SERVER_PORT'] == 8080) {
-			$port = "http://";
+		if (!$_SERVER['SERVER_PORT'] == 80) {
+			$port = "http://ascapstone.herokuapp.com";
 		} else {
 			$port = "https://ascapstone.herokuapp.com/";
 		}
