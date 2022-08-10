@@ -64,7 +64,7 @@ class user {
 
 				$sql2 = "INSERT INTO `user` (`username`, `first_name`, `last_name`, `phone`, `email`, `login_access`, `verify_key`, `isVerified`) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
-				$temp = 0;	//LOGIN ACCESS
+				$temp = 1;	//LOGIN ACCESS
 				$send_query2 = $this->con->prepare($sql2);
 				mysqli_stmt_bind_param($send_query2, "sssssisi", $this->student_id, $this->fname, $this->lname, $this->phone, $this->email, $temp, $verify_key, $temp);
 
@@ -77,14 +77,15 @@ class user {
 						} else {
 							mysqli_stmt_close($this->send_query);
 							mysqli_stmt_close($send_query2);
-							setMessage("Could not send verification email. Please check your internet connection. ");
+							//setMessage("Could not send verification email. Please check your internet connection. ");
 						}
 					} else {
 						mysqli_stmt_close($this->send_query);
 						mysqli_stmt_close($send_query2);
-						setMessage("This email is already regstered with us. Please use a different email . Or <a href='register?resend=" . base64_encode($this->email) . "&s=1'>Click here</a> to resend the verification email");
+						//setMessage("This email is already regstered with us. Please use a different email . Or <a href='register?resend=" . base64_encode($this->email) . "&s=1'>Click here</a> to resend the verification email");
 					}
 				}
+				header('Location: login.php');
 			} 
 			else {
 				setMessage("The passwords don't match.");
@@ -169,19 +170,20 @@ class user {
 				mysqli_stmt_execute($this->send_query);
 				mysqli_stmt_store_result($this->send_query);
 				if (mysqli_stmt_num_rows($this->send_query) == 1) {
-					while (mysqli_stmt_fetch($this->send_query)) {
-						$emailsent = $this->verify_email_register($this->email, $this->fname, $this->lname, $verify_key);
-						if (!$emailsent) {
-							setMessage("Could not send verification email. Please check your internet connection. ");
-						} else {
-							successMessage("A verification link has been sent to your Email. Please click on the link and verify your email. <a href='register?s=1&resend=" . $_GET['resend'] . "'>Click here</a> to resend the verification link. ");
-						}
-					}
+					// while (mysqli_stmt_fetch($this->send_query)) {
+					// 	$emailsent = $this->verify_email_register($this->email, $this->fname, $this->lname, $verify_key);
+					// 	if (!$emailsent) {
+					// 		setMessage("Could not send verification email. Please check your internet connection. ");
+					// 	} else {
+					// 		successMessage("A verification link has been sent to your Email. Please click on the link and verify your email. <a href='register?s=1&resend=" . $_GET['resend'] . "'>Click here</a> to resend the verification link. ");
+					// 	}
+					// }
 				} else {
-					setMessage("Could not resend the email. Please try registering again after some time. ");
+					//setMessage("Could not resend the email. Please try registering again after some time. ");
 				}
 				mysqli_stmt_free_result($this->send_query);
 				mysqli_stmt_close($this->send_query);
+				header('Location: login.php');
 			}
 		}
 		if (isset($_GET['cid']) && isset($_GET['resend']))			//isset $get['s'] and $get['s'] == 1 is already checked
@@ -195,19 +197,20 @@ class user {
 				mysqli_stmt_execute($this->send_query);
 				mysqli_stmt_store_result($this->send_query);
 				if (mysqli_stmt_num_rows($this->send_query) == 1) {
-					while (mysqli_stmt_fetch($this->send_query)) {
-						$emailsent = $this->verify_email_register($this->email, $this->fname, $this->lname, $verify_key);
-						if (!$emailsent) {
-							setMessage("Could not send verification email. Please check your internet connection. ");
-						} else {
-							successMessage("A verification link has been sent to your Email. Please click on the link and verify your email. <a href='register?s=1&cid=" . $_GET['cid'] . "&resend'>Click here</a> to resend the verification link. ");
-						}
-					}
+					// while (mysqli_stmt_fetch($this->send_query)) {
+					// 	$emailsent = $this->verify_email_register($this->email, $this->fname, $this->lname, $verify_key);
+					// 	if (!$emailsent) {
+					// 		setMessage("Could not send verification email. Please check your internet connection. ");
+					// 	} else {
+					// 		successMessage("A verification link has been sent to your Email. Please click on the link and verify your email. <a href='register?s=1&cid=" . $_GET['cid'] . "&resend'>Click here</a> to resend the verification link. ");
+					// 	}
+					// }
 				} else {
-					setMessage("Could not resend the email. Please try registering again after some time. ");
+					// setMessage("Could not resend the email. Please try registering again after some time. ");
 				}
 				mysqli_stmt_free_result($this->send_query);
 				mysqli_stmt_close($this->send_query);
+				header('Location: login.php');
 			}
 		}
 	}

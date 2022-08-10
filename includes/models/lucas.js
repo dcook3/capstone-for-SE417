@@ -20,7 +20,7 @@ class User{
 
     updateUser(){
         $.ajax({
-            url:rootPath+"includes/models/ajaxHandler.php",
+            url:rootPath+"/as_capstone/includes/models/ajaxHandler.php",
             method : "POST",
             data:{
                 'action' : 'updateUser',
@@ -51,7 +51,7 @@ class Menu_Item{
     }
     addToDatabase(){
         $.ajax({
-            url : rootPath+"includes/models/ajaxHandler.php",
+            url : rootPath+"/includes/models/ajaxHandler.php",
             method : "POST",
             data:{
                 'action' : 'addToDB',
@@ -65,7 +65,7 @@ class Menu_Item{
     }
     updateItem(){
         $.ajax({
-            url : rootPath+"includes/models/ajaxHandler.php",
+            url : rootPath+"/includes/models/ajaxHandler.php",
             method : "POST",
             data:{
                 'action' : 'updateItem',
@@ -79,7 +79,7 @@ class Menu_Item{
     }
     static async deleteItem(menu_item_id){
         let data = await $.ajax({
-            url : rootPath+"includes/models/ajaxHandler.php",
+            url : rootPath+"/includes/models/ajaxHandler.php",
             method : "POST",
             data:{
                 'action' : 'deleteItem',
@@ -94,7 +94,7 @@ class Menu_Item{
     }
     static getMenuItemByID(menu_item_id, wthImg, callback){
         $.ajax({
-            url : rootPath+"includes/models/ajaxHandler.php",
+            url : rootPath+"/as_capstone/includes/models/ajaxHandler.php",
             method : "POST",
             data:{
                 'action' : 'getMenuItemByID',
@@ -117,7 +117,7 @@ class Menu_Item{
     }
     static async getMenuItemsBySectionId(section_id, wthImg, callback){
         $.ajax({
-            url : rootPath+"includes/models/ajaxHandler.php",
+            url : rootPath+"/as_capstone/includes/models/ajaxHandler.php",
             method : "POST",
             data:{
                 'action' : 'getMenuItemsBySectionId',
@@ -165,7 +165,7 @@ class Order{
     }
     addOrderItem(order_item, callback){
         $.ajax({
-            url : rootPath+"includes/models/ajaxHandler.php",
+            url : rootPath+"/as_capstone/includes/models/ajaxHandler.php",
             method : "POST",
             data:{
                 'action' : 'addOrderItem',
@@ -180,7 +180,7 @@ class Order{
     }
     static createOrderIfNoneExists(user_id, callback){
         $.ajax({
-            url : rootPath+"includes/models/ajaxHandler.php",
+            url : rootPath+"/as_capstone/includes/models/ajaxHandler.php",
             method : "POST",
             data:{
                 'action' : 'createOrderIfNoneExists',
@@ -226,7 +226,7 @@ class Ingredient {
     static deleteIngredient(ingredient_id, menu_item_id){
         
         $.ajax({
-            url : rootPath+"/includes/models/ajaxHandler.php",
+            url : rootPath+"/as_capstone/includes/models/ajaxHandler.php",
             method : "POST",
             data:{
                 'action' : 'deleteIngredient',

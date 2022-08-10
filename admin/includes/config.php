@@ -29,8 +29,8 @@ if(!isset($_SESSION['location_query'])) {
 	$page_accessed = $_SERVER['PHP_SELF'] . "?" . $_SERVER['QUERY_STRING'];
 	$sql = "INSERT INTO `login_user_ip` (`email`, `ip`, `user_agent`, `date_accessed`, `page_accessed`) VALUES ('{$email}', '{$ipaddress}', '{$user_agent}', '{$datetime}', '{$page_accessed}')";
 
-	$send_query = $con->escape($con->query($sql));
-	$con->confirm($send_query);
+	//$send_query = $con->escape($con->query($sql));
+	//$con->confirm($send_query);
 	
 	$_SESSION['location_query'] = "sent";
 	$con->disconnect();

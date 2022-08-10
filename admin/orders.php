@@ -1,8 +1,13 @@
-<?php include('includes/front/top.php'); ?>
-<?php
+<?php 
+include('includes/front/top.php'); 
+//include 'includes/functions.php'
+?>
+<?php  
 if (!isset($_SESSION['ADMIN']['ADMINID'])) {
-redirect("login");
+    redirect("login");
 }
+?>
+<?php
     $levels = 1;
     $showDetails = false;
     include '../includes/models/sql_functions.php';
@@ -36,12 +41,11 @@ redirect("login");
             if(isset($_POST['orderStatus']))
             {
                 $updateOID = $_POST['updOrderID'];
-                $feedback = Order::updateOrderStatus($updateOID, 2);
-            }
-            else 
-            {
-                $updateOID = $_POST['updOrderID'];
-                $feedback = Order::updateOrderStatus($updateOID, 1);
+                $feedback = Order::updateOrderStatus($updateOID, $_POST['orderStatus']);
+                if($_POST['orderStatus'] == 2)
+                {
+                    //send_mail($_SESSION['USER']->email, $_SESSION['USER']->fname, "Your order is complete, and ready for pickup! Thank you for dining with us.", "Tiger Eats Order Update");
+                }
             }
         }
         else if(isset($_POST['showDetails']))
@@ -60,7 +64,7 @@ redirect("login");
     <div class="d-flex flex-column align-items-center">
         <button class="btn btn-secondary mb-3" type="button" data-bs-toggle="collapse" data-bs-target="#dateFilterDiv">Toggle Date Filter</button>
         <div class="col-3 collapse" id="dateFilterDiv">
-            <form method="get" action="index.php" id="dateFilter" class="p-2 col-6 border d-flex flex-column">
+            <form method="get" action="orders.php" id="dateFilter" class="p-2 col-6 border d-flex flex-column">
                 <label for="selectedDate" class="form-label">Pick day to show orders from:</label>
                 <?php if(!isset($_GET['selectedDate'])): ?>
                     <input type="date" name="selectedDate" class="form-control">
@@ -82,8 +86,9 @@ redirect("login");
         <tbody>
             <?php if(gettype($results) != "string"): ?>
                 <?php foreach($results as $row): 
-                    if($row['order_status'] == 2 || $row['order_status'] == 1){
+                        if($row['order_status'] == 1 || $row['order_status'] == 2){
                     ?>
+
                     <tr>
                         <td><?= "{$row['first_name']} {$row['last_name']}" ?></td>
                         <td><?= $row['username']; ?></td>
@@ -100,18 +105,20 @@ redirect("login");
                         <td>
                             <?php
                                 $id = $row['order_id'];
-                                if($row['order_status'] == "2")
+                                if($row['order_status'] == 1)
                                 {
-                                    echo "<form action='index.php' method='post' class='isCompleted'>
-                                            <input checked type='checkbox' name='orderStatus' value='checked'/><label for='orderStatus'>Completed</label>
+                                    echo "<form action='orders.php' method='post' class='isCompleted'>
+                                            <input type='checkbox' name = 'statusCheck'/><label for='statusCheck'>Completed</label>
+                                            <input type='hidden' name='orderStatus' value = '2'/> 
                                             <input type='hidden' name='updOrderID' value='$id' /> 
                                             <input type='hidden' name='selectedDate' value='$dateString'>
                                         </form>";
                                 }
-                                else if($row['order_status'] == "1")
+                                else if($row['order_status'] == 2)
                                 {
-                                    echo "<form action='index.php' method='post' class='isCompleted'>
-                                            <input type='checkbox' name='orderStatus' /><label for='orderStatus'>Completed</label>
+                                    echo "<form action='orders.php' method='post' class='isCompleted'>
+                                            <input checked type='checkbox' name = 'statusCheck'/><label for='statusCheck'>Completed</label>
+                                            <input type='hidden' name='orderStatus' value = '1'/> 
                                             <input type='hidden' name='updOrderID' value='$id' /> 
                                             <input type='hidden' name='selectedDate' value='$dateString'>
                                         </form>";
@@ -119,9 +126,9 @@ redirect("login");
                             ?>
                         </td>
                     </tr>
-                <?php 
-                }    
-            endforeach; 
+                <?php
+                        } 
+                endforeach; 
             else:?>
                 <tr><td><?= $results ?><td></tr>
             <?php endif; ?>
@@ -138,7 +145,7 @@ redirect("login");
                 <div class="modal-body">
                     Are you sure you wish to delete this order? Once an order is deleted, you cannot go back.
                 </div>
-                <form class="modal-footer" action="index.php" method="post">
+                <form class="modal-footer" action="orders.php" method="post">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
                     <button type="submit" class="btn btn-primary">Yes</button>
                     <input type="hidden" id="oidInput" name="delOrderID">

@@ -38,6 +38,6 @@
 		</span>
 	</div>
 	<div>
-		<a href="index"><button type="button" class="go-back-phone login100-form-btn">Go back</button></a>
+		<button class="go-back-phone login100-form-btn">Go back</button>
 	</div>
 </form>

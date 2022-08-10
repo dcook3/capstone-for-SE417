@@ -14,12 +14,11 @@ class Order_Item
     {
         global $db;
         if($this->order_item_id == "-1"){
-            $stmt = $db->prepare("INSERT INTO order_items (order_id, menu_item_id, qty, item_notes) VALUES (:order_id, :menu_item_id, :qty, :item_notes); ");
+            $stmt = $db->prepare("INSERT INTO order_items (order_id, menu_item_id, qty) VALUES (:order_id, :menu_item_id, :qty); ");
             $binds = array(
                 ":order_id" => $this->order_id,
                 ":menu_item_id" => $this->item_id,
                 ":qty" => $this->qty,
-                ":item_notes" => $this->notes
             );
             $stmt2 = $db->prepare("UPDATE orders SET order_price = (order_price + :order_price) WHERE order_id = :order_id;");
             $binds2 = array(

@@ -19,7 +19,7 @@ if (!isset($_GET['key']) && !isset($_GET['ts']) && isset($_GET['forgotPassword']
 
 		<div class="container-login100-form-btn">
 			<button class="login100-form-btn" type="submit" name="forgot_submit">
-				Reset
+				Send reset link
 			</button>
 		</div>
 

@@ -8,7 +8,7 @@
     function send_mail($receiver_email, $receiver_name, $message, $subject) {
 		$mail = new PHPMailer;
 		$mail->isSMTP();
-		$mail->SMTPDebug = 2;
+		//$mail->SMTPDebug = 2;
 		$config = parse_ini_file('../dbconfig.ini', true);
 		$mail->Host = 'smtp.gmail.com'; // Which SMTP server to use.
 		$mail->Port = 587; // Which port to use, 587 is the default port for TLS security.
@@ -135,6 +135,7 @@
                     $result = Order::createOrderIfNoneExists($_POST["user_id"]);
                     
                     echo json_encode($result);
+                    
                 }
                 else {
                     echo "user_id not set";
@@ -247,7 +248,6 @@
         $order_item->item_id = $postItem["menu_item_id"];
         $order_item->qty = $postItem["qty"];
         $order_item->price = $postItem["item_price"];
-        $order_item->notes = $postItem["item_notes"];
         if(isset($postItem["ingredients"])){
             foreach($postItem["ingredients"] as $ingredient){
                 array_push($order_item->ingredients, postToIngredient($ingredient));

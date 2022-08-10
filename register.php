@@ -83,7 +83,8 @@
 						}
 					if (isset($_GET['s'])) {
 						if ($_GET['s'] == 1 && isset($_GET['cid'])) {
-							successMessage("A verification link has been sent to your Email. Please click on the link and verify your email. <a href='register?s=1&cid=" . $_GET['cid'] . "&resend'>Click here</a> to resend the verification link. ");
+							//	NEW EDIT, has been commented out until validation behavior is figured out
+							//successMessage("A verification link has been sent to your Email. Please click on the link and verify your email. <a href='register?s=1&cid=" . $_GET['cid'] . "&resend'>Click here</a> to resend the verification link. ");
 							$user->resend_verify_email();
 						}
 						if ($_GET['s'] == 1 && isset($_GET['resend']) && !isset($_GET['cid'])) {
