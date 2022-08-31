@@ -27,7 +27,7 @@ class User{
                 'user'   : user
             }
         })
-        .fail(function(e){console.log(e)})
+        .fail(function(e){console.log("An error occured while updating user.")})
         .done(function(data){
             console.log(data);
         })
@@ -58,7 +58,7 @@ class Menu_Item{
                 'item' : this,
             }
         })
-        .fail(function(e) {console.log(e)})
+        .fail(function(e) {console.log("An error occured while adding menu item.")})
         .done(function(data){
             return(data);
         })
@@ -72,7 +72,7 @@ class Menu_Item{
                 'item' : this,
             }
         })
-        .fail(function(e) {console.log(e)})
+        .fail(function(e) {console.log("An error occured while updating menu item.")})
         .done(function(data){
             return(data);
         })
@@ -86,7 +86,7 @@ class Menu_Item{
                 'menu_item_id' : menu_item_id
             }
         })
-        .fail(function(e) {console.log(e)})
+        .fail(function(e) {console.log("An error occured while deleting item.")})
         .done(function(data){
             return(data);
         })
@@ -102,7 +102,7 @@ class Menu_Item{
                 'wthImg': wthImg
             }
         })
-        .fail(function(e) {console.log(e)})
+        .fail(function(e) {console.log("An error occured while getting menuy item.")})
         .done(function(data){
             var d = JSON.parse(data);
             
@@ -125,7 +125,7 @@ class Menu_Item{
                 'wthImg': wthImg
             }
         })
-        .fail(function(e) {console.log(e)})
+        .fail(function(e) {console.log("An error occured while getting section.")})
         .done(function(data){
             var data = JSON.parse(data);
             var menuItems = Array();
@@ -153,7 +153,7 @@ class Order_Item extends Menu_Item{
         this.qty = qty;
         this.item_notes = item_notes
         this.ingredients = Array();
-    }     
+    }
 }
 
 class Order{
@@ -173,7 +173,7 @@ class Order{
                 'order_item' : order_item,
             }
         })
-        .fail(function(e) {console.log(e)})
+        .fail(function(e) {console.log("An error occured while adding order item.")})
         .done(function(data){
             callback(data)
         })
@@ -187,7 +187,7 @@ class Order{
                 'user_id' : user_id,
             }
         })
-        .fail(function(e) {console.log(e)})
+        .fail(function(e) {console.log("An error occured while creating order.")})
         .done(function(data){
             console.log(data);
             let d = JSON.parse(data);
@@ -234,7 +234,7 @@ class Ingredient {
                 'menu_item_id' : menu_item_id
             }
         })
-        .fail(function(e) {console.log(e)})
+        .fail(function(e) {console.log("An error occured while deleting an ingredient.")})
         .done(function(data){
             return(data);
         })

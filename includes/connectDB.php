@@ -27,9 +27,9 @@ class connectDB
 		// 	$r = mysqli_close($this->connection);
 		// }
 		// catch (Exception $e){
-		// 	$r= 'connection already closed';
+		// 	$r= 'An error please refrech the page.';
 		// }
-		// return $r;
+		// return ($r);
 	}
 	public function query($sql)
 	{
@@ -69,16 +69,20 @@ class connectDB
 }
 ?>
 <?php
+try{
+	$ini = parse_ini_file( __DIR__ . '/dbconfig.ini');
+	$db = new PDO (  "mysql:host=" . $ini['servername'] . 
+					";port=" . $ini['port'] . 
+					";dbname=" . $ini['dbname'], 
+					$ini['username'], 
+					$ini['password']
+				);
 
-$ini = parse_ini_file( __DIR__ . '/dbconfig.ini');
-$db = new PDO (  "mysql:host=" . $ini['servername'] . 
-                ";port=" . $ini['port'] . 
-                ";dbname=" . $ini['dbname'], 
-                $ini['username'], 
-                $ini['password']
-            );
 
-
-$db->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
-$db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+	$db->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
+	$db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+}
+catch(PDOException $e){
+	echo("An error occured whilst connecting to the DB.");
+}
 ?>

@@ -290,7 +290,6 @@ $sections = Section::getSections();
         modal = new bootstrap.Modal(document.querySelector("#croppingModal"));
     });
     listView.addEventListener("click", function(e){
-        console.log(e.target);
         var imgs = document.querySelectorAll(".cardImage")
 
         if(e.target.checked){
@@ -334,14 +333,13 @@ $sections = Section::getSections();
                                                 qtyInput.value,
                                                 notesInput.value)
                 for(let i = 1; i < addItemMenu.children[1].children[0].children.length; i++){
-                    console.log(i);
                     let checkbox = addItemMenu.children[1].children[0].children[i].children[0]
                     if(checkbox.checked){
                         order_item.addIngredient(new Ingredient(checkbox.dataset["id"], "0",checkbox.parentElement.dataset["ingredientPrice"], false))
                     }
                 }
                 window.location.replace("cart.php")
-                order.addOrderItem(order_item, function(data){console.log(data)});
+                order.addOrderItem(order_item, function(data){window.location.replace()});
                 window.location.replace('cart.php')
             }
             else{

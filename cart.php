@@ -229,7 +229,7 @@
                     quantity: e.target.value,
                     action: "deleteOrderItem"
                 }
-            }).fail(function(e) {console.log(e)})
+            }).fail(function(e) {console.log("An error occured whilst deleting order.")})
             .done(function() {
                 window.location.replace('cart.php');
             });
@@ -246,7 +246,7 @@
                 orderTotal: subtotal,
                 action: "updateStatus"
             }
-        }).fail(function(e) {console.log(e)})
+        }).fail(function(e) {console.log("An error occured while updating the order.")})
         .done(function() {
             console.log("Confirmed order and email sent.");
             emailConfirmModal.show();
