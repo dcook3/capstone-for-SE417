@@ -2,7 +2,6 @@
 class connectDB {
 	private $connection;
 	public function connect()
-	{
 		$config = parse_ini_file('dbconfig.ini', true);
 		defined("DB_HOST") ? null : define("DB_HOST", $config['servername']);
 		defined("DB_USER") ? null : define("DB_USER", $config['username']);
