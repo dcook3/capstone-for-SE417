@@ -197,7 +197,7 @@ if (!isset($_SESSION['ADMIN']['ADMINID'])) {
                                     action: "detailsUpdate"
                                 }
                             })
-                            .fail(function(e) {console.log(e)})
+                            .fail(function(e) {console.log("Error on orders.")})
                             .done(function(data)
                             {
                                 data = data.replace("action not set", "")

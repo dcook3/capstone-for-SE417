@@ -27,7 +27,7 @@ class User{
                 'user'   : user
             }
         })
-        .fail(function(e){console.log("An error occured while updating user.")})
+        .fail(function(e){console.log("An error occured on lucas.js")})
         .done(function(data){
             console.log(data);
         })
@@ -58,7 +58,7 @@ class Menu_Item{
                 'item' : this,
             }
         })
-        .fail(function(e) {console.log("An error occured while adding menu item.")})
+        .fail(function(e) {console.log("An error occured on lucas.js")})
         .done(function(data){
             return(data);
         })
@@ -72,7 +72,7 @@ class Menu_Item{
                 'item' : this,
             }
         })
-        .fail(function(e) {console.log("An error occured while updating menu item.")})
+        .fail(function(e) {console.log("An error occured on lucas.js")})
         .done(function(data){
             return(data);
         })
@@ -86,7 +86,7 @@ class Menu_Item{
                 'menu_item_id' : menu_item_id
             }
         })
-        .fail(function(e) {console.log("An error occured while deleting item.")})
+        .fail(function(e) {console.log("An error occured on lucas.js")})
         .done(function(data){
             return(data);
         })
@@ -102,7 +102,7 @@ class Menu_Item{
                 'wthImg': wthImg
             }
         })
-        .fail(function(e) {console.log("An error occured while getting menuy item.")})
+        .fail(function(e) {console.log("An error occured on lucas.js")})
         .done(function(data){
             var d = JSON.parse(data);
             
@@ -125,7 +125,7 @@ class Menu_Item{
                 'wthImg': wthImg
             }
         })
-        .fail(function(e) {console.log("An error occured while getting section.")})
+        .fail(function(e) {console.log("An error occured on lucas.js")})
         .done(function(data){
             var data = JSON.parse(data);
             var menuItems = Array();
@@ -173,7 +173,7 @@ class Order{
                 'order_item' : order_item,
             }
         })
-        .fail(function(e) {console.log("An error occured while adding order item.")})
+        .fail(function(e) {console.log("An error occured on lucas.js")})
         .done(function(data){
             callback(data)
         })
@@ -187,7 +187,7 @@ class Order{
                 'user_id' : user_id,
             }
         })
-        .fail(function(e) {console.log("An error occured while creating order.")})
+        .fail(function(e) {console.log("An error occured on lucas.js")})
         .done(function(data){
             console.log(data);
             let d = JSON.parse(data);
@@ -234,7 +234,7 @@ class Ingredient {
                 'menu_item_id' : menu_item_id
             }
         })
-        .fail(function(e) {console.log("An error occured while deleting an ingredient.")})
+        .fail(function(e) {console.log("An error occured on lucas.js")})
         .done(function(data){
             return(data);
         })

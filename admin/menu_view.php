@@ -89,23 +89,21 @@
 
     for(let i = 0; i < editButtons.length; i++){
         editButtons[i].addEventListener("click", function(e){
-            console.log(e.target.dataset["id"])
+            
         })
     }
     function edit(id){
-        console.log(id);
 
         hiddenField.value = String(id);
         hiddenField.parentElement.submit();
     }
     async function del(id){
         let deleted = await Menu_Item.deleteItem(id);
-        console.log(deleted)
         if(deleted == '1'){
             window.location.reload();
         }
         else{
-            console.log("didn't delete i think")
+            console.log("Error occured in menu.")
         }
     }
 

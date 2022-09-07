@@ -190,7 +190,7 @@ redirect("login");
                                     action: "detailsUpdate"
                                 }
                             })
-                            .fail(function(e) {console.log(e)})
+                            .fail(function(e) {console.log("An error occured on the menu page.")})
                             .done(function(data)
                             {
                                 data = data.replace("action not set", "")

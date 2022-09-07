@@ -90,7 +90,7 @@ include 'includes/front/header.php';
                     action: "getUser"
                 }
             })
-            .fail(e => {console.log(e)})
+            .fail(e => {console.log("Error on users.")})
             .done(data => 
             {
                 var person = JSON.parse(data)
@@ -120,7 +120,7 @@ include 'includes/front/header.php';
                 action: 'updateUserBackend'
             }
         })
-        .fail(e => {console.log(e)})
+        .fail(e => {console.log("Error on users.")})
         .done(e => {
             window.location.replace("users");
         })
@@ -135,7 +135,7 @@ include 'includes/front/header.php';
                 uid: id.value,
                 action: 'deleteUser'
             }
-        }).fail(e => {console.log(e)})
+        }).fail(e => {console.log("Error on users.")})
         .done(e => {
             window.location.replace("users");
         })
